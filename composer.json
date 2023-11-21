@@ -1,0 +1,16 @@
+{
+    "name": "josephfusco/wpgraphiql-x",
+    "description": "The next generation of WPGraphQL's GraphiQL editor",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Joseph Fusco",
+            "homepage": "https://github.com/josephfusco",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    }
+}
