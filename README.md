@@ -2,6 +2,8 @@
 
 A next-gen query editor for WPGraphQL.
 
+https://github.com/josephfusco/wpgraphql-ide/assets/6676674/82ee25b6-c056-4065-ae6b-dfcf6b8c6173
+
 ## Development
 
 1. Install project dependencies.
