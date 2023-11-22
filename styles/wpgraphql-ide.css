@@ -109,3 +109,8 @@ body {
 .graphiql-history-header {
   color: hsla(var(--color-neutral),1);
 }
+
+/* Visually subdue the WPGraphQL Core wpadminbar link while this plugin is active */
+#wp-admin-bar-graphiql-ide {
+  opacity: 0.5;
+}
