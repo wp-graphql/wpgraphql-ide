@@ -2,7 +2,7 @@
 
 > A next-gen query editor for [WPGraphQL](https://github.com/wp-graphql/wp-graphql) 🚀
 
-https://github.com/josephfusco/wpgraphql-ide/assets/6676674/82ee25b6-c056-4065-ae6b-dfcf6b8c6173
+https://github.com/josephfusco/wpgraphql-ide/assets/6676674/88e128f0-a682-42ec-84d8-ff8474d7e683
 
 ## Install
 
