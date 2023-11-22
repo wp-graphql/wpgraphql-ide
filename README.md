@@ -1,8 +1,19 @@
-# WPGraphiQL X
+# WPGraphQL IDE
 
-The next generation of WPGraphQL's GraphiQL editor.
+A next-gen query editor for WPGraphQL.
 
-## Notice
+## Development
 
-This is beta software. There will be breaking changes as we iterate toward a stable release.
+1. Install project dependencies.
 
+    ```sh
+    npm install
+    ```
+
+2. Compile JavaScript assets.
+
+    ```sh
+    npm run build
+    ```
+
+Builds are only required for JS updates as the plugin's CSS is directly enqueued.
