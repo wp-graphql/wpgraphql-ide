@@ -1,14 +1,12 @@
 # WPGraphQL IDE
 
-> A next-gen query editor for [WPGraphQL](https://github.com/wp-graphql/wp-graphql).
+> A next-gen query editor for [WPGraphQL](https://github.com/wp-graphql/wp-graphql) 🚀
 
 https://github.com/josephfusco/wpgraphql-ide/assets/6676674/82ee25b6-c056-4065-ae6b-dfcf6b8c6173
 
 ## Install
 
-See [releases](https://github.com/josephfusco/wpgraphql-ide/releases).
-
-Also available via composer - [josephfusco/wpgraphql-ide](https://packagist.org/packages/josephfusco/wpgraphql-ide)
+See [releases](https://github.com/josephfusco/wpgraphql-ide/releases) to download, or [download from packagist.org](https://packagist.org/packages/josephfusco/wpgraphql-ide) via composer.
 
 ## Development
 
@@ -25,4 +23,3 @@ Also available via composer - [josephfusco/wpgraphql-ide](https://packagist.org/
     ```
 
 Builds are only required for JS updates as the plugin's CSS is directly enqueued.
-
