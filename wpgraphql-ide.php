@@ -163,24 +163,3 @@ function plugin_version(): string {
 
     return $version;
 }
-
-/**
- * Modifies the title of WPGraphQL core's submenu item.
- *
- * @global array $submenu An array of submenu items organized by parent menu.
- *
- * @return void
- */
-function modify_wpgraphql_core_submenu_title(): void {
-    global $submenu;
-
-    if ( isset( $submenu['graphiql-ide'] ) ) {
-        foreach ( $submenu['graphiql-ide'] as $key => $menu_item ) {
-            if ( $menu_item[2] === 'graphiql-ide' ) {
-                $submenu['graphiql-ide'][$key][0] = 'Old';
-                break;
-            }
-        }
-    }
-}
-add_action( 'admin_menu', __NAMESPACE__ . '\\modify_wpgraphql_core_submenu_title', 10 );
