@@ -73,7 +73,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   [vaul-drawer] {
-    user-select: auto !important;
+    user-select: auto !important; /* !important is needed for text selection within drawer */
   }
 }
 
