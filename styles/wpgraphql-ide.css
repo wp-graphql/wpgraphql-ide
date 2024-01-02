@@ -114,3 +114,8 @@ body {
 #wp-admin-bar-graphiql-ide {
   opacity: 0.5;
 }
+
+/* Align WPGraphQL logo with existing buttons */
+.wpgraphql-logo-link {
+  display: flex;
+}
