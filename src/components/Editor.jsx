@@ -1,5 +1,6 @@
 /* global WPGRAPHQL_IDE_DATA */
 import { GraphiQL } from 'graphiql';
+
 import 'graphiql/graphiql.min.css';
 
 const fetcher = async ( graphQLParams ) => {
@@ -17,10 +18,17 @@ const fetcher = async ( graphQLParams ) => {
 	return response.json();
 };
 
-export function Editor() {
+export function Editor( { setDrawerOpen } ) {
 	return (
-		<>
-			<GraphiQL fetcher={ fetcher } />
-		</>
+		<GraphiQL fetcher={ fetcher }>
+			<GraphiQL.Logo>
+				<button
+					className="button EditorDrawerCloseButton"
+					onClick={ () => setDrawerOpen( false ) }
+				>
+					X<span className="screen-reader-text">close drawer</span>
+				</button>
+			</GraphiQL.Logo>
+		</GraphiQL>
 	);
 }
