@@ -7,7 +7,7 @@
  * GitHub Plugin URI: https://github.com/josephfusco/wpgraphql-ide
  * License:           GPLv3 or later
  * Text Domain:       wpgraphql-ide
- * Version:           1.0.0-beta.13
+ * Version:           1.0.1
  *
  * @package WPGraphQLIDE
  */
