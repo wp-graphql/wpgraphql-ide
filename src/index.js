@@ -1,4 +1,6 @@
 import { createRoot } from '@wordpress/element';
+import { createHooks } from '@wordpress/hooks';
+
 import { App } from './App';
 
 /**
@@ -16,6 +18,9 @@ if (rootElement) {
     const root = createRoot(rootElement);
     root.render(<App />);
 }
+
+// Initialize hook system.
+App.hooks = createHooks();
 
 // Expose app as a global variable to utilize in gutenberg.
 window.WPGraphQLIDE = App;
