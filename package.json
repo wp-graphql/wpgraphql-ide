@@ -6,7 +6,8 @@
 		"start": "wp-scripts start",
 		"format": "wp-scripts format",
 		"format:src": "wp-scripts format ./src",
-		"lint:js": "wp-scripts lint-js",
+		"lint:js": "wp-scripts lint-js ./src",
+		"lint:js:fix": "wp-scripts lint-js --fix ./src",
 		"lint:js:src": "wp-scripts lint-js ./src"
 	},
 	"devDependencies": {
