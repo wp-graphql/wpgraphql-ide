@@ -1,6 +1,5 @@
 /* global WPGRAPHQL_IDE_DATA */
 import { GraphiQL } from 'graphiql';
-import { Logo } from './Logo';
 
 import 'graphiql/graphiql.min.css';
 
@@ -19,14 +18,17 @@ const fetcher = async ( graphQLParams ) => {
 	return response.json();
 };
 
-export function Editor() {
+export function Editor( { setDrawerOpen } ) {
 	return (
-        <GraphiQL fetcher={fetcher}>
-            <GraphiQL.Logo>
-                <a className="wpgraphql-logo-link" href="https://www.wpgraphql.com" target="_blank" rel="noreferrer">
-                    <Logo height="40" width="40" />
-                </a>
-            </GraphiQL.Logo>
-        </GraphiQL>
+		<GraphiQL fetcher={ fetcher }>
+			<GraphiQL.Logo>
+				<button
+					className="button EditorDrawerCloseButton"
+					onClick={ () => setDrawerOpen( false ) }
+				>
+					X<span className="screen-reader-text">close drawer</span>
+				</button>
+			</GraphiQL.Logo>
+		</GraphiQL>
 	);
 }
