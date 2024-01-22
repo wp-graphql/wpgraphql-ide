@@ -34,10 +34,9 @@ jobs:
 
     - name: Zip Artifacts
       run: |
-        mkdir -p plugin-build/
-        rsync -rc --exclude-from=.distignore --exclude=plugin-build/ . plugin-build/ --delete --delete-excluded -v
-        cd plugin-build ; zip -r wpgraphql-ide.zip wpgraphql-ide
-        rm -rf plugin-build/
+        mkdir -p wpgraphql-ide/
+        rsync -av --exclude-from='.distignore' --delete-excluded ./ wpgraphql-ide/ && zip -r wpgraphql-ide.zip wpgraphql-ide/ && rm -rf wpgraphql-ide/
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
