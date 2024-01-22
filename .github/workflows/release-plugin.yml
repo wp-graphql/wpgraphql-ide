@@ -33,8 +33,11 @@ jobs:
       run: npm run build
 
     - name: Zip Artifacts
-      run: zip -r package-${{ github.ref_name }}.zip ./build
-
+      run: |
+        mkdir -p plugin-build/
+        rsync -rc --exclude-from=.distignore --exclude=plugin-build/ . plugin-build/ --delete --delete-excluded -v
+        cd plugin-build ; zip -r wpgraphql-ide.zip wpgraphql-ide
+        rm -rf plugin-build/
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -52,6 +55,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./${{ github.ref_name }}.zip
-        asset_name: ${{ github.ref_name }}.zip
+        asset_path: ./plugin-build/wpgraphql-ide.zip
+        asset_name: wpgraphql-ide.zip
         asset_content_type: application/zip
