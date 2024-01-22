@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [20]
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
@@ -26,7 +26,7 @@ jobs:
 
     - name: Run Lint and Tests
       run: |
-        npm run lint
+        npm run lint:js
         npm run test
 
     - name: Build Package
