@@ -36,6 +36,7 @@ jobs:
       run: |
         mkdir -p wpgraphql-ide/
         rsync -av --exclude-from='.distignore' --delete-excluded ./ wpgraphql-ide/ && zip -r wpgraphql-ide.zip wpgraphql-ide/ && rm -rf wpgraphql-ide/
+        ls -la
 
     - name: Upload release artifact
       uses: softprops/action-gh-release@v1
