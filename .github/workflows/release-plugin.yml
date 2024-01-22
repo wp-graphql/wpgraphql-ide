@@ -44,3 +44,6 @@ jobs:
         files: wpgraphql-ide.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    permissions:
+      contents: write
