@@ -55,3 +55,8 @@ c3.php
 
 # output from e2e tests
 artifacts
+
+# build/release artifacts
+build/
+wpgraphql-ide/
+wpgraphql-ide.zip
