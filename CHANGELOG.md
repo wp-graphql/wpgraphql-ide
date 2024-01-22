@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2024-01-22
+
+### Fixed
+
+- Fixed inability to select text inside of editor
+
+### Added
+
+- Focusable dismiss button to close the drawer
+
 ## [1.0.0] - 2023-11-22
 
 ### Added
