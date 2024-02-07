@@ -1,0 +1,7 @@
+{
+  "core": "WordPress/WordPress",
+  "plugins": [
+    ".",
+    "https://downloads.wordpress.org/plugin/wp-graphql.zip"
+  ]
+}
