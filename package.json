@@ -4,7 +4,9 @@
     "check-engines": "wp-scripts check-engines",
     "build": "wp-scripts build --webpack-no-externals",
     "start": "wp-scripts start",
-    "test": "npx wp-env start && npx playwright test",
+    "test": "echo \"specify type of test\"",
+    "test:e2e": "npx wp-env start && npx playwright test",
+    "test:unit": "npx jest",
     "format": "wp-scripts format",
     "format:src": "wp-scripts format ./src",
     "lint:js": "wp-scripts lint-js ./src",
@@ -12,11 +14,17 @@
     "lint:js:src": "wp-scripts lint-js ./src"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-react": "^7.23.3",
     "@playwright/test": "^1.41.2",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
     "@types/node": "^20.11.16",
     "@wordpress/env": "^9.2.0",
     "@wordpress/scripts": "^26.17.0",
-    "clsx": "^2.0.0"
+    "babel-jest": "^29.7.0",
+    "clsx": "^2.0.0",
+    "jest": "^29.7.0"
   },
   "dependencies": {
     "@wordpress/element": "^5.23.0",
