@@ -6,7 +6,7 @@
     "build": "wp-scripts build --webpack-no-externals",
     "start": "wp-scripts start",
     "test": "echo \"specify type of test\"",
-    "test:e2e": "npx playwright test",
+    "test:e2e": "npx playwright test --reporter=line",
     "test:e2e:ui": "npx playwright test --ui",
     "test:unit": "npx jest",
     "format": "wp-scripts format",
