@@ -13,7 +13,8 @@
     "format:src": "wp-scripts format ./src",
     "lint:js": "wp-scripts lint-js ./src",
     "lint:js:fix": "wp-scripts lint-js --fix ./src",
-    "lint:js:src": "wp-scripts lint-js ./src"
+    "lint:js:src": "wp-scripts lint-js ./src",
+    "wp-env": "wp-env"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.9",
