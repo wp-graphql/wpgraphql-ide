@@ -17,15 +17,18 @@ jobs:
         node-version: ['18']
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '16.x' # Specify the Node.js version here
+          node-version: ${{ matrix.node-version }}
 
+      - name: Start WordPress Environment
+        run: npx wp-env start
+  
       - name: Install dependencies
         run: npm install
 
-      - name: Start WordPress Environment and Run E2E tests
+      - name: Run E2E tests
         run: npm run test:e2e

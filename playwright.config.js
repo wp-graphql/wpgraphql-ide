@@ -1,14 +1,16 @@
 const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
-  testDir: './tests/e2e',                  // Directory for E2E tests
-  fullyParallel: true,                     // Run tests in files in parallel
-  forbidOnly: !!process.env.CI,            // Fail the CI build if test.only is left in code
-  retries: process.env.CI ? 2 : 0,         // Number of retries on CI
-  workers: process.env.CI ? 1 : undefined, // Opt out of parallel tests on CI
-  reporter: 'html',                        // Use HTML reporter
+  globalSetup: require.resolve('./tests/scripts/global-setup'),
+  testDir: './tests/e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
   use: {
-    trace: 'on-first-retry',               // Collect trace when retrying failed tests
+    trace: 'on-first-retry',
+    baseURL: 'http://localhost:8888',
   },
   projects: [
     {

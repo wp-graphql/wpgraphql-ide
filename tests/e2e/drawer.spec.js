@@ -7,11 +7,6 @@ const wpHomeUrl = 'http://localhost:8888';
 const adminUsername = 'admin';
 const adminPassword = 'password';
 
-/**
- * Navigates to the WordPress admin page and logs in using predefined credentials.
- *
- * @param {import('playwright').Page} page - The Playwright page object.
- */
 test.beforeEach(async ({ page }) => {
   await visitAdminFacingPage(page);
   await page.fill('input[name="log"]', adminUsername);
@@ -30,40 +25,33 @@ test.beforeEach(async ({ page }) => {
   }
 });
 
-// test('drawer opens on an admin page', async ({ page }) => {
-//   await visitAdminFacingPage(page);
-//   await expect(page.locator('.graphiql-container')).toBeHidden();
-//   await toggleDrawer(page);
-//   await expect(page.locator('.graphiql-container')).toBeVisible();
-// });
+test.afterEach(async ({ page }) => {
+  await closeDrawer(page);
+});
 
-// test('drawer opens on a public page', async ({ page }) => {
-//   await visitPublicFacingPage(page);
-//   const overlay = await page.$('[vaul-overlay]');
-//   if (overlay) {
-//     await overlay.click();
-//   }
-//   await expect(page.locator('.graphiql-container')).toBeHidden();
-//   await toggleDrawer(page);
-//   const isVisible = await page.locator('.graphiql-container').isVisible();
-//   if (!isVisible) {
-//     await toggleDrawer(page);
-//   }
-//   await expect(page.locator('.graphiql-container')).toBeVisible();
-// });
+test('drawer opens on an admin page', async ({ page }) => {
+  await visitAdminFacingPage(page);
+  await openDrawer(page);
+  await expect(page.locator('.graphiql-container')).toBeVisible();
+});
+
+test('drawer opens on a public page', async ({ page }) => {
+  await visitPublicFacingPage(page);
+  await openDrawer(page);
+  await expect(page.locator('.graphiql-container')).toBeVisible();
+  await closeDrawer(page);
+});
 
 // test('loads with the documentation explorer closed', async ({ page }) => {
 //   await visitAdminFacingPage(page);
-//   await expect(page.locator('.graphiql-container')).toBeHidden();
-//   await toggleDrawer(page);
+//   await openDrawer(page);
 //   await expect(page.locator('.graphiql-container')).toBeVisible();
 //   await expect(page.locator('.graphiql-doc-explorer')).toBeHidden();
 // });
 
 // test('documentation explorer can be toggled open and closed', async ({ page }) => {
 //   await visitAdminFacingPage(page);
-//   await expect(page.locator('.graphiql-container')).toBeHidden();
-//   await toggleDrawer(page);
+//   await openDrawer(page);
 //   await expect(page.locator('.graphiql-container')).toBeVisible();
 //   await page.click('[aria-label="Show Documentation Explorer"]');
 //   await expect(page.locator('.graphiql-doc-explorer')).toBeVisible();
@@ -83,11 +71,6 @@ test.beforeEach(async ({ page }) => {
 //   expect(responseContent).toContain('nodes');
 // });
 
-test('drawer functionality test', async ({ page }) => {
-  await visitPublicFacingPage(page);
-  await openDrawer(page);
-  await closeDrawer(page);
-});
 
 // Helper methods
 

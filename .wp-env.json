@@ -3,5 +3,6 @@
   "plugins": [
     ".",
     "https://downloads.wordpress.org/plugin/wp-graphql.zip"
-  ]
+  ],
+  "themes": []
 }
