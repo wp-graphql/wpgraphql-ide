@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  unit-tests:
-    name: Unit tests on Node ${{ matrix.node-version }}
+  e2e-tests:
+    name: E2E tests on Node ${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
