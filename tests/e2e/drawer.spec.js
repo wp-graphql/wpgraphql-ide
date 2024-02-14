@@ -25,10 +25,6 @@ test.beforeEach(async ({ page }) => {
   }
 });
 
-test.afterEach(async ({ page }) => {
-  await closeDrawer(page);
-});
-
 test('drawer opens on an admin page', async ({ page }) => {
   await visitAdminFacingPage(page);
   await openDrawer(page);
@@ -36,41 +32,47 @@ test('drawer opens on an admin page', async ({ page }) => {
 });
 
 test('drawer opens on a public page', async ({ page }) => {
-  await visitPublicFacingPage(page);
+  await visitPublicFacingPageAsLoggedInUser(page);
   await openDrawer(page);
   await expect(page.locator('.graphiql-container')).toBeVisible();
-  await closeDrawer(page);
 });
 
-// test('loads with the documentation explorer closed', async ({ page }) => {
-//   await visitAdminFacingPage(page);
-//   await openDrawer(page);
-//   await expect(page.locator('.graphiql-container')).toBeVisible();
-//   await expect(page.locator('.graphiql-doc-explorer')).toBeHidden();
-// });
+test('drawer closes when close button is clicked', async ({ page }) => {
+  await visitAdminFacingPage(page);
+  await openDrawer(page);
+  await expect(page.locator('.graphiql-container')).toBeVisible();
+  await clickDrawerCloseButton(page);
+  await expect(page.locator('.graphiql-container')).toBeHidden();
+});
 
-// test('documentation explorer can be toggled open and closed', async ({ page }) => {
-//   await visitAdminFacingPage(page);
-//   await openDrawer(page);
-//   await expect(page.locator('.graphiql-container')).toBeVisible();
-//   await page.click('[aria-label="Show Documentation Explorer"]');
-//   await expect(page.locator('.graphiql-doc-explorer')).toBeVisible();
-//   await page.click('[aria-label="Hide Documentation Explorer"]');
-//   await expect(page.locator('.graphiql-doc-explorer')).toBeHidden();
-// });
+test('loads with the documentation explorer closed', async ({ page }) => {
+  await visitAdminFacingPage(page);
+  await openDrawer(page);
+  await expect(page.locator('.graphiql-container')).toBeVisible();
+  await expect(page.locator('.graphiql-doc-explorer')).toBeHidden();
+});
 
-// test('executes query', async ({ page }) => {
-//   await visitAdminFacingPage(page);
-//   await toggleDrawer(page);
-//   await typeQuery(page, `{posts{nodes{id}}}`);
-//   await typeVariables(page, { first: 10 });
-//   await executeQuery(page);
-//   await page.waitForTimeout(1000);
-//   const responseContent = await page.textContent('.graphiql-response'); // Adjust the selector as needed
-//   expect(responseContent).toContain('posts');
-//   expect(responseContent).toContain('nodes');
-// });
+test('documentation explorer can be toggled open and closed', async ({ page }) => {
+  await visitAdminFacingPage(page);
+  await openDrawer(page);
+  await expect(page.locator('.graphiql-container')).toBeVisible();
+  await page.click('[aria-label="Show Documentation Explorer"]');
+  await expect(page.locator('.graphiql-doc-explorer')).toBeVisible();
+  await page.click('[aria-label="Hide Documentation Explorer"]');
+  await expect(page.locator('.graphiql-doc-explorer')).toBeHidden();
+});
 
+test('executes query', async ({ page }) => {
+  await visitAdminFacingPage(page);
+  await openDrawer(page);
+  await typeQuery(page, `{posts{nodes{id}}}`);
+  await typeVariables(page, { first: 10 });
+  await executeQuery(page);
+  await page.waitForTimeout(1000);
+  const responseContent = await page.textContent('.graphiql-response'); // Adjust the selector as needed
+  expect(responseContent).toContain('posts');
+  expect(responseContent).toContain('nodes');
+});
 
 // Helper methods
 
@@ -86,7 +88,7 @@ export async function visitAdminFacingPage(page) {
   await page.goto(wpAdminUrl);
 }
 
-export async function visitPublicFacingPage(page) {
+export async function visitPublicFacingPageAsLoggedInUser(page) {
   await page.goto(wpHomeUrl);
 }
 
@@ -137,7 +139,6 @@ async function selectAndClearTextUsingKeyboard(page, selector) {
 export async function openDrawer(page) {
   const isDrawerVisible = await page.locator('.graphiql-container').isVisible();
   if (!isDrawerVisible) {
-    await page.waitForSelector('.EditorDrawerButton', { state: 'visible' });
     await clickDrawerButton(page);
     await page.waitForSelector('.graphiql-container', { state: 'visible' });
   }
@@ -152,7 +153,6 @@ export async function closeDrawer(page) {
       await overlay.click();
     }
     await expect(page.locator('.graphiql-container')).toBeHidden();
-    await page.waitForSelector('.EditorDrawerButton', { state: 'visible' });
     await clickDrawerCloseButton(page);
     await page.waitForSelector('.graphiql-container', { state: 'hidden' });
   }

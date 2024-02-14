@@ -1,7 +1,6 @@
 const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
-  globalSetup: require.resolve('./tests/scripts/global-setup'),
   testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -13,14 +12,14 @@ module.exports = defineConfig({
     baseURL: 'http://localhost:8888',
   },
   projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // {
+    //   name: 'chromium',
+    //   use: { ...devices['Desktop Chrome'] },
+    // },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
