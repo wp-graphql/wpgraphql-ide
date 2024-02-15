@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Logo } from '../../src/components/Logo';
+import { Logo } from '../../../src/components/Logo';
 
 describe('Logo Component', () => {
   test('renders an SVG element', () => {
