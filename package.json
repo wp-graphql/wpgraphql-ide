@@ -6,15 +6,14 @@
     "build": "wp-scripts build --webpack-no-externals",
     "start": "wp-scripts start",
     "test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
+    "test:e2e:ui": "wp-scripts test-playwright --config tests/e2e/playwright.config.js --ui",
     "test:unit": "jest --config tests/unit/jest.config.js",
     "format": "wp-scripts format",
     "format:src": "wp-scripts format ./src",
     "lint:js": "wp-scripts lint-js ./src",
     "lint:js:fix": "wp-scripts lint-js --fix ./src",
     "lint:js:src": "wp-scripts lint-js ./src",
-    "env": "wp-env",
-    "env:start": "wp-env start",
-    "env:stop": "wp-env stop",
+    "wp-env": "wp-env",
     "prepare": "husky install"
   },
   "devDependencies": {
