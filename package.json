@@ -6,15 +6,16 @@
     "build": "wp-scripts build --webpack-no-externals",
     "start": "wp-scripts start",
     "test": "echo \"specify type of test\"",
-    "test:e2e": "npx playwright test --reporter=line",
-    "test:e2e:ui": "npx playwright test --ui",
-    "test:unit": "npx jest",
+    "test:e2e": "playwright test --reporter=line",
+    "test:e2e:ui": "playwright test --ui",
+    "test:unit": "jest",
     "format": "wp-scripts format",
     "format:src": "wp-scripts format ./src",
     "lint:js": "wp-scripts lint-js ./src",
     "lint:js:fix": "wp-scripts lint-js --fix ./src",
     "lint:js:src": "wp-scripts lint-js ./src",
-    "wp-env": "wp-env"
+    "wp-env": "wp-env",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.9",
@@ -27,12 +28,20 @@
     "@wordpress/scripts": "^26.17.0",
     "babel-jest": "^29.7.0",
     "chalk": "^5.3.0",
-    "clsx": "^2.0.0"
+    "clsx": "^2.0.0",
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.4",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "sort-package-json": "^2.7.0"
   },
   "dependencies": {
     "@wordpress/element": "^5.23.0",
     "graphiql": "^3.0.10",
     "graphql-ws": "^5.14.2",
     "vaul": "^0.7.9"
+  },
+  "lint-staged": {
+    "package.json": "sort-package-json"
   }
 }
