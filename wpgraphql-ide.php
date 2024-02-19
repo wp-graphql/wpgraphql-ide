@@ -144,6 +144,10 @@ function enqueue_react_app_with_styles(): void {
     wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $version );
     // Avoid running custom styles through a build process for an improved developer experience.
     wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $version );
+
+    // Extensions looking to extend GraphiQL can hook in here,
+    // after the window object is established, but before the App renders
+    do_action( 'wpgraphiql_enqueue_script' );
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
