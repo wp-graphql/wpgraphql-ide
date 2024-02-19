@@ -4,9 +4,11 @@
 		"check-engines": "wp-scripts check-engines",
 		"build": "wp-scripts build --webpack-no-externals",
 		"start": "wp-scripts start",
+		"test": "echo \"This is a test script!\"",
 		"format": "wp-scripts format",
 		"format:src": "wp-scripts format ./src",
-		"lint:js": "wp-scripts lint-js",
+		"lint:js": "wp-scripts lint-js ./src",
+		"lint:js:fix": "wp-scripts lint-js --fix ./src",
 		"lint:js:src": "wp-scripts lint-js ./src"
 	},
 	"devDependencies": {

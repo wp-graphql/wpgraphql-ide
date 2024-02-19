@@ -73,7 +73,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   [vaul-drawer] {
-    user-select: none;
+    user-select: auto !important; /* !important is needed for text selection within drawer */
   }
 }
 
@@ -113,4 +113,9 @@ body {
 /* Visually subdue the WPGraphQL Core wpadminbar link while this plugin is active */
 #wp-admin-bar-graphiql-ide {
   opacity: 0.5;
+}
+
+/* Align WPGraphQL logo with existing buttons */
+.wpgraphql-logo-link {
+  display: flex;
 }
