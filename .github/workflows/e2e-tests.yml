@@ -36,3 +36,6 @@ jobs:
 
       - name: Run E2E tests
         run: npm run test:e2e
+
+      - name: Stop WordPress Environment
+        run: npm run wp-env -- stop
