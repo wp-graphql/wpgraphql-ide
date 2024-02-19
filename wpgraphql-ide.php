@@ -121,7 +121,9 @@ function enqueue_react_app_with_styles(): void {
         'wp-i18n',
     ];
 
-    $version = plugin_version();
+    $app_context = get_app_context();
+
+    $version = get_plugin_header( 'Version' );
 
     wp_enqueue_script(
         'wpgraphql-ide-app',
@@ -138,7 +140,7 @@ function enqueue_react_app_with_styles(): void {
             'nonce'           => wp_create_nonce( 'wp_rest' ),
             'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
             'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-            'context'         => get_app_context(), 
+            'context'         => $app_context, 
         ]
     );
 
@@ -148,25 +150,29 @@ function enqueue_react_app_with_styles(): void {
 
     // Extensions looking to extend GraphiQL can hook in here,
     // after the window object is established, but before the App renders
-    do_action( 'wpgraphqlide_enqueue_script' );
+    do_action( 'wpgraphqlide_enqueue_script', $app_context );
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 
 /**
- * Retrieves the version of the current plugin.
+ * Retrieves the specific header of this plugin.
  *
- * @return string The version number of the plugin. Returns an empty string if the version is not found.
+ * @param string The plugin data key.
+ * @return string|null The version number of the plugin. Returns an empty string if the version is not found.
  */
-function plugin_version(): string {
+function get_plugin_header( $key = '' ): ?string {
     if ( ! function_exists( 'get_plugin_data' ) ) {
         require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
     }
 
-    $plugin_data = get_plugin_data( __FILE__ );
-    $version     = $plugin_data['Version'];
+    if ( empty( $key ) ) {
+        return null;
+    }
 
-    return $version;
+    $plugin_data = get_plugin_data( __FILE__ );
+
+    return $plugin_data[ $key ] ?? null;
 }
 
 /**
@@ -176,6 +182,8 @@ function plugin_version(): string {
  */
 function get_app_context() {
     $context = apply_filters( 'wpgraphqlide_context', [
+        'pluginVersion'     => get_plugin_header( 'Version' ),
+        'pluginName'        => get_plugin_header( 'Name' ),
         'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] )
     ]);
 
