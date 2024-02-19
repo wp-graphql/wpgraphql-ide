@@ -138,6 +138,7 @@ function enqueue_react_app_with_styles(): void {
             'nonce'           => wp_create_nonce( 'wp_rest' ),
             'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
             'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
+            'context'         => get_app_context(), 
         ]
     );
 
@@ -147,7 +148,7 @@ function enqueue_react_app_with_styles(): void {
 
     // Extensions looking to extend GraphiQL can hook in here,
     // after the window object is established, but before the App renders
-    do_action( 'wpgraphiql_enqueue_script' );
+    do_action( 'wpgraphqlide_enqueue_script' );
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
