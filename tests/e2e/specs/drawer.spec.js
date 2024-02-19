@@ -5,7 +5,7 @@ import {
   clearCodeMirror
 } from '../utils.js'; 
 
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 
 const selectors = {
   graphiqlContainer: '.graphiql-container',
