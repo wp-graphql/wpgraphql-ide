@@ -168,3 +168,16 @@ function plugin_version(): string {
 
     return $version;
 }
+
+/**
+ * Retrieves app context.
+ * 
+ * @return array The possibly filtered app context array.
+ */
+function get_app_context() {
+    $context = apply_filters( 'wpgraphqlide_context', [
+        'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] )
+    ]);
+
+    return $context;
+}
