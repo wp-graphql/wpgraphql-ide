@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@wordpress/element": "^5.23.0",
+		"@wordpress/hooks": "^3.49.0",
 		"graphiql": "^3.0.10",
 		"graphql-ws": "^5.14.2",
 		"vaul": "^0.7.9"
