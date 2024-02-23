@@ -18,9 +18,14 @@ const fetcher = async ( graphQLParams ) => {
 	return response.json();
 };
 
+const CustomButton = () => <button>custom</button>
+
 export function Editor( { setDrawerOpen } ) {
 	return (
 		<GraphiQL fetcher={ fetcher }>
+			<GraphiQL.Toolbar>
+				<CustomButton />
+			</GraphiQL.Toolbar>
 			<GraphiQL.Logo>
 				<button
 					className="button EditorDrawerCloseButton"
