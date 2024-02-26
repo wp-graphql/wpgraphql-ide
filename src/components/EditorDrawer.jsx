@@ -1,3 +1,4 @@
+import React from 'react';
 import { Drawer as VaulDrawer } from 'vaul';
 
 export function EditorDrawer( {

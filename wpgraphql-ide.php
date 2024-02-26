@@ -110,6 +110,9 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_ic
  * @return void
  */
 function enqueue_react_app_with_styles(): void {
+    if ( ! class_exists( '\WPGraphQL\Router' ) ) {
+        return;
+    }
     if ( user_lacks_capability() ) {
         return;
     }
