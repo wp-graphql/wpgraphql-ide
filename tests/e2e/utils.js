@@ -1,11 +1,11 @@
 /**
  * Utility functions for Playwright tests in WordPress Admin and GraphiQL IDE.
- * 
+ *
  * This file contains helper functions designed to simplify interactions with the WordPress
  * admin dashboard and the GraphiQL IDE within end-to-end tests using Playwright. Functions
  * include logging into the WordPress admin, typing queries and variables into CodeMirror editors,
  * and clearing CodeMirror editor content.
- * 
+ *
  * @fileoverview Utility functions for WordPress Admin and GraphiQL IDE interaction.
  * @module utils
  */
@@ -17,7 +17,7 @@
  * @property {string} submitButton - The CSS selector for the submit button in the WordPress login form.
  */
 
-/** 
+/**
  * CSS selectors used for navigating the WordPress admin login page.
  * @type {Selectors}
  */
@@ -32,11 +32,20 @@ const selectors = {
  * @param {import('@playwright/test').Page} page The Playwright page object.
  */
 export async function loginToWordPressAdmin(page) {
-  await page.goto('http://localhost:8888/wp-admin');
-  await page.fill(selectors.loginUsername, 'admin');
-  await page.fill(selectors.loginPassword, 'password');
-  await page.click(selectors.submitButton);
-  await page.waitForSelector('#wpadminbar'); // Confirm login by waiting for the admin bar
+	const isLoggedIn = await page.$('#wpadminbar' );
+
+	// If already logged in, return early
+	if (isLoggedIn) {
+		return;
+	}
+
+	await page.goto('http://localhost:8888/wp-admin', { waitUntil: 'networkidle'});
+	await page.fill(selectors.loginUsername, 'admin');
+	await page.fill(selectors.loginPassword, 'password');
+	await page.click(selectors.submitButton);
+	await page.waitForSelector('#wpadminbar'); // Confirm login by waiting for the admin bar
+
+
 }
 
 /**

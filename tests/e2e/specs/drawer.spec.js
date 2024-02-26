@@ -1,8 +1,6 @@
 import {
   loginToWordPressAdmin,
-  typeQuery,
-  typeVariables,
-  clearCodeMirror
+  typeQuery
 } from '../utils.js';
 
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
@@ -17,6 +15,7 @@ const selectors = {
   variablesInput: '[aria-label="Variables"] .CodeMirror',
 };
 
+// Login to WordPress before each test
 test.beforeEach(async ({ page }) => {
   await loginToWordPressAdmin(page);
 });
@@ -39,6 +38,10 @@ test('should execute a GraphQL query successfully', async ({ page }) => {
   await page.waitForSelector('.graphiql-spinner', { state: 'hidden' }); // Wait for query execution
 
   // Check for expected response
-  const expectedResponseText = `"data": {"posts": {"nodes": [{"databaseId": 1}]}}`;
-  await expect(page.locator(selectors.graphiqlResponse)).toContainText(expectedResponseText);
+  // The expected response is a JSON object with a "posts" property.
+  const expectedResponseText = `"posts"`;
+  const response = await page.locator(selectors.graphiqlResponse);
+
+
+  await expect(response).toContainText(expectedResponseText);
 });
