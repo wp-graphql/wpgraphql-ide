@@ -20,8 +20,14 @@ const fetcher = async ( graphQLParams ) => {
 };
 
 export function Editor( { setDrawerOpen } ) {
+
+	const params = new URLSearchParams(window.location.search);
+	let defaultQuery = params.get('wpgql_query');
+
 	return (
-		<GraphiQL fetcher={ fetcher }>
+		<GraphiQL
+			query={defaultQuery}
+			fetcher={ fetcher }>
 			<GraphiQL.Logo>
 				<button
 					className="button EditorDrawerCloseButton"
