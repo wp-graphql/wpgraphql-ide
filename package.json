@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@wordpress/element": "^5.23.0",
+    "docker-compose": "^0.24.6",
     "graphiql": "^3.0.10",
     "graphql-ws": "^5.14.2",
     "vaul": "^0.9.0"

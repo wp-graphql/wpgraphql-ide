@@ -27,10 +27,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build Assets
+        run: npm run build
+
       - name: Install Playwright dependencies
         run: |
             npx playwright install chromium firefox webkit --with-deps
-  
+
       - name: Start WordPress Environment
         run: npm run wp-env -- start
 
