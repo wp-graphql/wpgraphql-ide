@@ -133,7 +133,7 @@ test.skip('expect error if invalid json is submitted for variables', async ({ pa
 });
 
 
-text.skip('expect error if invalid query is submitted', async ({ page }) => { });
+test.skip('expect error if invalid query is submitted', async ({ page }) => { });
 
 describe('query params', () => {
 
