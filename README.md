@@ -31,3 +31,7 @@ GraphiQL IDE has intentionally been updated to read "GraphQL IDE", which feels m
     ```
 
 Builds are only required for JS updates as the plugin's CSS is directly enqueued.
+
+## Custom Hooks
+
+See [ACTIONS_AND_FILTERS.md].
