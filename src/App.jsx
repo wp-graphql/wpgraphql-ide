@@ -11,7 +11,14 @@ const { doAction } = wp.hooks;
  * @returns {JSX.Element} The application component.
  */
 export function App() {
-    const [drawerOpen, setDrawerOpen] = useState(false);
+	const params = new URLSearchParams(window.location.search);
+	let defaultOpen = params.has('wpgql_query');
+    const [drawerOpen, setDrawerOpen] = useState( defaultOpen );
+
+	const closeDrawer = () => {
+		params.delete( 'wpgraphql-ide' );
+		setDrawerOpen(false);
+	}
 
     useEffect(() => {
         /**

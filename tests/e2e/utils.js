@@ -27,6 +27,9 @@ const selectors = {
   submitButton: '#wp-submit',
 };
 
+const wpHomeUrl = 'http://localhost:8888';
+const wpAdminUrl = 'http://localhost:8888/wp-admin';
+
 /**
  * Log in to the WordPress admin dashboard.
  * @param {import('@playwright/test').Page} page The Playwright page object.
@@ -63,14 +66,36 @@ export async function typeQuery(page, query) {
 /**
  * Types GraphQL variables into the CodeMirror editor.
  * @param {import('@playwright/test').Page} page The Playwright page object.
- * @param {Object} variables The GraphQL variables to type.
+ * @param {Object} variables The GraphQL variables to type (as an object).
  */
 export async function typeVariables(page, variables) {
   const variablesString = JSON.stringify(variables, null, 2);
-  const variablesSelector = '[aria-label="Variables"] .CodeMirror';
+  // remove trailing curly brace. As users type, the IDE adds a trailing brace, so we're going to trim it
+  // as a user wouldn't actually type an extra trailing brace
+  const trimmedVariableString = variablesString.substring(0, -1);
   await page.click('[data-name="variables"]');
+  const variablesSelector = '.graphiql-editor-tool[aria-label="Variables"]:not(.hidden)';
   await clearCodeMirror(page, variablesSelector);
-  await page.keyboard.type(variablesString);
+  await page.keyboard.type(trimmedVariableString);
+}
+
+/**
+ * Types GraphQL variables into the CodeMirror editor.
+ * @param {import('@playwright/test').Page} page The Playwright page object.
+ * @param {string} variables The GraphQL variables to type (as a string).
+ */
+export async function pasteVariables(page, variables) {
+	const trimmedVariableString = variablesString.substring(0, -1);
+
+	// open the variable editor
+	await page.click('[data-name="variables"]');
+	// await clearCodeMirror(page, variablesSelector);
+
+	// set the value on the CodeMirror editor
+	const variablesSelector = '.graphiql-editor-tool[aria-label="Variables"]:not(.hidden) .cm-s-graphiql';
+	const variableEditor = await page.locator(variablesSelector);
+	const variableEditorInstance = variableEditor.CodeMirror;
+	await variableEditorInstance.setValue(trimmedVariableString);
 }
 
 /**
@@ -84,4 +109,60 @@ export async function clearCodeMirror(page, selector) {
   const selectAllCommand = process.platform === 'darwin' ? 'Meta+A' : 'Control+A';
   await page.keyboard.press(selectAllCommand); // Select all text
   await page.keyboard.press('Backspace'); // Clear the selection
+}
+export async function visitPublicFacingPage(page) {
+	await page.goto(wpHomeUrl);
+}
+
+export async function visitAdminFacingPage(page) {
+	await page.goto(wpAdminUrl);
+}
+
+export async function visitPluginsPage(page) {
+	await page.goto(`${wpAdminUrl}/plugins.php`);
+}
+
+export async function openDrawer(page) {
+	const isDrawerVisible = await page.locator('.graphiql-container').isVisible();
+	if (!isDrawerVisible) {
+		await page.waitForSelector('.EditorDrawerButton', { state: 'visible' });
+		await clickDrawerButton(page);
+		await page.waitForSelector('.graphiql-container', { state: 'visible' });
+	}
+}
+
+export async function closeDrawer(page) {
+	const isDrawerVisible = await page.locator('.graphiql-container').isVisible();
+
+	if (isDrawerVisible) {
+		const overlay = await page.locator('[vaul-overlay]');
+		if (overlay) {
+			await overlay.click();
+		}
+		await expect(page.locator('.graphiql-container')).toBeHidden();
+		await page.waitForSelector('.EditorDrawerButton', { state: 'visible' });
+		await clickDrawerCloseButton(page);
+		await page.waitForSelector('.graphiql-container', { state: 'hidden' });
+	}
+}
+
+export async function clickDrawerButton(page) {
+	await page.click('.EditorDrawerButton');
+}
+
+export async function clickDrawerCloseButton(page) {
+	await page.click('.EditorDrawerCloseButton');
+}
+
+export async function executeQuery(page) {
+	await page.click('.graphiql-execute-button');
+}
+
+async function selectAndClearTextUsingKeyboard(page, selector) {
+	await page.click(selector); // Focus the element
+
+	// Determine the operating system to use the correct "Select All" shortcut
+	const selectAllCommand = process.platform === 'darwin' ? 'Meta+A' : 'Control+A';
+	await page.keyboard.press(selectAllCommand); // Select all text using OS-specific shortcut
+	await page.keyboard.press('Backspace'); // Clear selected text
 }
