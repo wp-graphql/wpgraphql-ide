@@ -67,8 +67,8 @@ function is_dedicated_ide_page(): bool {
     }
 
     $dedicated_ide_screens = [
-        'toplevel_page_graphiql-ide',
-        'graphql_page_graphql-ide',
+        'toplevel_page_graphiql-ide', // old - GraphiQL IDE
+        'graphql_page_graphql-ide',   // new - GraphQL IDE
     ];
 
     return in_array( $screen->id, $dedicated_ide_screens, true );
