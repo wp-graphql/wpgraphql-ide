@@ -50,14 +50,28 @@ function user_lacks_capability(): bool {
     return ! current_user_can( $capability_required );
 }
 
+/**
+ * Checks if the current page is intended for the dedicated WPGraphQL IDE (non-drawer).
+ * 
+ * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
+ */
 function is_dedicated_ide_page(): bool {
-    $screen = get_current_screen();
-
-    if ( 'toplevel_page_graphiql-ide' === $screen->id || 'toplevel_page_graphql-ide' === $screen->id ) {
-        return true;
+    if ( ! function_exists( 'get_current_screen' ) ) {
+        _doing_it_wrong( __FUNCTION__, 'Function should only be called within admin pages context.', '1.0.1' );
+        return false;
     }
 
-    return false;
+    $screen = get_current_screen();
+    if ( ! $screen ) {
+        return false;
+    }
+
+    $dedicated_ide_screens = [
+        'toplevel_page_graphiql-ide',
+        'graphql_page_graphql-ide',
+    ];
+
+    return in_array( $screen->id, $dedicated_ide_screens, true );
 }
 
 /**
@@ -89,6 +103,45 @@ function register_wpadminbar_menu(): void {
     $wp_admin_bar->add_node( $args );
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menu', 999 );
+
+/**
+ * Registers a submenu page for the dedicated GraphQL IDE.
+ *
+ * This function checks if the current user has the necessary capabilities
+ * to access the GraphQL IDE. If the user has the required capabilities,
+ * it adds a submenu page under a specified parent menu. The submenu page
+ * is intended to provide access to a dedicated GraphQL IDE within the WordPress
+ * admin area.
+ *
+ * @see add_submenu_page() For more information on adding submenu pages.
+ * @link https://developer.wordpress.org/reference/functions/add_submenu_page/
+ *
+ * @return void
+ */
+function register_dedicated_ide_menu(): void {
+    if ( user_lacks_capability() ) {
+        return;
+    }
+
+    add_submenu_page(
+        'graphiql-ide',
+        __( 'GraphQL IDE', 'wp-graphql' ),
+        __( 'GraphQL IDE', 'wp-graphql' ),
+        'manage_options',
+        'graphql-ide',
+        __NAMESPACE__ . '\\render_dedicated_ide_page'
+    );
+}
+add_action( 'admin_menu', __NAMESPACE__ . '\\register_dedicated_ide_menu' );
+
+/**
+ * Renders the container for the dedicated IDE page for the React app to be mounted to.
+ *
+ * @return void
+ */
+function render_dedicated_ide_page(): void {
+    echo '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '">IDE GOES HERE</div>';
+}
 
 /**
  * Enqueues custom CSS to set the "GraphQL IDE" menu item icon in the WordPress Admin Bar.
@@ -128,10 +181,6 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_ic
  * @return void
  */
 function enqueue_react_app_with_styles(): void {
-    if ( is_dedicated_ide_page() ) {
-        return;
-    }
-
     if ( ! class_exists( '\WPGraphQL\Router' ) ) {
         return;
     }
