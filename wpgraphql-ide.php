@@ -50,6 +50,16 @@ function user_lacks_capability(): bool {
     return ! current_user_can( $capability_required );
 }
 
+function is_dedicated_ide_page(): bool {
+    $screen = get_current_screen();
+
+    if ( 'toplevel_page_graphiql-ide' === $screen->id || 'toplevel_page_graphql-ide' === $screen->id ) {
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * Registers a custom menu item in the WordPress Admin Bar.
  *
@@ -60,6 +70,10 @@ function user_lacks_capability(): bool {
  * @return void
  */
 function register_wpadminbar_menu(): void {
+    if ( is_dedicated_ide_page() ) {
+        return;
+    }
+
     if ( user_lacks_capability() ) {
         return;
     }
@@ -82,6 +96,10 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menu', 999 
  * @return void
  */
 function enqueue_graphql_ide_menu_icon_css(): void {
+    if ( is_dedicated_ide_page() ) {
+        return;
+    }
+
     if ( user_lacks_capability() ) {
         return;
     }
@@ -110,9 +128,14 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_ic
  * @return void
  */
 function enqueue_react_app_with_styles(): void {
+    if ( is_dedicated_ide_page() ) {
+        return;
+    }
+
     if ( ! class_exists( '\WPGraphQL\Router' ) ) {
         return;
     }
+
     if ( user_lacks_capability() ) {
         return;
     }
