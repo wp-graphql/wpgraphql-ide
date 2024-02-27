@@ -8,7 +8,7 @@ import {
 	visitPublicFacingPage
 } from '../utils.js';
 
-const { test, expect, describe } = require( '@wordpress/e2e-test-utils-playwright' );
+const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 
 const selectors = {
   graphiqlContainer: '.graphiql-container',
@@ -135,7 +135,7 @@ test.skip('expect error if invalid json is submitted for variables', async ({ pa
 
 test.skip('expect error if invalid query is submitted', async ({ page }) => { });
 
-describe('query params', () => {
+test.describe('query params', () => {
 
 	test.skip('loads with fetcher in authenticated state if query param ?wpgql_is_authenticated=true', async ({ page }) => {});
 
@@ -147,7 +147,6 @@ describe('query params', () => {
 
 
 	test.skip('loads with drawer open if ?wpgql_query exists as a query param', async ({ page }) => {});
-	test.skip('query editor is populated with the query passed in from the ?wpgql_query query param', async ({ page }) => {});
 	test.skip('query editor is populated with the query passed in from the ?wpgql_query query param', async ({ page }) => {});
 
 	test.skip('loads with drawer open if ?wpgql_query_hash exists as a query param', async ({ page }) => {});
