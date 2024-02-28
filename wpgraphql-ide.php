@@ -59,7 +59,6 @@ function user_lacks_capability(): bool {
  */
 function is_dedicated_ide_page(): bool {
 	if ( ! function_exists( 'get_current_screen' ) ) {
-		_doing_it_wrong( __FUNCTION__, 'Function should only be called within admin pages context.', '1.0.1' );
 		return false;
 	}
 
@@ -136,7 +135,7 @@ add_action( 'admin_menu', __NAMESPACE__ . '\\register_dedicated_ide_menu' );
  * Renders the container for the dedicated IDE page for the React app to be mounted to.
  */
 function render_dedicated_ide_page(): void {
-	echo '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">IDE GOES HERE</div>';
+	echo '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"></div>';
 }
 
 /**
@@ -173,6 +172,7 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_ic
  * Enqueues the React application script and associated styles.
  */
 function enqueue_react_app_with_styles(): void {
+
 	if ( ! class_exists( '\WPGraphQL\Router' ) ) {
 		return;
 	}
@@ -204,10 +204,11 @@ function enqueue_react_app_with_styles(): void {
 		'wpgraphql-ide-app',
 		'WPGRAPHQL_IDE_DATA',
 		[
-			'nonce'           => wp_create_nonce( 'wp_rest' ),
-			'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
-			'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-			'context'         => $app_context,
+			'nonce'              => wp_create_nonce( 'wp_rest' ),
+			'graphqlEndpoint'    => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
+			'rootElementId'      => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
+			'context'            => $app_context,
+			'isDedicatedIdePage' => is_dedicated_ide_page(),
 		]
 	);
 
