@@ -52,7 +52,7 @@ function user_lacks_capability(): bool {
 
 /**
  * Checks if the current page is intended for the dedicated WPGraphQL IDE (non-drawer).
- * 
+ *
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
 function is_dedicated_ide_page(): bool {
@@ -215,7 +215,8 @@ function enqueue_react_app_with_styles(): void {
             'nonce'           => wp_create_nonce( 'wp_rest' ),
             'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
             'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-            'context'         => $app_context, 
+            'context'         => $app_context,
+	        'screenId'        => get_current_screen()->id ?? null,
         ]
     );
 
@@ -252,7 +253,7 @@ function get_plugin_header( $key = '' ): ?string {
 
 /**
  * Retrieves app context.
- * 
+ *
  * @return array The possibly filtered app context array.
  */
 function get_app_context() {

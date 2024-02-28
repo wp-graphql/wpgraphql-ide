@@ -5,7 +5,7 @@ import {
 	typeQuery,
 	typeVariables,
 	visitAdminFacingPage,
-	visitPublicFacingPage
+	visitPublicFacingPage, wpAdminUrl
 } from '../utils.js';
 
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
@@ -145,9 +145,17 @@ test.describe('query params', () => {
 
 	test.skip('loads with variables pane populated if ?wpgql_variables is not set or does not have a valid plugin name set', async ({ page }) => {});
 
+	test('loads with drawer open if ?wpgql_query exists as a query param', async ({ page }) => {
+		await page.goto(`${wpAdminUrl}/index.php?wpgql_query=query TestQuery { posts { nodes { id } } }`, { waitUntil: "networkidle"});
+		await expect(page.locator('.graphiql-container')).toBeVisible();
+	});
 
-	test.skip('loads with drawer open if ?wpgql_query exists as a query param', async ({ page }) => {});
-	test.skip('query editor is populated with the query passed in from the ?wpgql_query query param', async ({ page }) => {});
+
+	test('query editor is populated with the query passed in from the ?wpgql_query query param', async ({ page }) => {
+		await page.goto(`${wpAdminUrl}/index.php?wpgql_query=query TestQuery { posts { nodes { id } } }`, { waitUntil: "networkidle"});
+		const queryInput = await page.locator( selectors.queryInput);
+		await expect(queryInput).toContainText( "TestQuery" );
+	});
 
 	test.skip('loads with drawer open if ?wpgql_query_hash exists as a query param', async ({ page }) => {});
 	test.skip('query editor is populated with the (unhashed) query passed in from the ?wpgql_query_hash query param', async ({ page }) => {});
