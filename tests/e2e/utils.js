@@ -27,8 +27,8 @@ const selectors = {
   submitButton: '#wp-submit',
 };
 
-const wpHomeUrl = 'http://localhost:8888';
-const wpAdminUrl = 'http://localhost:8888/wp-admin';
+export const wpHomeUrl = 'http://localhost:8888';
+export const wpAdminUrl = 'http://localhost:8888/wp-admin';
 
 /**
  * Log in to the WordPress admin dashboard.
@@ -111,15 +111,15 @@ export async function clearCodeMirror(page, selector) {
   await page.keyboard.press('Backspace'); // Clear the selection
 }
 export async function visitPublicFacingPage(page) {
-	await page.goto(wpHomeUrl);
+	await page.goto(wpHomeUrl, { waitUntil: "networkidle"});
 }
 
 export async function visitAdminFacingPage(page) {
-	await page.goto(wpAdminUrl);
+	await page.goto(wpAdminUrl, { waitUntil: "networkidle"});
 }
 
 export async function visitPluginsPage(page) {
-	await page.goto(`${wpAdminUrl}/plugins.php`);
+	await page.goto(`${wpAdminUrl}/plugins.php`, { waitUntil: "networkidle"});
 }
 
 export async function openDrawer(page) {

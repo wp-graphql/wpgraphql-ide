@@ -57,7 +57,6 @@ function user_lacks_capability(): bool {
  */
 function is_dedicated_ide_page(): bool {
     if ( ! function_exists( 'get_current_screen' ) ) {
-        _doing_it_wrong( __FUNCTION__, 'Function should only be called within admin pages context.', '1.0.1' );
         return false;
     }
 
@@ -140,7 +139,7 @@ add_action( 'admin_menu', __NAMESPACE__ . '\\register_dedicated_ide_menu' );
  * @return void
  */
 function render_dedicated_ide_page(): void {
-    echo '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '">IDE GOES HERE</div>';
+    echo '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '"></div>';
 }
 
 /**
@@ -209,6 +208,7 @@ function enqueue_react_app_with_styles(): void {
             'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
             'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
             'context'         => $app_context,
+	        'isDedicatedIdePage'        => is_dedicated_ide_page(),
         ]
     );
 
