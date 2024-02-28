@@ -1,9 +1,8 @@
 import { useState, useEffect } from '@wordpress/element';
+import { doAction } from '@wordpress/hooks';
+
 import { EditorDrawer } from './components/EditorDrawer';
 import { Editor } from './components/Editor';
-
-// Assuming wp.hooks is globally available through WordPress's script enqueueing mechanism.
-const { doAction } = wp.hooks;
 
 /**
  * The main application component.
