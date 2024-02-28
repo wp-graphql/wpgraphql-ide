@@ -185,14 +185,14 @@ function enqueue_react_app_with_styles(): void {
     }
 
 	// Don't enqueue new styles/scripts on the legacy IDE page
-	if ( function_exists( 'get_current_screen' ) ) {
-		$screen = get_current_screen();
+    if ( function_exists( 'get_current_screen' ) ) {
+        $screen = get_current_screen();
 		if ( 'toplevel_page_graphiql-ide' === $screen->id ) {
 			return;
 		}
 	}
 
-    if ( user_lacks_capability() ) {
+	if ( user_lacks_capability() ) {
         return;
     }
 
