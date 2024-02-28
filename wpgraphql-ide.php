@@ -215,7 +215,7 @@ function enqueue_react_app_with_styles(): void {
             'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
             'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
             'context'         => $app_context,
-	        'screenId'        => function_exists( 'get_current_screen' ) ? get_current_screen()->id : null,
+	        'isDedicatedIdePage'        => is_dedicated_ide_page(),
         ]
     );
 
