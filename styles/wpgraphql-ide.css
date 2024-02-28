@@ -101,7 +101,8 @@ body:not(.graphql_page_graphql-ide) {
   top: var(--wp-admin--admin-bar--height) !important;
 }
 
-.graphiql-dialog {
+.graphiql-dialog,
+.graphiql-dialog-overlay {
   z-index: 100002; /* #wpadminar's z-index of 99999 + 3 */
 }
 
