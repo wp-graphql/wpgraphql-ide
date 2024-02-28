@@ -58,21 +58,21 @@ function user_lacks_capability(): bool {
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
 function is_dedicated_ide_page(): bool {
-    if ( ! function_exists( 'get_current_screen' ) ) {
-        return false;
-    }
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return false;
+	}
 
-    $screen = get_current_screen();
-    if ( ! $screen ) {
-        return false;
-    }
+	$screen = get_current_screen();
+	if ( ! $screen ) {
+		return false;
+	}
 
-    $dedicated_ide_screens = [
-        'toplevel_page_graphiql-ide', // old - GraphiQL IDE
-        'graphql_page_graphql-ide',   // new - GraphQL IDE
-    ];
+	$dedicated_ide_screens = [
+		'toplevel_page_graphiql-ide', // old - GraphiQL IDE
+		'graphql_page_graphql-ide',   // new - GraphQL IDE
+	];
 
-    return in_array( $screen->id, $dedicated_ide_screens, true );
+	return in_array( $screen->id, $dedicated_ide_screens, true );
 }
 
 /**
@@ -135,7 +135,7 @@ add_action( 'admin_menu', __NAMESPACE__ . '\\register_dedicated_ide_menu' );
  * Renders the container for the dedicated IDE page for the React app to be mounted to.
  */
 function render_dedicated_ide_page(): void {
-    echo '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '"></div>';
+	echo '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"></div>';
 }
 
 /**
@@ -173,53 +173,52 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_ic
  */
 function enqueue_react_app_with_styles(): void {
 
-    if ( ! class_exists( '\WPGraphQL\Router' ) ) {
-        return;
-    }
+	if ( ! class_exists( '\WPGraphQL\Router' ) ) {
+		return;
+	}
 
-    if ( user_lacks_capability() ) {
-        return;
-    }
+	if ( user_lacks_capability() ) {
+		return;
+	}
 
-    $app_dependencies = [
-        'wp-element',
-        'wp-components',
-        'wp-api-fetch',
-        'wp-i18n',
-    ];
+	$app_dependencies = [
+		'wp-element',
+		'wp-components',
+		'wp-api-fetch',
+		'wp-i18n',
+	];
 
-    $app_context = get_app_context();
+	$app_context = get_app_context();
 
-    $version = get_plugin_header( 'Version' );
+	$version = get_plugin_header( 'Version' );
 
-    wp_enqueue_script(
-        'wpgraphql-ide-app',
-        plugins_url( 'build/index.js', __FILE__ ),
-        $app_dependencies,
-        $version,
-        true
-    );
+	wp_enqueue_script(
+		'wpgraphql-ide-app',
+		plugins_url( 'build/index.js', __FILE__ ),
+		$app_dependencies,
+		$version,
+		true
+	);
 
-    wp_localize_script(
-        'wpgraphql-ide-app',
-        'WPGRAPHQL_IDE_DATA',
-        [
-            'nonce'              => wp_create_nonce( 'wp_rest' ),
-            'graphqlEndpoint'    => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
-            'rootElementId'      => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-            'context'            => $app_context,
-	          'isDedicatedIdePage' => is_dedicated_ide_page(),
-        ]
-    );
+	wp_localize_script(
+		'wpgraphql-ide-app',
+		'WPGRAPHQL_IDE_DATA',
+		[
+			'nonce'              => wp_create_nonce( 'wp_rest' ),
+			'graphqlEndpoint'    => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
+			'rootElementId'      => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
+			'context'            => $app_context,
+			'isDedicatedIdePage' => is_dedicated_ide_page(),
+		]
+	);
 
-    wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $version );
-    // Avoid running custom styles through a build process for an improved developer experience.
-    wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $version );
+	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $version );
+	// Avoid running custom styles through a build process for an improved developer experience.
+	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $version );
 
-    // Extensions looking to extend GraphiQL can hook in here,
-    // after the window object is established, but before the App renders
-    do_action( 'wpgraphqlide_enqueue_script', $app_context );
-
+	// Extensions looking to extend GraphiQL can hook in here,
+	// after the window object is established, but before the App renders
+	do_action( 'wpgraphqlide_enqueue_script', $app_context );
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
