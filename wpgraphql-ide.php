@@ -57,7 +57,6 @@ function user_lacks_capability(): bool {
  */
 function is_dedicated_ide_page(): bool {
     if ( ! function_exists( 'get_current_screen' ) ) {
-        _doing_it_wrong( __FUNCTION__, 'Function should only be called within admin pages context.', '1.0.1' );
         return false;
     }
 
@@ -216,7 +215,7 @@ function enqueue_react_app_with_styles(): void {
             'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
             'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
             'context'         => $app_context,
-	        'screenId'        => get_current_screen()->id ?? null,
+	        'screenId'        => function_exists( 'get_current_screen' ) ? get_current_screen()->id : null,
         ]
     );
 
