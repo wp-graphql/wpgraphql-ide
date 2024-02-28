@@ -4,7 +4,7 @@ import {useDispatch, useSelect} from "@wordpress/data";
 import { EditorDrawer } from './components/EditorDrawer';
 import { Editor } from './components/Editor';
 import { parse, print } from 'graphql'
-const { screenId } = window.WPGRAPHQL_IDE_DATA;
+const { isDedicatedIdePage } = window.WPGRAPHQL_IDE_DATA;
 
 const url = new URL(window.location.href);
 const params = url.searchParams;
@@ -18,7 +18,7 @@ const setInitialState = () => {
 		setInitialStateLoaded
 	} = useDispatch('wpgraphql-ide');
 
-	if ( 'graphql_page_graphql-ide' === screenId ) {
+	if ( isDedicatedIdePage ) {
 		setShouldRenderStandalone(true)
 	}
 
