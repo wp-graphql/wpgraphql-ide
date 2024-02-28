@@ -139,7 +139,7 @@ add_action( 'admin_menu', __NAMESPACE__ . '\\register_dedicated_ide_menu' );
  * @return void
  */
 function render_dedicated_ide_page(): void {
-    echo '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '">IDE GOES HERE</div>';
+    echo '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '"></div>';
 }
 
 /**

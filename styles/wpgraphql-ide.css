@@ -96,8 +96,8 @@
   color: inherit;
 }
 
-/* Fix layout shift from drawer opening */
-body {
+/* Fix layout shift from drawer opening everywhere except the dedicated IDE page */
+body:not(.graphql_page_graphql-ide) {
   top: var(--wp-admin--admin-bar--height) !important;
 }
 
@@ -118,4 +118,27 @@ body {
 /* Align WPGraphQL logo with existing buttons */
 .wpgraphql-logo-link {
   display: flex;
+}
+
+/* Dedicated IDE page for new editor */
+
+/* Ful-width editor on dedicated page */
+body.graphql_page_graphql-ide #wpcontent {
+  padding-left: 0;
+}
+/* Ful-height editor on dedicated page */
+body.graphql_page_graphql-ide #wpgraphql-ide-root {
+  height: calc(100vh - var(--wp-admin--admin-bar--height));
+}
+
+body.graphql_page_graphql-ide .AppRoot {
+  height: 100%;
+}
+
+body.graphql_page_graphql-ide #wpbody-content {
+  padding: 0;
+}
+
+body.graphql_page_graphql-ide #wpfooter {
+  display: none
 }
