@@ -52,7 +52,7 @@ function user_lacks_capability(): bool {
 
 /**
  * Checks if the current page is intended for the dedicated WPGraphQL IDE (non-drawer).
- * 
+ *
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
 function is_dedicated_ide_page(): bool {
@@ -189,22 +189,15 @@ function enqueue_react_app_with_styles(): void {
         return;
     }
 
-    $app_dependencies = [
-        'wp-element',
-        'wp-components',
-        'wp-api-fetch',
-        'wp-i18n',
-    ];
+	$asset_file = include( plugin_dir_path( __FILE__ ) . 'build/index.asset.php');
 
     $app_context = get_app_context();
-
-    $version = get_plugin_header( 'Version' );
 
     wp_enqueue_script(
         'wpgraphql-ide-app',
         plugins_url( 'build/index.js', __FILE__ ),
-        $app_dependencies,
-        $version,
+	    $asset_file['dependencies'],
+	    $asset_file['version'],
         true
     );
 
@@ -215,13 +208,13 @@ function enqueue_react_app_with_styles(): void {
             'nonce'           => wp_create_nonce( 'wp_rest' ),
             'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
             'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-            'context'         => $app_context, 
+            'context'         => $app_context,
         ]
     );
 
-    wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $version );
+    wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $asset_file['version'] );
     // Avoid running custom styles through a build process for an improved developer experience.
-    wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $version );
+    wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
 
     // Extensions looking to extend GraphiQL can hook in here,
     // after the window object is established, but before the App renders
@@ -252,7 +245,7 @@ function get_plugin_header( $key = '' ): ?string {
 
 /**
  * Retrieves app context.
- * 
+ *
  * @return array The possibly filtered app context array.
  */
 function get_app_context() {
