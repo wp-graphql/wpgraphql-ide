@@ -1,79 +1,79 @@
-import { createReduxStore } from "@wordpress/data"
+import { createReduxStore } from '@wordpress/data';
 
 const initialState = {
 	isDrawerOpen: false,
 	shouldRenderStandalone: false,
 	isInitialStateLoaded: false,
-}
+};
 
 const reducer = ( state = initialState, action ) => {
-	switch (action.type) {
+	switch ( action.type ) {
 		case 'SET_RENDER_STANDALONE':
 			return {
 				...state,
-				shouldRenderStandalone: action.shouldRenderStandalone
-			}
+				shouldRenderStandalone: action.shouldRenderStandalone,
+			};
 		case 'SET_QUERY':
 			return {
 				...state,
-				query: action.query
-			}
+				query: action.query,
+			};
 		case 'SET_DRAWER_OPEN':
 			return {
 				...state,
-				isDrawerOpen: action.isDrawerOpen
-			}
+				isDrawerOpen: action.isDrawerOpen,
+			};
 		case 'SET_INITIAL_STATE_LOADED':
 			return {
 				...state,
-				isInitialStateLoaded: true
-			}
+				isInitialStateLoaded: true,
+			};
 	}
 	return state;
 };
 const actions = {
-	setQuery: (query) => {
+	setQuery: ( query ) => {
 		return {
 			type: 'SET_QUERY',
-			query
-		}
+			query,
+		};
 	},
-	setDrawerOpen: (isDrawerOpen) => {
+	setDrawerOpen: ( isDrawerOpen ) => {
 		return {
 			type: 'SET_DRAWER_OPEN',
-			isDrawerOpen
-		}
+			isDrawerOpen,
+		};
 	},
-	setShouldRenderStandalone: (shouldRenderStandalone) => {
+	setShouldRenderStandalone: ( shouldRenderStandalone ) => {
 		return {
 			type: 'SET_RENDER_STANDALONE',
-			shouldRenderStandalone
-		}
+			shouldRenderStandalone,
+		};
 	},
 	setInitialStateLoaded: () => {
 		return {
-			type: 'SET_INITIAL_STATE_LOADED'
-		}
-	}
+			type: 'SET_INITIAL_STATE_LOADED',
+		};
+	},
 };
 
 const selectors = {
-	getQuery: (state) => {
+	getQuery: ( state ) => {
 		return state.query;
 	},
-	isDrawerOpen: (state) => {
+	isDrawerOpen: ( state ) => {
 		return state.isDrawerOpen;
 	},
-	shouldRenderStandalone: (state) => {
+	shouldRenderStandalone: ( state ) => {
 		return state.shouldRenderStandalone;
 	},
-	isInitialStateLoaded: (state) => {
-		return state.isInitialStateLoaded
-	}
+	isInitialStateLoaded: ( state ) => {
+		return state.isInitialStateLoaded;
+	},
 };
 
 export const store = createReduxStore( 'wpgraphql-ide', {
 	reducer,
 	selectors,
-	actions
-})
+	actions,
+} );

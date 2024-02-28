@@ -3,7 +3,7 @@ import React from 'react';
 import { GraphiQL } from 'graphiql';
 
 import 'graphiql/graphiql.min.css';
-import {useDispatch, useSelect} from "@wordpress/data";
+import { useDispatch, useSelect } from '@wordpress/data';
 
 const fetcher = async ( graphQLParams ) => {
 	const { graphqlEndpoint } = WPGRAPHQL_IDE_DATA;
@@ -21,33 +21,35 @@ const fetcher = async ( graphQLParams ) => {
 };
 
 export function Editor() {
-
-	const query = useSelect( (select) => {
+	const query = useSelect( ( select ) => {
 		return select( 'wpgraphql-ide' ).getQuery();
-	});
+	} );
 
-	const shouldRenderStandalone = useSelect( (select) => {
+	const shouldRenderStandalone = useSelect( ( select ) => {
 		return select( 'wpgraphql-ide' ).shouldRenderStandalone();
-	});
+	} );
 
 	console.log( {
 		query,
-		shouldRenderStandalone
-	})
+		shouldRenderStandalone,
+	} );
 
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
 
 	return (
-		<GraphiQL
-			query={query}
-			fetcher={ fetcher }>
+		<GraphiQL query={ query } fetcher={ fetcher }>
 			<GraphiQL.Logo>
-				{ ! shouldRenderStandalone ? <button
-					className="button EditorDrawerCloseButton"
-					onClick={ () => setDrawerOpen( false ) }
-				>
-					X<span className="screen-reader-text">close drawer</span>
-				</button> : <span /> }
+				{ ! shouldRenderStandalone ? (
+					<button
+						className="button EditorDrawerCloseButton"
+						onClick={ () => setDrawerOpen( false ) }
+					>
+						X
+						<span className="screen-reader-text">close drawer</span>
+					</button>
+				) : (
+					<span />
+				) }
 			</GraphiQL.Logo>
 		</GraphiQL>
 	);

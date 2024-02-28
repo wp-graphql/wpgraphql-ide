@@ -3,7 +3,7 @@ import { createRoot } from '@wordpress/element';
 import { createHooks } from '@wordpress/hooks';
 import { register } from '@wordpress/data';
 import { App } from './App';
-import { store } from './store'
+import { store } from './store';
 
 /**
  * Get the ID of the HTML element where the React app will be placed.
