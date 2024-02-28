@@ -8,6 +8,8 @@
  * License:           GPLv3 or later
  * Text Domain:       wpgraphql-ide
  * Version:           1.0.1
+ * Requires PHP:      7.4
+ * Tested up to:      6.4.3
  *
  * @package WPGraphQLIDE
  */
@@ -15,7 +17,7 @@
 namespace WPGraphQLIDE;
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
@@ -26,7 +28,7 @@ define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
  * @return string The SVG logo markup.
  */
 function graphql_logo_svg(): string {
-    return <<<XML
+	return <<<XML
     <svg xmlns="http://www.w3.org/2000/svg" fill="color(display-p3 .8824 0 .5961)" viewBox="0 0 100 100">
         <path fill-rule="evenodd" d="m50 6.903 37.323 21.549v43.096L50 93.097 12.677 71.548V28.451L50 6.903ZM16.865 30.87v31.656L44.28 15.041 16.864 30.87ZM50 13.51 18.398 68.246h63.205L50 13.509Zm27.415 58.924h-54.83L50 88.261l27.415-15.828Zm5.72-9.908L55.72 15.041 83.136 30.87v31.656Z" clip-rule="evenodd"/>
         <circle cx="50" cy="9.321" r="8.82"/>
@@ -45,9 +47,9 @@ function graphql_logo_svg(): string {
  * @return bool Whether the user lacks the required capability.
  */
 function user_lacks_capability(): bool {
-    $capability_required = apply_filters( 'wpgraphqlide_capability_required', 'manage_options' );
+	$capability_required = apply_filters( 'wpgraphqlide_capability_required', 'manage_options' );
 
-    return ! current_user_can( $capability_required );
+	return ! current_user_can( $capability_required );
 }
 
 /**
@@ -79,27 +81,25 @@ function is_dedicated_ide_page(): bool {
  * This function adds the mount point for the plugin's React app.
  *
  * @global WP_Admin_Bar $wp_admin_bar The WordPress Admin Bar instance.
- *
- * @return void
  */
 function register_wpadminbar_menu(): void {
-    if ( is_dedicated_ide_page() ) {
-        return;
-    }
+	if ( is_dedicated_ide_page() ) {
+		return;
+	}
 
-    if ( user_lacks_capability() ) {
-        return;
-    }
+	if ( user_lacks_capability() ) {
+		return;
+	}
 
-    global $wp_admin_bar;
+	global $wp_admin_bar;
 
-    $args = [
-        'id'    => 'wpgraphql-ide',
-        'title' => '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '"></div>',
-        'href'  => '#',
-    ];
+	$args = [
+		'id'    => 'wpgraphql-ide',
+		'title' => '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '"></div>',
+		'href'  => '#',
+	];
 
-    $wp_admin_bar->add_node( $args );
+	$wp_admin_bar->add_node( $args );
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menu', 999 );
 
@@ -114,29 +114,25 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menu', 999 
  *
  * @see add_submenu_page() For more information on adding submenu pages.
  * @link https://developer.wordpress.org/reference/functions/add_submenu_page/
- *
- * @return void
  */
 function register_dedicated_ide_menu(): void {
-    if ( user_lacks_capability() ) {
-        return;
-    }
+	if ( user_lacks_capability() ) {
+		return;
+	}
 
-    add_submenu_page(
-        'graphiql-ide',
-        __( 'GraphQL IDE', 'wp-graphql' ),
-        __( 'GraphQL IDE', 'wp-graphql' ),
-        'manage_options',
-        'graphql-ide',
-        __NAMESPACE__ . '\\render_dedicated_ide_page'
-    );
+	add_submenu_page(
+		'graphiql-ide',
+		__( 'GraphQL IDE', 'wp-graphql' ),
+		__( 'GraphQL IDE', 'wp-graphql' ),
+		'manage_options',
+		'graphql-ide',
+		__NAMESPACE__ . '\\render_dedicated_ide_page'
+	);
 }
 add_action( 'admin_menu', __NAMESPACE__ . '\\register_dedicated_ide_menu' );
 
 /**
  * Renders the container for the dedicated IDE page for the React app to be mounted to.
- *
- * @return void
  */
 function render_dedicated_ide_page(): void {
     echo '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '"></div>';
@@ -144,19 +140,17 @@ function render_dedicated_ide_page(): void {
 
 /**
  * Enqueues custom CSS to set the "GraphQL IDE" menu item icon in the WordPress Admin Bar.
- *
- * @return void
  */
 function enqueue_graphql_ide_menu_icon_css(): void {
-    if ( is_dedicated_ide_page() ) {
-        return;
-    }
+	if ( is_dedicated_ide_page() ) {
+		return;
+	}
 
-    if ( user_lacks_capability() ) {
-        return;
-    }
+	if ( user_lacks_capability() ) {
+		return;
+	}
 
-    $custom_css = '
+	$custom_css = '
         #wp-admin-bar-wpgraphql-ide .ab-icon::before {
             background-image: url("data:image/svg+xml;base64,' . base64_encode( graphql_logo_svg() ) . '");
             background-size: 100%;
@@ -169,17 +163,16 @@ function enqueue_graphql_ide_menu_icon_css(): void {
         }
     ';
 
-    wp_add_inline_style( 'admin-bar', $custom_css );
+	wp_add_inline_style( 'admin-bar', $custom_css );
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_icon_css' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_icon_css' );
 
 /**
  * Enqueues the React application script and associated styles.
- *
- * @return void
  */
 function enqueue_react_app_with_styles(): void {
+
     if ( ! class_exists( '\WPGraphQL\Router' ) ) {
         return;
     }
@@ -211,11 +204,11 @@ function enqueue_react_app_with_styles(): void {
         'wpgraphql-ide-app',
         'WPGRAPHQL_IDE_DATA',
         [
-            'nonce'           => wp_create_nonce( 'wp_rest' ),
-            'graphqlEndpoint' => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
-            'rootElementId'   => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-            'context'         => $app_context,
-	        'isDedicatedIdePage'        => is_dedicated_ide_page(),
+            'nonce'              => wp_create_nonce( 'wp_rest' ),
+            'graphqlEndpoint'    => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
+            'rootElementId'      => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
+            'context'            => $app_context,
+	          'isDedicatedIdePage' => is_dedicated_ide_page(),
         ]
     );
 
@@ -226,6 +219,7 @@ function enqueue_react_app_with_styles(): void {
     // Extensions looking to extend GraphiQL can hook in here,
     // after the window object is established, but before the App renders
     do_action( 'wpgraphqlide_enqueue_script', $app_context );
+
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
@@ -233,34 +227,35 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styl
 /**
  * Retrieves the specific header of this plugin.
  *
- * @param string The plugin data key.
+ * @param string $key The plugin data key.
  * @return string|null The version number of the plugin. Returns an empty string if the version is not found.
  */
-function get_plugin_header( $key = '' ): ?string {
-    if ( ! function_exists( 'get_plugin_data' ) ) {
-        require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-    }
+function get_plugin_header( string $key = '' ): ?string {
+	if ( ! function_exists( 'get_plugin_data' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
 
-    if ( empty( $key ) ) {
-        return null;
-    }
+	if ( empty( $key ) ) {
+		return null;
+	}
 
-    $plugin_data = get_plugin_data( __FILE__ );
+	$plugin_data = get_plugin_data( __FILE__ );
 
-    return $plugin_data[ $key ] ?? null;
+	return $plugin_data[ $key ] ?? null;
 }
 
 /**
  * Retrieves app context.
  *
- * @return array The possibly filtered app context array.
+ * @return array<mixed> The possibly filtered app context array.
  */
-function get_app_context() {
-    $context = apply_filters( 'wpgraphqlide_context', [
-        'pluginVersion'     => get_plugin_header( 'Version' ),
-        'pluginName'        => get_plugin_header( 'Name' ),
-        'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] )
-    ]);
-
-    return $context;
+function get_app_context(): array {
+	return apply_filters(
+		'wpgraphqlide_context',
+		[
+			'pluginVersion'     => get_plugin_header( 'Version' ),
+			'pluginName'        => get_plugin_header( 'Name' ),
+			'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] ),
+		]
+	);
 }
