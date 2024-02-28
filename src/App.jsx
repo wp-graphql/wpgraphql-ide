@@ -18,14 +18,7 @@ const setInitialState = () => {
 		setInitialStateLoaded
 	} = useDispatch('wpgraphql-ide');
 
-	console.log( {
-		WPGRAPHQL_IDE_DATA_YO: window?.WPGRAPHQL_IDE_DATA ?? null
-	})
-
 	if ( 'graphql_page_graphql-ide' === screenId ) {
-		console.log( {
-			setShouldRenderStandalone: true,
-		})
 		setShouldRenderStandalone(true)
 	}
 
