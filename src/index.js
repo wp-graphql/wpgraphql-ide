@@ -15,7 +15,7 @@ const registerPlugin = (name, config) => {
 // a 3rd party plugin
 registerPlugin( 'extensions', {
 	title: 'Extensions',
-	icon: () => <Icon icon={plugins} />,
+	icon: () => <Icon icon={plugins} style={{ fill: 'hsla(var(--color-neutral), var(--alpha-tertiary))' }} />,
 	content: () => <><h2>Extensions, yo!!</h2></>
 })
 
