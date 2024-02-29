@@ -63,7 +63,7 @@ function user_lacks_capability(): bool {
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
 function is_dedicated_ide_page(): bool {
-	return is_new_ide_page() || is_legacy_ide_page();
+	return is_ide_page() || is_legacy_ide_page();
 }
 
 /**
