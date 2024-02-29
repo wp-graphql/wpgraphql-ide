@@ -71,7 +71,7 @@ function is_dedicated_ide_page(): bool {
  *
  * @return bool True if the current page is the new WPGraphQL IDE page, false otherwise.
  */
-function is_new_ide_page(): bool {
+function is_ide_page(): bool {
 	if ( ! function_exists( 'get_current_screen' ) ) {
 		return false;
 	}
