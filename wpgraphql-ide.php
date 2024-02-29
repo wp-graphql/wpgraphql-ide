@@ -53,12 +53,25 @@ function user_lacks_capability(): bool {
 }
 
 /**
- * Checks if the current page is intended for the dedicated WPGraphQL IDE (non-drawer).
+ * Determines if the current admin page is a dedicated WPGraphQL IDE page.
+ *
+ * This function checks whether the current admin page is exclusively for either the new GraphQL IDE
+ * or the legacy GraphiQL IDE, distinguishing them from other admin pages where the IDE might be present
+ * in a drawer. It is designed to help in tailoring the admin interface or enqueuing specific scripts
+ * and styles on these dedicated IDE pages.
  *
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
 function is_dedicated_ide_page(): bool {
+	return is_ide_page() || is_legacy_ide_page();
+}
 
+/**
+ * Checks if the current admin page is the new WPGraphQL IDE page.
+ *
+ * @return bool True if the current page is the new WPGraphQL IDE page, false otherwise.
+ */
+function is_ide_page(): bool {
 	if ( ! function_exists( 'get_current_screen' ) ) {
 		return false;
 	}
@@ -68,12 +81,25 @@ function is_dedicated_ide_page(): bool {
 		return false;
 	}
 
-	$dedicated_ide_screens = [
-		'toplevel_page_graphiql-ide', // old - GraphiQL IDE
-		'graphql_page_graphql-ide',   // new - GraphQL IDE
-	];
+	return 'graphql_page_graphql-ide' === $screen->id;
+}
 
-	return in_array( $screen->id, $dedicated_ide_screens, true );
+/**
+ * Checks if the current admin page is the legacy GraphiQL IDE page.
+ *
+ * @return bool True if the current page is the legacy GraphiQL IDE page, false otherwise.
+ */
+function is_legacy_ide_page(): bool {
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return false;
+	}
+
+	$screen = get_current_screen();
+	if ( ! $screen ) {
+		return false;
+	}
+
+	return 'toplevel_page_graphiql-ide' === $screen->id;
 }
 
 /**
@@ -173,6 +199,9 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_ic
  * Enqueues the React application script and associated styles.
  */
 function enqueue_react_app_with_styles(): void {
+	if ( is_legacy_ide_page() ) {
+		return;
+	}
 
 	if ( ! class_exists( '\WPGraphQL\Router' ) ) {
 		return;
