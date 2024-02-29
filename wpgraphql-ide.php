@@ -58,6 +58,7 @@ function user_lacks_capability(): bool {
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
 function is_dedicated_ide_page(): bool {
+
 	if ( ! function_exists( 'get_current_screen' ) ) {
 		return false;
 	}
@@ -95,7 +96,7 @@ function register_wpadminbar_menu(): void {
 
 	$args = [
 		'id'    => 'wpgraphql-ide',
-		'title' => '<div id="' . WPGRAPHQL_IDE_ROOT_ELEMENT_ID . '"></div>',
+		'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"></div>',
 		'href'  => '#',
 	];
 
@@ -181,24 +182,25 @@ function enqueue_react_app_with_styles(): void {
 		return;
 	}
 
-	$app_dependencies = [
-		'wp-element',
-		'wp-components',
-		'wp-api-fetch',
-		'wp-i18n',
-	];
+	// Don't enqueue new styles/scripts on the legacy IDE page
+	if ( function_exists( 'get_current_screen' ) ) {
+		$screen = get_current_screen();
+		if ( 'toplevel_page_graphiql-ide' === $screen->id ) {
+			return;
+		}
+	}
 
-	$app_context = get_app_context();
-
-	$version = get_plugin_header( 'Version' );
+	$asset_file = include plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
 	wp_enqueue_script(
 		'wpgraphql-ide-app',
 		plugins_url( 'build/index.js', __FILE__ ),
-		$app_dependencies,
-		$version,
+		$asset_file['dependencies'],
+		$asset_file['version'],
 		true
 	);
+
+	$app_context = get_app_context();
 
 	wp_localize_script(
 		'wpgraphql-ide-app',
@@ -212,9 +214,9 @@ function enqueue_react_app_with_styles(): void {
 		]
 	);
 
-	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $version );
+	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $asset_file['version'] );
 	// Avoid running custom styles through a build process for an improved developer experience.
-	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $version );
+	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
 
 	// Extensions looking to extend GraphiQL can hook in here,
 	// after the window object is established, but before the App renders
