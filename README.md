@@ -34,4 +34,4 @@ Builds are only required for JS updates as the plugin's CSS is directly enqueued
 
 ## Custom Hooks
 
-See [ACTIONS_AND_FILTERS.md].
+See [ACTIONS_AND_FILTERS.md](ACTIONS_AND_FILTERS.md).
