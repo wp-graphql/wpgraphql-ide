@@ -63,7 +63,7 @@ function user_lacks_capability(): bool {
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
 function is_dedicated_ide_page(): bool {
-    return is_ide_page() || is_legacy_ide_page();
+	return is_ide_page() || is_legacy_ide_page();
 }
 
 /**
@@ -72,16 +72,16 @@ function is_dedicated_ide_page(): bool {
  * @return bool True if the current page is the new WPGraphQL IDE page, false otherwise.
  */
 function is_ide_page(): bool {
-    if ( ! function_exists( 'get_current_screen' ) ) {
-        return false;
-    }
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return false;
+	}
 
-    $screen = get_current_screen();
-    if ( ! $screen ) {
-        return false;
-    }
+	$screen = get_current_screen();
+	if ( ! $screen ) {
+		return false;
+	}
 
-    return $screen->id === 'graphql_page_graphql-ide';
+	return 'graphql_page_graphql-ide' === $screen->id;
 }
 
 /**
@@ -90,16 +90,16 @@ function is_ide_page(): bool {
  * @return bool True if the current page is the legacy GraphiQL IDE page, false otherwise.
  */
 function is_legacy_ide_page(): bool {
-    if ( ! function_exists( 'get_current_screen' ) ) {
-        return false;
-    }
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return false;
+	}
 
-    $screen = get_current_screen();
-    if ( ! $screen ) {
-        return false;
-    }
+	$screen = get_current_screen();
+	if ( ! $screen ) {
+		return false;
+	}
 
-    return $screen->id === 'toplevel_page_graphiql-ide';
+	return 'toplevel_page_graphiql-ide' === $screen->id;
 }
 
 /**
