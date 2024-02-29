@@ -1,44 +1,44 @@
 name: E2E Tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
-  e2e-tests:
-    name: E2E tests on Node ${{ matrix.node-version }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['18']
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    e2e-tests:
+        name: E2E tests on Node ${{ matrix.node-version }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: ['18']
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Build Assets
-        run: npm run build
+            - name: Build Assets
+              run: npm run build
 
-      - name: Install Playwright dependencies
-        run: |
-            npx playwright install chromium firefox webkit --with-deps
+            - name: Install Playwright dependencies
+              run: |
+                  npx playwright install chromium firefox webkit --with-deps
 
-      - name: Start WordPress Environment
-        run: npm run wp-env -- start
+            - name: Start WordPress Environment
+              run: npm run wp-env -- start
 
-      - name: Run E2E tests
-        run: npm run test:e2e
+            - name: Run E2E tests
+              run: npm run test:e2e
 
-      - name: Stop WordPress Environment
-        run: npm run wp-env -- stop
+            - name: Stop WordPress Environment
+              run: npm run wp-env -- stop
