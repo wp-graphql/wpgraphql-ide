@@ -29,15 +29,14 @@ export function Editor() {
 		return select( 'wpgraphql-ide' ).shouldRenderStandalone();
 	} );
 
-	console.log( {
-		query,
-		shouldRenderStandalone,
-	} );
+	const plugins = useSelect( ( select ) => {
+		return select( 'wpgraphql-ide').getPluginsArray();
+	});
 
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
 
 	return (
-		<GraphiQL query={ query } fetcher={ fetcher }>
+		<GraphiQL query={ query } fetcher={ fetcher } plugins={plugins.length > 0 ? plugins : null}>
 			<GraphiQL.Logo>
 				{ ! shouldRenderStandalone ? (
 					<button

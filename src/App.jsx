@@ -1,5 +1,6 @@
-import { useEffect } from '@wordpress/element';
-import { doAction } from '@wordpress/hooks';
+/* global WPGRAPHQL_IDE_DATA */
+import {createRoot, useEffect} from '@wordpress/element';
+import {doAction} from '@wordpress/hooks';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { EditorDrawer } from './components/EditorDrawer';
 import { Editor } from './components/Editor';
@@ -125,3 +126,27 @@ export function RenderApp() {
 		</div>
 	);
 }
+
+/**
+ * Get the ID of the HTML element where the React app will be placed.
+ *
+ * @constant {string} rootElementId - The ID of the HTML element.
+ *
+ * Localized in wpgraphql-ide.php
+ */
+const { rootElementId } = WPGRAPHQL_IDE_DATA;
+
+console.log( {
+	WPGRAPHQL_IDE_DATA
+})
+
+let rootElement = null;
+
+document.addEventListener('DOMContentLoaded', function(event) {
+	if (!rootElement) {
+		rootElement = document.getElementById(rootElementId);
+		const root = createRoot(rootElement)
+		root.render( <App /> );
+	}
+});
+
