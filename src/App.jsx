@@ -1,9 +1,12 @@
 import { useEffect } from '@wordpress/element';
 import { doAction } from '@wordpress/hooks';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { parse, print } from 'graphql';
+import LZString from 'lz-string';
+
 import { EditorDrawer } from './components/EditorDrawer';
 import { Editor } from './components/Editor';
-import { parse, print } from 'graphql';
+
 const { isDedicatedIdePage } = window.WPGRAPHQL_IDE_DATA;
 
 const url = new URL( window.location.href );
@@ -21,8 +24,16 @@ const setInitialState = () => {
 		setShouldRenderStandalone( true );
 	}
 
-	if ( params.has( 'wpgql_query' ) ) {
-		const queryString = params.get( 'wpgql_query' );
+	if ( params.has( 'wpgraphql_ide' ) ) {
+		const queryParam = params.get( 'wpgraphql_ide' );
+		const queryParamShareObjectString =
+			LZString.decompressFromEncodedURIComponent( queryParam );
+		const queryParamShareObject = JSON.parse( queryParamShareObjectString );
+
+		const compressedQuery = queryParamShareObject.query;
+		const queryString =
+			LZString.decompressFromEncodedURIComponent( compressedQuery );
+
 		let parsedQuery;
 		let printedQuery = null;
 
@@ -55,7 +66,7 @@ const setInitialState = () => {
 		if ( null !== printedQuery ) {
 			setDrawerOpen( true );
 			setQuery( printedQuery );
-			params.delete( 'wpgql_query' );
+			params.delete( 'wpgraphql_ide' );
 			history.pushState( {}, '', url.toString() );
 		}
 	}
