@@ -26,7 +26,7 @@ export const ShareDocumentButton = () => {
 
 	const generateShareLink = () => {
 		const query = queryEditor?.getValue() ?? '';
-		const hashedQueryParamObject = getHashedQueryParamObject({ query });
+		const hashedQueryParamObject = getHashedQueryParams({ query });
 		const fullUrl = `${ dedicatedIdeBaseUrl }&wpgraphql_ide=${ hashedQueryParamObject }`;
 
 		setShareUrl( fullUrl );
