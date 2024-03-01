@@ -155,37 +155,37 @@ test.describe( 'query params', () => {
 		page,
 	} ) => {} );
 
-	test( 'loads with drawer open if ?wpgql_query exists as a query param', async ( {
+	test( 'loads with drawer open if ?wpgraphql_ide exists as a query param', async ( {
 		page,
 	} ) => {
 		await page.goto(
-			`${ wpAdminUrl }/index.php?wpgql_query=query TestQuery { posts { nodes { id } } }`,
+			`${ wpAdminUrl }/index.php?wpgraphql_ide=query TestQuery { posts { nodes { id } } }`,
 			{ waitUntil: 'networkidle' }
 		);
 		await expect( page.locator( '.graphiql-container' ) ).toBeVisible();
 	} );
 
-	test( 'query editor is populated with the query passed in from the ?wpgql_query query param', async ( {
+	test( 'query editor is populated with the query passed in from the ?wpgraphql_ide query param', async ( {
 		page,
 	} ) => {
 		await page.goto(
-			`${ wpAdminUrl }/index.php?wpgql_query=query TestQuery { posts { nodes { id } } }`,
+			`${ wpAdminUrl }/index.php?wpgraphql_ide=query TestQuery { posts { nodes { id } } }`,
 			{ waitUntil: 'networkidle' }
 		);
 		const queryInput = await page.locator( selectors.queryInput );
 		await expect( queryInput ).toContainText( 'TestQuery' );
 	} );
 
-	test.skip( 'loads with drawer open if ?wpgql_query_hash exists as a query param', async ( {
+	test.skip( 'loads with drawer open if ?wpgraphql_ide_hash exists as a query param', async ( {
 		page,
 	} ) => {} );
-	test.skip( 'query editor is populated with the (unhashed) query passed in from the ?wpgql_query_hash query param', async ( {
+	test.skip( 'query editor is populated with the (unhashed) query passed in from the ?wpgraphql_ide_hash query param', async ( {
 		page,
 	} ) => {} );
 
 	// This tests that the wpgraphql-ide query parameter will load graphiql in an opened state
 	// It also tests that the query parameter will populate the query input
-	// test.skip( 'graphiql loads with ?wpgql_query populated from query parameter', async ({ page }) => {
+	// test.skip( 'graphiql loads with ?wpgraphql_ide populated from query parameter', async ({ page }) => {
 	// 	const query = 'query TestQuery{posts{nodes{databaseId}}}';
 	// 	const url = `http://localhost:8888/wp-admin?wpgraphql-ide=open&query=${query}`;
 	// 	await page.goto(url, { waitUntil: 'networkidle' });
