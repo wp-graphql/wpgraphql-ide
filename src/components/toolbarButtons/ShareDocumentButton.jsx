@@ -25,19 +25,9 @@ export const ShareDocumentButton = () => {
 	const [ shareUrl, setShareUrl ] = useState( '' );
 
 	const generateShareLink = () => {
-		const document = queryEditor?.getValue() ?? '';
-		const compressedQuery =
-			LZString.compressToEncodedURIComponent( document );
-
-		const queryParamShareObject = {
-			query: compressedQuery,
-		};
-		const compressedQueryParamShareObject =
-			LZString.compressToEncodedURIComponent(
-				JSON.stringify( queryParamShareObject )
-			);
-
-		const fullUrl = `${ dedicatedIdeBaseUrl }&wpgraphql_ide=${ compressedQueryParamShareObject }`;
+		const query = queryEditor?.getValue() ?? '';
+		const hashedQueryParamObject = getHashedQueryParamObject({ query });
+		const fullUrl = `${ dedicatedIdeBaseUrl }&wpgraphql_ide=${ hashedQueryParamObject }`;
 
 		setShareUrl( fullUrl );
 		copyToClipboard( fullUrl );
@@ -61,4 +51,27 @@ export const ShareDocumentButton = () => {
 
 async function copyToClipboard( text ) {
 	console.log( 'Copied: ', text );
+}
+
+/**
+ * Converts a given object to a compressed, encoded URI component string using LZString compression.
+ * This is useful for generating shorter query parameters from complex objects.
+ * 
+ * @param {Object} obj - The object to be converted into a compressed query parameter.
+ * @returns {string} The compressed and encoded URI component string.
+ * @throws {TypeError} If the input is not an object or cannot be serialized.
+ */
+export function getHashedQueryParams(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        console.error('Input must be a non-null object');
+		return null;
+    }
+
+    try {
+        const queryParamString = JSON.stringify(obj);
+        const compressedQueryParamShareObject = LZString.compressToEncodedURIComponent(queryParamString);
+        return compressedQueryParamShareObject;
+    } catch (error) {
+        console.error('Failed to compress query parameter object:', error);
+    }
 }

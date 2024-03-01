@@ -26,13 +26,10 @@ const setInitialState = () => {
 
 	if ( params.has( 'wpgraphql_ide' ) ) {
 		const queryParam = params.get( 'wpgraphql_ide' );
-		const queryParamShareObjectString =
-			LZString.decompressFromEncodedURIComponent( queryParam );
+		const queryParamShareObjectString = LZString.decompressFromEncodedURIComponent( queryParam );
 		const queryParamShareObject = JSON.parse( queryParamShareObjectString );
 
-		const compressedQuery = queryParamShareObject.query;
-		const queryString =
-			LZString.decompressFromEncodedURIComponent( compressedQuery );
+		const { query } = queryParamShareObject;
 
 		let parsedQuery;
 		let printedQuery = null;
@@ -40,10 +37,10 @@ const setInitialState = () => {
 		// convert the query from a string to an AST
 		// console errors if there are any
 		try {
-			parsedQuery = parse( queryString );
+			parsedQuery = parse( query );
 		} catch ( error ) {
 			console.error(
-				`Error parsing the query "${ queryString }"`,
+				`Error parsing the query "${ query }"`,
 				error.message
 			);
 			parsedQuery = null;
@@ -56,7 +53,7 @@ const setInitialState = () => {
 				printedQuery = print( parsedQuery );
 			} catch ( error ) {
 				console.error(
-					`Error printing the query "${ queryString }"`,
+					`Error printing the query "${ query }"`,
 					error.message
 				);
 				printedQuery = null;
