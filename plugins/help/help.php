@@ -27,7 +27,7 @@ function enqueue_plugin() {
 	wp_enqueue_script(
 		'wpgraphql-ide-help-plugin',
 		WPGRAPHQL_IDE_PLUGIN_URL . 'build/help.js',
-		array_merge( $asset_file['dependencies'], [ 'wpgraphql-ide'] ),
+		array_merge( $asset_file['dependencies'], [ 'wpgraphql-ide' ] ),
 		$asset_file['version'],
 		true
 	);
