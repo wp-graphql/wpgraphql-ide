@@ -2,26 +2,27 @@
 import { createHooks } from '@wordpress/hooks';
 import { register, dispatch } from '@wordpress/data';
 import { store } from './store';
-import { Icon, plugins } from "@wordpress/icons";
 
+/**
+ * Register the store to wp.data for use throughout the plugin and extending plugins
+ */
 register( store );
 
+/**
+ * Registers a plugin to the WPGraphQL IDE
+ *
+ * @param string name The name of the plugin to register
+ * @param object config The config array to define the plugin
+ */
 const registerPlugin = (name, config) => {
 	dispatch( store ).registerPlugin(name, config)
 }
 
-// example of registering a plugin from the "core" codebase
-// see /plugins/help for an example of registering a plugin from
-// a 3rd party plugin
-registerPlugin( 'extensions', {
-	title: 'Extensions',
-	icon: () => <Icon icon={plugins} style={{ fill: 'hsla(var(--color-neutral), var(--alpha-tertiary))' }} />,
-	content: () => <><h2>Extensions, yo!!</h2></>
-})
-
 export const hooks = createHooks();
 
-// Expose app as a global variable to utilize in gutenberg.
+// Expose WPGraphQLIDE as a global variable.
+// This allows plugins to be enqueued as external JS
+// and make use of functions provideded by the IDE.
 window.WPGraphQLIDE = {
 	registerPlugin,
 	hooks,

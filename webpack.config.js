@@ -11,6 +11,6 @@ module.exports = {
 	externals: {
 		react: "React",
 		"react-dom": "ReactDOM",
-		WPGraphQLIDE: "WPGraphQLIDE"
+		"wpgraphql-ide": "WPGraphQLIDE"
 	},
 };

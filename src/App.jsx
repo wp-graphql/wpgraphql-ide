@@ -136,17 +136,7 @@ export function RenderApp() {
  */
 const { rootElementId } = WPGRAPHQL_IDE_DATA;
 
-console.log( {
-	WPGRAPHQL_IDE_DATA
-})
-
-let rootElement = null;
-
-document.addEventListener('DOMContentLoaded', function(event) {
-	if (!rootElement) {
-		rootElement = document.getElementById(rootElementId);
-		const root = createRoot(rootElement)
-		root.render( <App /> );
-	}
-});
+const rootElement = document.getElementById(rootElementId);
+const root = createRoot(rootElement)
+root.render( <App /> );
 

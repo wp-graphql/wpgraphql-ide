@@ -9,6 +9,10 @@
 
 namespace WPGraphQLIDE\Plugins\Help;
 
+/**
+ * Hook into the GraphiQL enqueue lifecycle, ensuring scripts are only loaded if the GraphiQL IDE
+ * is also loaded.
+ */
 add_action( 'wpgraphqlide_enqueue_script', __NAMESPACE__ . '\\enqueue_plugin' );
 
 /**
@@ -23,7 +27,7 @@ function enqueue_plugin() {
 	wp_enqueue_script(
 		'wpgraphql-ide-help-plugin',
 		WPGRAPHQL_IDE_PLUGIN_URL . 'build/help.js',
-		array_merge( $asset_file['dependencies'] ),
+		array_merge( $asset_file['dependencies'], [ 'wpgraphql-ide'] ),
 		$asset_file['version'],
 		true
 	);

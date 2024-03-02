@@ -5,6 +5,7 @@ const initialState = {
 	shouldRenderStandalone: false,
 	isInitialStateLoaded: false,
 	registeredPlugins: {},
+	query: null,
 };
 
 const reducer = ( state = initialState, action ) => {
@@ -95,7 +96,6 @@ const selectors = {
 			}
 			pluginsArray.push( plugin() )
 		})
-		console.log( { pluginsArray })
 		return pluginsArray
 	}
 };
