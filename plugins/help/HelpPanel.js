@@ -74,9 +74,6 @@ const HelpPanel = () => {
 		<div className="wpgraphql-ide-help-panel">
 			<div className="graphiql-doc-explorer-title">Help</div>
 			{helpCards.map((card, i) => {
-				console.log( {
-					card
-				})
 				return <HelpCard key={i} card={card} />
 			})}
 		</div>
