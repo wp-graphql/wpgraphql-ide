@@ -21,23 +21,25 @@ const fetcher = async ( graphQLParams ) => {
 };
 
 export function Editor() {
-	const query = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide' ).getQuery();
-	} );
+	const { query, shouldRenderStandalone, plugins } = useSelect(select => {
+		const wpgraphqlIde = select('wpgraphql-ide');
+		return {
+			query: wpgraphqlIde.getQuery(),
+			shouldRenderStandalone: wpgraphqlIde.shouldRenderStandalone(),
+			plugins: wpgraphqlIde.getPluginsArray()
+		}
+	});
 
-	const shouldRenderStandalone = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide' ).shouldRenderStandalone();
-	} );
-
-	console.log( {
-		query,
-		shouldRenderStandalone,
-	} );
-
-	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
+	const { setDrawerOpen, setQuery } = useDispatch( 'wpgraphql-ide' );
 
 	return (
-		<GraphiQL query={ query } fetcher={ fetcher }>
+		<GraphiQL
+			query={ query }
+			onEditQuery={ query => {
+				setQuery(query)
+			}}
+			fetcher={ fetcher }
+			plugins={plugins.length > 0 ? plugins : null}>
 			<GraphiQL.Logo>
 				{ ! shouldRenderStandalone ? (
 					<button
