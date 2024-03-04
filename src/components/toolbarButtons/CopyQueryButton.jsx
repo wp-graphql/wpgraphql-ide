@@ -3,6 +3,7 @@ import { ToolbarButton, useCopyQuery, CopyIcon } from '@graphiql/react';
 
 export const CopyQueryButton = ( { onCopyQuery } ) => {
 	const copy = useCopyQuery( { onCopyQuery } );
+
 	return (
 		<ToolbarButton
 			className="graphiql-un-styled graphiql-toolbar-button"
