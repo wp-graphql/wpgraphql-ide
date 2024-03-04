@@ -13,10 +13,12 @@ register( store );
  *
  * @param string name The name of the plugin to register
  * @param object config The config array to define the plugin
+ * @param name
+ * @param config
  */
-const registerPlugin = (name, config) => {
-	dispatch( store ).registerPlugin(name, config)
-}
+const registerPlugin = ( name, config ) => {
+	dispatch( store ).registerPlugin( name, config );
+};
 
 export const hooks = createHooks();
 
@@ -26,5 +28,5 @@ export const hooks = createHooks();
 window.WPGraphQLIDE = {
 	registerPlugin,
 	hooks,
-	store
+	store,
 };

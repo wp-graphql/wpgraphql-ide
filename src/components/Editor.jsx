@@ -1,12 +1,18 @@
 /* global WPGRAPHQL_IDE_DATA */
 import React from 'react';
 import { GraphiQL } from 'graphiql';
+import { useDispatch, useSelect } from '@wordpress/data';
+import { applyFilters } from '@wordpress/hooks';
+
+import { PrettifyButton } from './toolbarButtons/PrettifyButton';
+import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
+import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
+import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
 
 import 'graphiql/graphiql.min.css';
-import { useDispatch, useSelect } from '@wordpress/data';
 
 const fetcher = async ( graphQLParams ) => {
-	const { graphqlEndpoint } = WPGRAPHQL_IDE_DATA;
+	const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
 
 	const response = await fetch( graphqlEndpoint, {
 		method: 'POST',
@@ -20,26 +26,42 @@ const fetcher = async ( graphQLParams ) => {
 	return response.json();
 };
 
+/**
+ * Filter the Buttons to allow 3rd parties to add their own buttons to the GraphiQL Toolbar.
+ */
+const toolbarButtons = applyFilters( 'wpgraphqlide_toolbar_buttons', {
+	copy: CopyQueryButton,
+	prettify: PrettifyButton,
+	merge: MergeFragmentsButton,
+	custom: ShareDocumentButton,
+} );
+
 export function Editor() {
-	const { query, shouldRenderStandalone, plugins } = useSelect(select => {
-		const wpgraphqlIde = select('wpgraphql-ide');
-		return {
-			query: wpgraphqlIde.getQuery(),
-			shouldRenderStandalone: wpgraphqlIde.shouldRenderStandalone(),
-			plugins: wpgraphqlIde.getPluginsArray()
+	const { query, shouldRenderStandalone, plugins } = useSelect(
+		( select ) => {
+			const wpgraphqlIde = select( 'wpgraphql-ide' );
+			return {
+				query: wpgraphqlIde.getQuery(),
+				shouldRenderStandalone: wpgraphqlIde.shouldRenderStandalone(),
+				plugins: wpgraphqlIde.getPluginsArray(),
+			};
 		}
-	});
+	);
 
 	const { setDrawerOpen, setQuery } = useDispatch( 'wpgraphql-ide' );
 
 	return (
 		<GraphiQL
 			query={ query }
-			onEditQuery={ query => {
-				setQuery(query)
-			}}
 			fetcher={ fetcher }
-			plugins={plugins.length > 0 ? plugins : null}>
+			onEditQuery={ ( query ) => setQuery( query ) }
+			plugins={ plugins.length > 0 ? plugins : null }
+		>
+			<GraphiQL.Toolbar>
+				{ Object.entries( toolbarButtons ).map( ( [ key, Button ] ) => (
+					<Button key={ key } />
+				) ) }
+			</GraphiQL.Toolbar>
 			<GraphiQL.Logo>
 				{ ! shouldRenderStandalone ? (
 					<button

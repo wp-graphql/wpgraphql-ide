@@ -240,11 +240,12 @@ function enqueue_react_app_with_styles(): void {
 		'wpgraphql-ide',
 		'WPGRAPHQL_IDE_DATA',
 		[
-			'nonce'              => wp_create_nonce( 'wp_rest' ),
-			'graphqlEndpoint'    => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
-			'rootElementId'      => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-			'context'            => $app_context,
-			'isDedicatedIdePage' => is_dedicated_ide_page(),
+			'nonce'               => wp_create_nonce( 'wp_rest' ),
+			'graphqlEndpoint'     => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
+			'rootElementId'       => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
+			'context'             => $app_context,
+			'isDedicatedIdePage'  => is_dedicated_ide_page(),
+			'dedicatedIdeBaseUrl' => get_dedicated_ide_base_url(),
 		]
 	);
 
@@ -269,6 +270,15 @@ function enqueue_react_app_with_styles(): void {
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
+
+/**
+ * Retrieves the base URL for the dedicated WPGraphQL IDE page.
+ *
+ * @return string The URL for the dedicated IDE page within the WordPress admin.
+ */
+function get_dedicated_ide_base_url(): string {
+	return menu_page_url( 'graphql-ide', false );
+}
 
 /**
  * Retrieves the specific header of this plugin.

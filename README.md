@@ -16,21 +16,9 @@ When this plugin is active, a new link "GraphQL IDE" will appear to the right of
 
 GraphiQL IDE has intentionally been updated to read "GraphQL IDE", which feels more inline with the colloquial reference to the editor when inside of WordPress, and simply "WPGraphQL IDE" when not in a WordPress context.
 
-## Development
+## Contributing
 
-1. Install project dependencies.
-
-    ```sh
-    npm install
-    ```
-
-2. Compile JavaScript assets.
-
-    ```sh
-    npm run build
-    ```
-
-Builds are only required for JS updates as the plugin's CSS is directly enqueued.
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Custom Hooks
 

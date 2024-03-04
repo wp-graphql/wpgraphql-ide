@@ -1,10 +1,13 @@
 /* global WPGRAPHQL_IDE_DATA */
-import {createRoot, useEffect} from '@wordpress/element';
-import {doAction} from '@wordpress/hooks';
+import { createRoot, useEffect } from '@wordpress/element';
+import { doAction } from '@wordpress/hooks';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { parse, print } from 'graphql';
+import LZString from 'lz-string';
+
 import { EditorDrawer } from './components/EditorDrawer';
 import { Editor } from './components/Editor';
-import { parse, print } from 'graphql';
+
 const { isDedicatedIdePage } = window.WPGRAPHQL_IDE_DATA;
 
 const url = new URL( window.location.href );
@@ -22,18 +25,24 @@ const setInitialState = () => {
 		setShouldRenderStandalone( true );
 	}
 
-	if ( params.has( 'wpgql_query' ) ) {
-		const queryString = params.get( 'wpgql_query' );
+	if ( params.has( 'wpgraphql_ide' ) ) {
+		const queryParam = params.get( 'wpgraphql_ide' );
+		const queryParamShareObjectString =
+			LZString.decompressFromEncodedURIComponent( queryParam );
+		const queryParamShareObject = JSON.parse( queryParamShareObjectString );
+
+		const { query } = queryParamShareObject;
+
 		let parsedQuery;
 		let printedQuery = null;
 
 		// convert the query from a string to an AST
 		// console errors if there are any
 		try {
-			parsedQuery = parse( queryString );
+			parsedQuery = parse( query );
 		} catch ( error ) {
 			console.error(
-				`Error parsing the query "${ queryString }"`,
+				`Error parsing the query "${ query }"`,
 				error.message
 			);
 			parsedQuery = null;
@@ -46,7 +55,7 @@ const setInitialState = () => {
 				printedQuery = print( parsedQuery );
 			} catch ( error ) {
 				console.error(
-					`Error printing the query "${ queryString }"`,
+					`Error printing the query "${ query }"`,
 					error.message
 				);
 				printedQuery = null;
@@ -56,7 +65,7 @@ const setInitialState = () => {
 		if ( null !== printedQuery ) {
 			setDrawerOpen( true );
 			setQuery( printedQuery );
-			params.delete( 'wpgql_query' );
+			params.delete( 'wpgraphql_ide' );
 			history.pushState( {}, '', url.toString() );
 		}
 	}
@@ -134,9 +143,8 @@ export function RenderApp() {
  *
  * Localized in wpgraphql-ide.php
  */
-const { rootElementId } = WPGRAPHQL_IDE_DATA;
+const { rootElementId } = window.WPGRAPHQL_IDE_DATA;
 
-const rootElement = document.getElementById(rootElementId);
-const root = createRoot(rootElement)
+const rootElement = document.getElementById( rootElementId );
+const root = createRoot( rootElement );
 root.render( <App /> );
-

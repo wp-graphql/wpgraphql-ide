@@ -35,9 +35,9 @@ const reducer = ( state = initialState, action ) => {
 				...state,
 				registeredPlugins: {
 					...state.registeredPlugins,
-					[action.name]: action.config
-				}
-			}
+					[ action.name ]: action.config,
+				},
+			};
 	}
 	return state;
 };
@@ -65,13 +65,13 @@ const actions = {
 			type: 'SET_INITIAL_STATE_LOADED',
 		};
 	},
-	registerPlugin: (name, config) => {
+	registerPlugin: ( name, config ) => {
 		return {
 			type: 'REGISTER_PLUGIN',
 			name,
-			config
-		}
-	}
+			config,
+		};
+	},
 };
 
 const selectors = {
@@ -87,17 +87,17 @@ const selectors = {
 	isInitialStateLoaded: ( state ) => {
 		return state.isInitialStateLoaded;
 	},
-	getPluginsArray: (state) => {
+	getPluginsArray: ( state ) => {
 		const registeredPlugins = state.registeredPlugins;
 		const pluginsArray = [];
-		Object.entries(registeredPlugins).map( ( [ key, config]) => {
+		Object.entries( registeredPlugins ).map( ( [ key, config ] ) => {
 			const plugin = () => {
 				return config;
-			}
-			pluginsArray.push( plugin() )
-		})
-		return pluginsArray
-	}
+			};
+			pluginsArray.push( plugin() );
+		} );
+		return pluginsArray;
+	},
 };
 
 export const store = createReduxStore( 'wpgraphql-ide', {
