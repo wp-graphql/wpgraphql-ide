@@ -57,7 +57,7 @@ export const ShareDocumentButton = () => {
  * @param {Object} obj The object containing query parameters to be compressed and encoded.
  * @returns {string} A compressed and encoded string representing the query parameters.
  */
-function getHashedQueryParams( obj ) {
+export function getHashedQueryParams( obj ) {
 	if ( typeof obj !== 'object' || obj === null ) {
 		console.error( 'Input must be a non-null object' );
 		return '';
