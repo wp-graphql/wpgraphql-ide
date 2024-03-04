@@ -21,6 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
+define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
+define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+// require plugins
+require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/help/help.php';
 
 /**
  * Generates the SVG logo for GraphQL.
@@ -219,20 +224,20 @@ function enqueue_react_app_with_styles(): void {
 		}
 	}
 
-	$asset_file = include plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/index.asset.php';
+
+	$app_context = get_app_context();
 
 	wp_enqueue_script(
-		'wpgraphql-ide-app',
+		'wpgraphql-ide',
 		plugins_url( 'build/index.js', __FILE__ ),
 		$asset_file['dependencies'],
 		$asset_file['version'],
 		true
 	);
 
-	$app_context = get_app_context();
-
 	wp_localize_script(
-		'wpgraphql-ide-app',
+		'wpgraphql-ide',
 		'WPGRAPHQL_IDE_DATA',
 		[
 			'nonce'               => wp_create_nonce( 'wp_rest' ),
@@ -244,13 +249,24 @@ function enqueue_react_app_with_styles(): void {
 		]
 	);
 
-	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $asset_file['version'] );
-	// Avoid running custom styles through a build process for an improved developer experience.
-	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
-
 	// Extensions looking to extend GraphiQL can hook in here,
 	// after the window object is established, but before the App renders
 	do_action( 'wpgraphqlide_enqueue_script', $app_context );
+
+	$app_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/app.asset.php';
+
+	wp_enqueue_script(
+		'wpgraphql-ide-app',
+		plugins_url( 'build/app.js', __FILE__ ),
+		array_merge( $app_asset_file['dependencies'], [ 'wpgraphql-ide' ] ),
+		$app_asset_file['version'],
+		true
+	);
+
+	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/app.css', __FILE__ ), [], $asset_file['version'] );
+
+	// Avoid running custom styles through a build process for an improved developer experience.
+	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );

@@ -5,9 +5,12 @@ import { useDispatch, useSelect } from '@wordpress/data';
 export function EditorDrawer( { children } ) {
 	const buttonLabel = 'GraphQL IDE';
 
-	const isDrawerOpen = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide' ).isDrawerOpen();
-	} );
+	const { isDrawerOpen } = useSelect( select => {
+		const wpgraphqlIde = select( 'wpgraphql-ide' );
+		return {
+			isDrawerOpen: wpgraphqlIde.isDrawerOpen()
+		};
+	} )
 
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
 
