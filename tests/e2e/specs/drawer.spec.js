@@ -160,12 +160,12 @@ test.describe( 'query params', () => {
 	test( 'loads with drawer open if ?wpgraphql_ide exists as a query param', async ( {
 		page,
 	} ) => {
-		const hashedQueryParams = getHashedQueryParams({
-			query: 'query TestQuery { posts { nodes { id } } }'
-		});
+		const hashedQueryParams = getHashedQueryParams( {
+			query: 'query TestQuery { posts { nodes { id } } }',
+		} );
 
 		await page.goto(
-			`${ wpAdminUrl }/index.php?wpgraphql_ide=${hashedQueryParams}`,
+			`${ wpAdminUrl }/index.php?wpgraphql_ide=${ hashedQueryParams }`,
 			{ waitUntil: 'networkidle' }
 		);
 		await expect( page.locator( '.graphiql-container' ) ).toBeVisible();
@@ -174,12 +174,12 @@ test.describe( 'query params', () => {
 	test( 'query editor is populated with the query passed in from the ?wpgraphql_ide query param', async ( {
 		page,
 	} ) => {
-		const hashedQueryParams = getHashedQueryParams({
-			query: 'query TestQuery { posts { nodes { id } } }'
-		});
-	
+		const hashedQueryParams = getHashedQueryParams( {
+			query: 'query TestQuery { posts { nodes { id } } }',
+		} );
+
 		await page.goto(
-			`${ wpAdminUrl }/index.php?wpgraphql_ide=${hashedQueryParams}`,
+			`${ wpAdminUrl }/index.php?wpgraphql_ide=${ hashedQueryParams }`,
 			{ waitUntil: 'networkidle' }
 		);
 

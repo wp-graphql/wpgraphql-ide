@@ -12,7 +12,7 @@ import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
 import 'graphiql/graphiql.min.css';
 
 const fetcher = async ( graphQLParams ) => {
-	const { graphqlEndpoint } = WPGRAPHQL_IDE_DATA;
+	const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
 
 	const response = await fetch( graphqlEndpoint, {
 		method: 'POST',

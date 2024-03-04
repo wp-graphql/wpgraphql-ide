@@ -1,6 +1,6 @@
 /* global WPGRAPHQL_IDE_DATA */
-import {createRoot, useEffect} from '@wordpress/element';
-import {doAction} from '@wordpress/hooks';
+import { createRoot, useEffect } from '@wordpress/element';
+import { doAction } from '@wordpress/hooks';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, print } from 'graphql';
 import LZString from 'lz-string';
@@ -27,7 +27,8 @@ const setInitialState = () => {
 
 	if ( params.has( 'wpgraphql_ide' ) ) {
 		const queryParam = params.get( 'wpgraphql_ide' );
-		const queryParamShareObjectString = LZString.decompressFromEncodedURIComponent( queryParam );
+		const queryParamShareObjectString =
+			LZString.decompressFromEncodedURIComponent( queryParam );
 		const queryParamShareObject = JSON.parse( queryParamShareObjectString );
 
 		const { query } = queryParamShareObject;
@@ -142,9 +143,8 @@ export function RenderApp() {
  *
  * Localized in wpgraphql-ide.php
  */
-const { rootElementId } = WPGRAPHQL_IDE_DATA;
+const { rootElementId } = window.WPGRAPHQL_IDE_DATA;
 
-const rootElement = document.getElementById(rootElementId);
-const root = createRoot(rootElement)
+const rootElement = document.getElementById( rootElementId );
+const root = createRoot( rootElement );
 root.render( <App /> );
-
