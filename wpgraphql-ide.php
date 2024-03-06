@@ -160,8 +160,8 @@ function register_dedicated_ide_menu(): void {
 
 	add_submenu_page(
 		'graphiql-ide',
-		__( 'GraphQL IDE', 'wp-graphql' ),
-		__( 'GraphQL IDE', 'wp-graphql' ),
+		__( 'GraphQL IDE', 'wpgraphql-ide' ),
+		__( 'GraphQL IDE', 'wpgraphql-ide' ),
 		'manage_options',
 		'graphql-ide',
 		__NAMESPACE__ . '\\render_dedicated_ide_page'
