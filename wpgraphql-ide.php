@@ -108,32 +108,34 @@ function is_legacy_ide_page(): bool {
 }
 
 /**
- * Registers a custom menu item in the WordPress Admin Bar.
- *
- * This function adds the mount point for the plugin's React app.
+ * Registers the plugin's custom menu item in the WordPress Admin Bar.
  *
  * @global WP_Admin_Bar $wp_admin_bar The WordPress Admin Bar instance.
  */
-function register_wpadminbar_menu(): void {
-	if ( is_dedicated_ide_page() ) {
-		return;
-	}
-
+function register_wpadminbar_menus(): void {
 	if ( user_lacks_capability() ) {
 		return;
 	}
 
 	global $wp_admin_bar;
 
-	$args = [
+	// Link to the new dedicated IDE page.
+	$wp_admin_bar->add_node([
 		'id'    => 'wpgraphql-ide',
-		'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"></div>',
-		'href'  => '#',
-	];
+		'title' => '<span class="ab-icon"></span>' . __( 'GraphQL IDE', 'wpgraphql-ide' ),
+		'href'  => trailingslashit( admin_url() ) . 'admin.php?page=graphql-ide',
+	]);
 
-	$wp_admin_bar->add_node( $args );
+	if ( ! is_dedicated_ide_page() ) {
+		// Drawer Button
+		$wp_admin_bar->add_node([
+			'id'    => 'wpgraphql-ide-button',
+			'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"></div>',
+			'href'  => '#',
+		]);
+	}	
 }
-add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menu', 999 );
+add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 
 /**
  * Registers a submenu page for the dedicated GraphQL IDE.
@@ -174,16 +176,13 @@ function render_dedicated_ide_page(): void {
  * Enqueues custom CSS to set the "GraphQL IDE" menu item icon in the WordPress Admin Bar.
  */
 function enqueue_graphql_ide_menu_icon_css(): void {
-	if ( is_dedicated_ide_page() ) {
-		return;
-	}
-
 	if ( user_lacks_capability() ) {
 		return;
 	}
 
 	$custom_css = '
-        #wp-admin-bar-wpgraphql-ide .ab-icon::before {
+        #wp-admin-bar-wpgraphql-ide .ab-icon::before,
+		#wp-admin-bar-wpgraphql-ide .ab-icon::before {
             background-image: url("data:image/svg+xml;base64,' . base64_encode( graphql_logo_svg() ) . '");
             background-size: 100%;
             border-radius: 12px;
@@ -315,3 +314,33 @@ function get_app_context(): array {
 		]
 	);
 }
+
+/**
+ * Registers a notice for legacy IDE users.
+ *
+ * This function checks if the GraphQL admin notice function exists and registers a notice
+ * informing users about a newer version of the IDE available.
+ * 
+ * @return void
+ */
+function register_legacy_ide_notice() {
+    if ( ! function_exists( 'register_graphql_admin_notice' ) ) {
+        return;
+    }
+
+    $new_page_url = admin_url( 'admin.php?page=graphql-ide' );
+
+    register_graphql_admin_notice(
+        'wpgraphql-legacy-ide-announcement',
+        [
+            'type'           => 'info',
+            'message'        => sprintf(
+                // Translators: %s: URL to the new IDE page.
+                __( '<a href="%s">A newer version of this IDE is now available!</a> 🎉', 'wpgraphql-ide' ),
+                esc_url( $new_page_url )
+            ),
+            'is_dismissable' => false
+        ]
+    );
+}
+add_action( 'graphql_init', __NAMESPACE__ . '\\register_legacy_ide_notice' );
