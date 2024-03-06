@@ -314,33 +314,3 @@ function get_app_context(): array {
 		]
 	);
 }
-
-/**
- * Registers a notice for legacy IDE users.
- *
- * This function checks if the GraphQL admin notice function exists and registers a notice
- * informing users about a newer version of the IDE available.
- * 
- * @return void
- */
-function register_legacy_ide_notice() {
-    if ( ! function_exists( 'register_graphql_admin_notice' ) ) {
-        return;
-    }
-
-    $new_page_url = admin_url( 'admin.php?page=graphql-ide' );
-
-    register_graphql_admin_notice(
-        'wpgraphql-legacy-ide-announcement',
-        [
-            'type'           => 'info',
-            'message'        => sprintf(
-                // Translators: %s: URL to the new IDE page.
-                __( '<a href="%s">A newer version of this IDE is now available!</a> 🎉', 'wpgraphql-ide' ),
-                esc_url( $new_page_url )
-            ),
-            'is_dismissable' => false
-        ]
-    );
-}
-add_action( 'graphql_init', __NAMESPACE__ . '\\register_legacy_ide_notice' );
