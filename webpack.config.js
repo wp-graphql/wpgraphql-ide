@@ -7,6 +7,7 @@ module.exports = {
 		index: path.resolve( process.cwd(), 'src', 'index.js' ),
 		app: path.resolve( process.cwd(), 'src', 'App.jsx' ),
 		help: path.resolve( process.cwd(), 'plugins/help', 'index.js' ),
+		queryComposer: path.resolve( process.cwd(), 'plugins/query-composer', 'index.js' ),
 	},
 	externals: {
 		react: 'React',

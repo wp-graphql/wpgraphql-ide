@@ -3,6 +3,7 @@ import React from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { applyFilters } from '@wordpress/hooks';
+import { explorerPlugin } from "@graphiql/plugin-explorer";
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
