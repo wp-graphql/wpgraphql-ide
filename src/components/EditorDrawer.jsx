@@ -3,7 +3,7 @@ import { Drawer as VaulDrawer } from 'vaul';
 import { useDispatch, useSelect } from '@wordpress/data';
 
 export function EditorDrawer( { children } ) {
-	const buttonLabel = 'GraphQL IDE';
+	const buttonLabel = '🚀';
 
 	const { isDrawerOpen } = useSelect( ( select ) => {
 		const wpgraphqlIde = select( 'wpgraphql-ide' );
@@ -23,10 +23,7 @@ export function EditorDrawer( { children } ) {
 				open={ isDrawerOpen }
 				onOpenChange={ setDrawerOpen }
 			>
-				<VaulDrawer.Trigger className="EditorDrawerButton">
-					<span className="ab-icon" aria-hidden="true" />
-					{ buttonLabel }
-				</VaulDrawer.Trigger>
+				<VaulDrawer.Trigger className="EditorDrawerButton">{ buttonLabel }</VaulDrawer.Trigger>
 				<VaulDrawer.Portal>
 					<VaulDrawer.Content>{ children }</VaulDrawer.Content>
 					<VaulDrawer.Overlay />
