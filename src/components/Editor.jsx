@@ -3,6 +3,8 @@ import React from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { applyFilters } from '@wordpress/hooks';
+import { useEffect } from '@wordpress/element'
+
 import { explorerPlugin } from "@graphiql/plugin-explorer";
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
@@ -51,12 +53,14 @@ export function Editor() {
 
 	const { setDrawerOpen, setQuery } = useDispatch( 'wpgraphql-ide' );
 
+	const activePlugins = applyFilters( 'wpgraphqlide_plugins', [] );
+
 	return (
 		<GraphiQL
 			query={ query }
 			fetcher={ fetcher }
 			onEditQuery={ ( query ) => setQuery( query ) }
-			plugins={ plugins.length > 0 ? plugins : null }
+			plugins={ activePlugins }
 		>
 			<GraphiQL.Toolbar>
 				{ Object.entries( toolbarButtons ).map( ( [ key, Button ] ) => (
