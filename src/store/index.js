@@ -4,7 +4,7 @@ const initialState = {
 	isDrawerOpen: false,
 	shouldRenderStandalone: false,
 	isInitialStateLoaded: false,
-	registeredPlugins: {},
+	registeredPlugins: [],
 	query: null,
 };
 
@@ -31,13 +31,22 @@ const reducer = ( state = initialState, action ) => {
 				isInitialStateLoaded: true,
 			};
 		case 'REGISTER_PLUGIN':
+			// push the plugin into the registeredPlugins array
 			return {
 				...state,
-				registeredPlugins: {
+				registeredPlugins: [
 					...state.registeredPlugins,
-					[ action.name ]: action.config,
-				},
-			};
+					...[ action.config ],
+				],
+			}
+
+			// return {
+			// 	...state,
+			// 	registeredPlugins: {
+			// 		...state.registeredPlugins,
+			// 		[ action.name ]: action.config,
+			// 	},
+			// };
 	}
 	return state;
 };
@@ -86,6 +95,9 @@ const selectors = {
 	},
 	isInitialStateLoaded: ( state ) => {
 		return state.isInitialStateLoaded;
+	},
+	getRegisteredPlugins: ( state ) => {
+		return state.registeredPlugins;
 	},
 	getPluginsArray: ( state ) => {
 		const registeredPlugins = state.registeredPlugins;
