@@ -26,6 +26,7 @@ define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 // require plugins
 require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/help/help.php';
+require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/acf/acf.php';
 
 /**
  * Generates the SVG logo for GraphQL.
@@ -137,7 +138,7 @@ function register_wpadminbar_menus(): void {
 				'href'  => '#',
 			]
 		);
-	}   
+	}
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 

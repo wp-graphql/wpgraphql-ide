@@ -7,6 +7,7 @@ module.exports = {
 		index: path.resolve( process.cwd(), 'src', 'index.js' ),
 		app: path.resolve( process.cwd(), 'src', 'App.jsx' ),
 		help: path.resolve( process.cwd(), 'plugins/help', 'index.js' ),
+		acf: path.resolve( process.cwd(), 'plugins/acf', 'index.js' ),
 	},
 	externals: {
 		react: 'React',

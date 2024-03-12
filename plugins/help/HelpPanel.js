@@ -1,4 +1,5 @@
 import HelpCard from './HelpCard';
+import { useSelect } from '@wordpress/data';
 
 export const helpCards = [
 	{
@@ -82,6 +83,18 @@ export const helpCards = [
 ];
 
 const HelpPanel = () => {
+	const { query, schema } = useSelect( select => {
+		const store = select( 'wpgraphql-ide' );
+		return {
+			query: store.getQuery(),
+			schema: store.getSchema(),
+		}
+	})
+
+	console.log( {
+		query,
+		schema
+	})
 	return (
 		<div className="wpgraphql-ide-help-panel">
 			<div className="graphiql-doc-explorer-title">Help</div>

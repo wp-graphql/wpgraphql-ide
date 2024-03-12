@@ -2,6 +2,7 @@
 import { createHooks } from '@wordpress/hooks';
 import { register, dispatch } from '@wordpress/data';
 import { store } from './store';
+import * as GraphQL from 'graphql/index.js';
 
 /**
  * Register the store to wp.data for use throughout the plugin and extending plugins
@@ -29,4 +30,5 @@ window.WPGraphQLIDE = {
 	registerPlugin,
 	hooks,
 	store,
+	GraphQL
 };

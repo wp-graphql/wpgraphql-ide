@@ -6,6 +6,8 @@ const initialState = {
 	isInitialStateLoaded: false,
 	registeredPlugins: {},
 	query: null,
+	schema: undefined,
+	isFetching: false,
 };
 
 const reducer = ( state = initialState, action ) => {
@@ -35,9 +37,24 @@ const reducer = ( state = initialState, action ) => {
 				...state,
 				registeredPlugins: {
 					...state.registeredPlugins,
-					[ action.name ]: action.config,
+					[action.name]: action.config,
 				},
 			};
+		case 'SET_SCHEMA':
+
+			if (state.schema === action.schema) {
+				return state;
+			}
+
+			return {
+				...state,
+				schema: action.schema,
+			}
+		case 'SET_IS_FETCHING':
+			return {
+				...state,
+				isFetching: action.isFetching,
+			}
 	}
 	return state;
 };
@@ -47,6 +64,12 @@ const actions = {
 			type: 'SET_QUERY',
 			query,
 		};
+	},
+	setSchema: ( schema ) => {
+		return {
+			type: 'SET_SCHEMA',
+			schema,
+		}
 	},
 	setDrawerOpen: ( isDrawerOpen ) => {
 		return {
@@ -72,11 +95,20 @@ const actions = {
 			config,
 		};
 	},
+	setIsFetching: ( isFetching ) => {
+		return {
+			type: 'SET_IS_FETCHING',
+			isFetching,
+		};
+	}
 };
 
 const selectors = {
 	getQuery: ( state ) => {
 		return state.query;
+	},
+	getSchema: ( state ) => {
+		return state.schema;
 	},
 	isDrawerOpen: ( state ) => {
 		return state.isDrawerOpen;
@@ -98,6 +130,9 @@ const selectors = {
 		} );
 		return pluginsArray;
 	},
+	isFetching: ( state ) => {
+		return state.isFetching;
+	}
 };
 
 export const store = createReduxStore( 'wpgraphql-ide', {
