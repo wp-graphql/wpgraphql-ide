@@ -228,6 +228,30 @@ function enqueue_react_app_with_styles(): void {
 		}
 	}
 
+	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'packages/graphql/build/index.asset.php';
+
+	wp_enqueue_script(
+		'graphql',
+		plugins_url( 'packages/graphql/build/index.js', __FILE__ ),
+		$graphql_asset_file['dependencies'],
+		$graphql_asset_file['version'],
+		true
+	);
+
+	$graphiql_react_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'packages/graphiql-react/build/index.asset.php';
+
+	$graphiql_react_asset_file['dependencies'][] = 'graphql';
+
+	wp_enqueue_script(
+		'graphiql-react',
+		plugins_url( 'packages/graphiql-react/build/index.js', __FILE__ ),
+//		'https://unpkg.com/browse/@graphiql/react@0.20.3/dist/index.js',
+		$graphiql_react_asset_file['dependencies'],
+		$graphiql_react_asset_file['version'],
+		true
+	);
+
+
 	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/index.asset.php';
 
 	$app_context = get_app_context();
@@ -235,7 +259,7 @@ function enqueue_react_app_with_styles(): void {
 	wp_enqueue_script(
 		'wpgraphql-ide',
 		plugins_url( 'build/index.js', __FILE__ ),
-		$asset_file['dependencies'],
+		array_merge( $asset_file['dependencies'], [ 'graphql', 'graphiql-react' ] ),
 		$asset_file['version'],
 		true
 	);

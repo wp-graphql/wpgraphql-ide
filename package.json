@@ -2,8 +2,14 @@
 	"private": true,
 	"scripts": {
 		"check-engines": "wp-scripts check-engines",
-		"build": "wp-scripts build",
+    "prebuild": "npm run build:graphiql-react && npm run build:graphql",
+    "build:graphiql-react": "wp-scripts build ./src/GraphiQLReact.js --output-path ./dist/graphiql-react.js",
+    "build:graphql": "wp-scripts build ./src/GraphQL.js --output-path ./dist/graphql.js",
+		"build": "wp-scripts build --webpack-bundle-analyzer",
+    "prestart": "npm run start:graphiql-react && npm run start:graphql",
 		"start": "wp-scripts start",
+    "start:graphiql-react": "wp-scripts start ./src/GraphiQLReact.js",
+    "start:graphql": "wp-scripts start ./src/GraphQL.js",
 		"test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
 		"test:e2e:ui": "wp-scripts test-playwright --config tests/e2e/playwright.config.js --ui",
 		"test:unit": "jest --config tests/unit/jest.config.js",
@@ -36,6 +42,7 @@
 		"sort-package-json": "^2.7.0"
 	},
 	"dependencies": {
+		"@graphiql/plugin-explorer": "^1.0.3",
 		"@graphiql/toolkit": "^0.9.1",
 		"@wordpress/components": "^27.0.0",
 		"@wordpress/data": "^9.22.0",

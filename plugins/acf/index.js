@@ -1,6 +1,15 @@
 import {useDispatch, useSelect} from '@wordpress/data';
-import { registerPlugin, GraphQL } from 'wpgraphql-ide';
+import { registerPlugin } from 'wpgraphql-ide';
+
+const GraphQL = window.GraphQL;
 const { GraphQLObjectType, GraphQLString, GraphQLSchema, isInterfaceType, GraphQLScalarType } = GraphQL;
+
+import { explorerPlugin } from '@graphiql/plugin-explorer';
+
+console.log( {
+	registerPlugin: `queryComposer`,
+})
+registerPlugin( 'queryComposer', explorerPlugin() );
 
 /**
  * Checks if a given type implements the Connection interface.
