@@ -20,7 +20,9 @@ export function EditorDrawer( { children } ) {
 				open={ isDrawerOpen }
 				onOpenChange={ setDrawerOpen }
 			>
-				<VaulDrawer.Trigger className="EditorDrawerButton">{ buttonLabel }</VaulDrawer.Trigger>
+				<VaulDrawer.Trigger className="EditorDrawerButton">
+					{ buttonLabel }
+				</VaulDrawer.Trigger>
 				<VaulDrawer.Portal>
 					<VaulDrawer.Content>{ children }</VaulDrawer.Content>
 					<VaulDrawer.Overlay />

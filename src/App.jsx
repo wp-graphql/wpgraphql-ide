@@ -26,7 +26,8 @@ const setInitialState = () => {
 
 	if ( params.has( 'wpgraphql_ide' ) ) {
 		const queryParam = params.get( 'wpgraphql_ide' );
-		const queryParamShareObjectString = LZString.decompressFromEncodedURIComponent( queryParam );
+		const queryParamShareObjectString =
+			LZString.decompressFromEncodedURIComponent( queryParam );
 		const queryParamShareObject = JSON.parse( queryParamShareObjectString );
 
 		const { query } = queryParamShareObject;
