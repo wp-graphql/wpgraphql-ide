@@ -2,7 +2,6 @@
 import React from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { applyFilters } from '@wordpress/hooks';
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
@@ -29,12 +28,12 @@ const fetcher = async ( graphQLParams ) => {
 /**
  * Filter the Buttons to allow 3rd parties to add their own buttons to the GraphiQL Toolbar.
  */
-const toolbarButtons = applyFilters( 'wpgraphqlide_toolbar_buttons', {
+const toolbarButtons = {
 	copy: CopyQueryButton,
 	prettify: PrettifyButton,
 	merge: MergeFragmentsButton,
-	custom: ShareDocumentButton,
-} );
+	share: ShareDocumentButton,
+};
 
 export function Editor() {
 	const query = useSelect( ( select ) => {
