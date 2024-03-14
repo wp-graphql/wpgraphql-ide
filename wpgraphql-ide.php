@@ -115,20 +115,24 @@ function register_wpadminbar_menus(): void {
 	global $wp_admin_bar;
 
 	// Link to the new dedicated IDE page.
-	$wp_admin_bar->add_node([
-		'id'    => 'wpgraphql-ide',
-		'title' => '<span class="ab-icon"></span>' . __( 'GraphQL IDE', 'wpgraphql-ide' ),
-		'href'  => trailingslashit( admin_url() ) . 'admin.php?page=graphql-ide',
-	]);
+	$wp_admin_bar->add_node(
+		[
+			'id'    => 'wpgraphql-ide',
+			'title' => '<span class="ab-icon"></span>' . __( 'GraphQL IDE', 'wpgraphql-ide' ),
+			'href'  => trailingslashit( admin_url() ) . 'admin.php?page=graphql-ide',
+		]
+	);
 
 	if ( ! is_dedicated_ide_page() ) {
 		// Drawer Button
-		$wp_admin_bar->add_node([
-			'id'    => 'wpgraphql-ide-button',
-			'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"></div>',
-			'href'  => '#',
-		]);
-	}	
+		$wp_admin_bar->add_node(
+			[
+				'id'    => 'wpgraphql-ide-button',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"></div>',
+				'href'  => '#',
+			]
+		);
+	}   
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 
