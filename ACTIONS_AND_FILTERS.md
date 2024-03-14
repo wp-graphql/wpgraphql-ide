@@ -2,7 +2,7 @@
 
 -> [Original documentation](https://www.wpgraphql.com/docs/customizing-wpgraphiql)
 
-_legend_ 🎉 = new
+_legend_ 🎉 = new functionality
 
 ## PHP Actions
 
@@ -21,4 +21,11 @@ _legend_ 🎉 = new
 
 ## JavaScript Filters
 
-...
+- `wpgraphqlide_toolbar_buttons` ([graphiql_toolbar_buttons](https://www.wpgraphql.com/docs/customizing-wpgraphiql#graphiql_toolbar_buttons))
+
+## Legacy Hooks
+
+Not all actions/filters were ported over from the legacy WPGraphQL IDE.
+
+- `graphiql_toolbar_before_buttons`
+- `graphiql_toolbar_after_buttons`

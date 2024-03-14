@@ -4,6 +4,8 @@ const initialState = {
 	isDrawerOpen: false,
 	shouldRenderStandalone: false,
 	isInitialStateLoaded: false,
+	registeredPlugins: {},
+	query: null,
 };
 
 const reducer = ( state = initialState, action ) => {
@@ -27,6 +29,14 @@ const reducer = ( state = initialState, action ) => {
 			return {
 				...state,
 				isInitialStateLoaded: true,
+			};
+		case 'REGISTER_PLUGIN':
+			return {
+				...state,
+				registeredPlugins: {
+					...state.registeredPlugins,
+					[ action.name ]: action.config,
+				},
 			};
 	}
 	return state;
@@ -55,6 +65,13 @@ const actions = {
 			type: 'SET_INITIAL_STATE_LOADED',
 		};
 	},
+	registerPlugin: ( name, config ) => {
+		return {
+			type: 'REGISTER_PLUGIN',
+			name,
+			config,
+		};
+	},
 };
 
 const selectors = {
@@ -69,6 +86,17 @@ const selectors = {
 	},
 	isInitialStateLoaded: ( state ) => {
 		return state.isInitialStateLoaded;
+	},
+	getPluginsArray: ( state ) => {
+		const registeredPlugins = state.registeredPlugins;
+		const pluginsArray = [];
+		Object.entries( registeredPlugins ).map( ( [ key, config ] ) => {
+			const plugin = () => {
+				return config;
+			};
+			pluginsArray.push( plugin() );
+		} );
+		return pluginsArray;
 	},
 };
 
