@@ -5,11 +5,8 @@ import { useDispatch, useSelect } from '@wordpress/data';
 export function EditorDrawer( { children } ) {
 	const buttonLabel = '🚀';
 
-	const { isDrawerOpen } = useSelect( ( select ) => {
-		const wpgraphqlIde = select( 'wpgraphql-ide' );
-		return {
-			isDrawerOpen: wpgraphqlIde.isDrawerOpen(),
-		};
+	const isDrawerOpen = useSelect( ( select ) => {
+		return select( 'wpgraphql-ide' ).isDrawerOpen();
 	} );
 
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
@@ -23,7 +20,9 @@ export function EditorDrawer( { children } ) {
 				open={ isDrawerOpen }
 				onOpenChange={ setDrawerOpen }
 			>
-				<VaulDrawer.Trigger className="EditorDrawerButton">{ buttonLabel }</VaulDrawer.Trigger>
+				<VaulDrawer.Trigger className="EditorDrawerButton">
+					{ buttonLabel }
+				</VaulDrawer.Trigger>
 				<VaulDrawer.Portal>
 					<VaulDrawer.Content>{ children }</VaulDrawer.Content>
 					<VaulDrawer.Overlay />

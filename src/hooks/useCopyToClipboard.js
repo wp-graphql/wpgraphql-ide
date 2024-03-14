@@ -9,7 +9,7 @@ import copy from 'copy-to-clipboard';
  * allowing for user feedback. After copying, it dispatches a WordPress admin notice
  * to inform the user.
  *
- * @returns {Function[]} An array where the first element is the copyToClipboard function and
+ * @return {Function[]} An array where the first element is the copyToClipboard function and
  * the second element is a boolean state indicating whether the text has been copied.
  */
 export const useCopyToClipboard = () => {

@@ -15,7 +15,7 @@ import { useCopyToClipboard } from '../../hooks/useCopyToClipboard';
  * via WordPress admin notices.
  *
  * @param {Object} props Component properties.
- * @returns {React.Element} A ToolbarButton element for the share document functionality.
+ * @return {React.Element} A ToolbarButton element for the share document functionality.
  */
 export const ShareDocumentButton = () => {
 	const { queryEditor } = useEditorContext();
@@ -55,7 +55,7 @@ export const ShareDocumentButton = () => {
  * Compresses and encodes a query parameter object for use in a shareable URL.
  *
  * @param {Object} obj The object containing query parameters to be compressed and encoded.
- * @returns {string} A compressed and encoded string representing the query parameters.
+ * @return {string} A compressed and encoded string representing the query parameters.
  */
 export function getHashedQueryParams( obj ) {
 	if ( typeof obj !== 'object' || obj === null ) {

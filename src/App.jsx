@@ -135,16 +135,3 @@ export function RenderApp() {
 		</div>
 	);
 }
-
-/**
- * Get the ID of the HTML element where the React app will be placed.
- *
- * @constant {string} rootElementId - The ID of the HTML element.
- *
- * Localized in wpgraphql-ide.php
- */
-const { rootElementId } = window.WPGRAPHQL_IDE_DATA;
-
-const rootElement = document.getElementById( rootElementId );
-const root = createRoot( rootElement );
-root.render( <App /> );

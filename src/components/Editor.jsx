@@ -2,7 +2,6 @@
 import React from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { applyFilters } from '@wordpress/hooks';
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
@@ -29,52 +28,50 @@ const fetcher = async ( graphQLParams ) => {
 /**
  * Filter the Buttons to allow 3rd parties to add their own buttons to the GraphiQL Toolbar.
  */
-const toolbarButtons = applyFilters( 'wpgraphqlide_toolbar_buttons', {
+const toolbarButtons = {
 	copy: CopyQueryButton,
 	prettify: PrettifyButton,
 	merge: MergeFragmentsButton,
-	custom: ShareDocumentButton,
-} );
+	share: ShareDocumentButton,
+};
 
 export function Editor() {
-	const { query, shouldRenderStandalone, plugins } = useSelect(
-		( select ) => {
-			const wpgraphqlIde = select( 'wpgraphql-ide' );
-			return {
-				query: wpgraphqlIde.getQuery(),
-				shouldRenderStandalone: wpgraphqlIde.shouldRenderStandalone(),
-				plugins: wpgraphqlIde.getPluginsArray(),
-			};
-		}
-	);
+	const query = useSelect( ( select ) => {
+		return select( 'wpgraphql-ide' ).getQuery();
+	} );
 
-	const { setDrawerOpen, setQuery } = useDispatch( 'wpgraphql-ide' );
+	const shouldRenderStandalone = useSelect( ( select ) => {
+		return select( 'wpgraphql-ide' ).shouldRenderStandalone();
+	} );
+
+	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
 
 	return (
-		<GraphiQL
-			query={ query }
-			fetcher={ fetcher }
-			onEditQuery={ ( query ) => setQuery( query ) }
-			plugins={ plugins.length > 0 ? plugins : null }
-		>
-			<GraphiQL.Toolbar>
-				{ Object.entries( toolbarButtons ).map( ( [ key, Button ] ) => (
-					<Button key={ key } />
-				) ) }
-			</GraphiQL.Toolbar>
-			<GraphiQL.Logo>
-				{ ! shouldRenderStandalone ? (
-					<button
-						className="button EditorDrawerCloseButton"
-						onClick={ () => setDrawerOpen( false ) }
-					>
-						X
-						<span className="screen-reader-text">close drawer</span>
-					</button>
-				) : (
-					<span />
-				) }
-			</GraphiQL.Logo>
-		</GraphiQL>
+		<>
+			<GraphiQL query={ query } fetcher={ fetcher }>
+				<GraphiQL.Toolbar>
+					{ Object.entries( toolbarButtons ).map(
+						( [ key, Button ] ) => (
+							<Button key={ key } />
+						)
+					) }
+				</GraphiQL.Toolbar>
+				<GraphiQL.Logo>
+					{ ! shouldRenderStandalone ? (
+						<button
+							className="button EditorDrawerCloseButton"
+							onClick={ () => setDrawerOpen( false ) }
+						>
+							X
+							<span className="screen-reader-text">
+								close drawer
+							</span>
+						</button>
+					) : (
+						<span />
+					) }
+				</GraphiQL.Logo>
+			</GraphiQL>
+		</>
 	);
 }
