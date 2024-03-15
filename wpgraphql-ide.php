@@ -306,9 +306,20 @@ function get_app_context(): array {
 	);
 }
 
+/**
+ * This enqueues the scripts for each package in the build directory.
+ *
+ * To generate packages, run `npm run build` in the root of the plugin.
+ *
+ * @return void
+ */
 function graphiql_ide_enqueue_scripts() {
 
 	$packages = glob( WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/*/index.min.js' );
+
+	if ( empty( $packages ) ) {
+		return;
+	}
 
 	$scripts = [];
 	foreach ( $packages as $path ) {
@@ -330,17 +341,12 @@ function graphiql_ide_enqueue_scripts() {
 			'in_footer' => true,
 		];
 
-//		wp_enqueue_script(
-//			'wpgraphql-ide-' . $package,
-//			plugins_url( 'build/' . $package . '/index.min.js', __FILE__ ),
-//			[],
-//			filemtime( WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/' . $package . '/index.min.js' ),
-//			true
-//		);
 	}
 
-	foreach ( $scripts as $script ) {
-		wp_enqueue_script( $script['handle'], $script['src'], $script['deps'], $script['ver'], $script['in_footer'] );
+	if ( ! empty( $scripts ) ) {
+		foreach ( $scripts as $script ) {
+			wp_enqueue_script( $script['handle'], $script['src'], $script['deps'], $script['ver'], $script['in_footer'] );
+		}
 	}
 
 }
