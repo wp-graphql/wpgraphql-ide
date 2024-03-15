@@ -1,0 +1,1 @@
+{"version":3,"names":["ActivityBar","createElement"],"sources":["@wordpress/activity-bar/src/index.js"],"sourcesContent":["const ActivityBar = () => {\n  return (\n\t<div>\n\t  <h1>ActivityBar</h1>\n\t</div>\n  );\n}\n\nexport default ActivityBar;\n"],"mappings":";AAAA,MAAMA,WAAW,GAAGA,CAAA,KAAM;EACxB,OACDC,aAAA,cACEA,aAAA,aAAI,aAAe,CAChB,CAAC;AAEP,CAAC;AAED,eAAeD,WAAW"}

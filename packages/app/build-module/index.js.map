@@ -1,0 +1,1 @@
+{"version":3,"names":["App","createElement"],"sources":["@wordpress/app/src/index.js"],"sourcesContent":["const App = () => {\n\treturn (\n\t\t<div>\n\t\t\t<h1>App</h1>\n\t\t</div>\n\t);\n}\n\nexport default App;\n"],"mappings":";AAAA,MAAMA,GAAG,GAAGA,CAAA,KAAM;EACjB,OACCC,aAAA,cACCA,aAAA,aAAI,KAAO,CACP,CAAC;AAER,CAAC;AAED,eAAeD,GAAG"}

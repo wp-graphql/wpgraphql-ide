@@ -2,7 +2,10 @@
 	"private": true,
 	"scripts": {
 		"check-engines": "wp-scripts check-engines",
-		"build": "wp-scripts build",
+    "build": "npm run build:packages && wp-scripts build",
+    "prebuild:packages": "npm run clean:packages && lerna run build",
+    "build:packages": "node ./bin/packages/build.js",
+    "clean:packages": "rimraf \"./packages/*/@(build|build-module|build-style)\"",
 		"start": "wp-scripts start",
 		"test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
 		"test:e2e:ui": "wp-scripts test-playwright --config tests/e2e/playwright.config.js --ui",
@@ -18,14 +21,21 @@
 	"devDependencies": {
 		"@babel/preset-env": "^7.23.9",
 		"@babel/preset-react": "^7.23.3",
+		"@emotion/babel-plugin": "^11.11.0",
 		"@playwright/test": "^1.41.2",
 		"@testing-library/jest-dom": "^6.4.2",
 		"@testing-library/react": "^14.2.1",
 		"@types/node": "^20.11.16",
+		"@wordpress/babel-preset-default": "^7.37.0",
+		"@wordpress/browserslist-config": "^5.36.0",
+		"@wordpress/dependency-extraction-webpack-plugin": "^5.4.0",
 		"@wordpress/e2e-test-utils-playwright": "^0.19.0",
 		"@wordpress/env": "^9.2.0",
+		"@wordpress/readable-js-assets-webpack-plugin": "^2.36.0",
 		"@wordpress/scripts": "^27.3.0",
 		"babel-jest": "^29.7.0",
+		"babel-plugin-inline-json-import": "^0.3.2",
+		"browserslist": "^4.22.2",
 		"chalk": "^5.3.0",
 		"clsx": "^2.0.0",
 		"concurrently": "^8.2.2",
@@ -33,8 +43,11 @@
 		"dotenv": "^16.4.4",
 		"husky": "^9.0.11",
 		"lint-staged": "^15.2.2",
-		"sort-package-json": "^2.7.0"
-	},
+		"moment-timezone-data-webpack-plugin": "^1.5.1",
+		"sort-package-json": "^2.7.0",
+		"worker-farm": "1.7.0",
+    "lerna": "7.1.4"
+  },
 	"dependencies": {
 		"@wordpress/components": "^27.0.0",
 		"@wordpress/data": "^9.22.0",
@@ -54,9 +67,13 @@
 		"graphql-ws": "^5.14.2",
 		"lz-string": "^1.5.0",
 		"react": "^18.2.0",
-		"vaul": "^0.9.0"
+		"vaul": "^0.9.0",
+		"wicg-inert": "3.1.2"
 	},
 	"lint-staged": {
 		"package.json": "sort-package-json"
-	}
+	},
+  "browserslist": [
+    "extends @wordpress/browserslist-config"
+  ]
 }
