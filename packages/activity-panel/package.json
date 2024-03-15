@@ -1,0 +1,35 @@
+{
+  "name": "@wpgraphql-ide/activity-panel",
+  "version": "0.0.1",
+  "author": "WPGraphQL",
+  "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wp-graphql/wpgraphql-ide.git",
+    "directory": "packages/activity-panel"
+  },
+  "bugs": {
+    "url": "https://github.com/wp-graphql/wpgraphql-ide/issues"
+  },
+  "main": "build/index.js",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@wordpress/data": "^9.23.0",
+    "@wordpress/dom": "^3.53.0",
+    "@wordpress/element": "^5.30.0",
+    "@wordpress/hooks": "^1.0.2",
+    "@wpgraphql-ide/activity-bar": "file:packages/activity-bar",
+    "@wpgraphql-ide/activity-panel": "file:packages/activity-panel",
+    "@wpgraphql-ide/app": "file:packages/app",
+    "@wpgraphql-ide/components": "file:packages/components",
+    "@wpgraphql-ide/document-editor": "file:packages/document-editor",
+    "@wpgraphql-ide/preferences": "file:packages/preferences",
+    "@wpgraphql-ide/response-inspector": "file:packages/response-inspector"
+  },
+  "publishConfig": {
+    "access": "private"
+  }
+}

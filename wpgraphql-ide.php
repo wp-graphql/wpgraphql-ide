@@ -134,7 +134,7 @@ function register_wpadminbar_menus(): void {
 				'href'  => '#',
 			]
 		);
-	}   
+	}
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 
@@ -258,8 +258,8 @@ function enqueue_react_app_with_styles(): void {
 	// Avoid running custom styles through a build process for an improved developer experience.
 	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
 }
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
+//add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
+//add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 
 /**
  * Retrieves the base URL for the dedicated WPGraphQL IDE page.
@@ -305,3 +305,51 @@ function get_app_context(): array {
 		]
 	);
 }
+
+/**
+ * This enqueues the scripts for each package in the build directory.
+ *
+ * To generate packages, run `npm run build` in the root of the plugin.
+ *
+ * @return void
+ */
+function graphiql_ide_enqueue_scripts() {
+
+	$packages = glob( WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/*/index.min.js' );
+
+	if ( empty( $packages ) ) {
+		return;
+	}
+
+	$scripts = [];
+	foreach ( $packages as $path ) {
+
+		$handle = 'wpgraphql-ide-' . basename( dirname( $path ) );
+
+		$asset_file = substr( $path, 0, -( strlen( '.js' ) ) ) . '.asset.php';
+		$asset = file_exists( $asset_file ) ? include $asset_file : null;
+		$dependencies = isset( $asset['dependencies'] ) ? $asset['dependencies'] : [];
+		$version = isset( $asset['version'] ) ? $asset['version'] : filemtime( $path );
+
+		$wpgraphql_ide_path = substr( $path, strlen( WPGRAPHQL_IDE_PLUGIN_DIR_PATH ) );
+
+		$scripts[] = [
+			'handle' => $handle,
+			'src' => plugins_url( $wpgraphql_ide_path, __FILE__ ),
+			'deps' => $dependencies,
+			'ver' => $version,
+			'in_footer' => true,
+		];
+
+	}
+
+	if ( ! empty( $scripts ) ) {
+		foreach ( $scripts as $script ) {
+			wp_enqueue_script( $script['handle'], $script['src'], $script['deps'], $script['ver'], $script['in_footer'] );
+		}
+	}
+
+}
+
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\graphiql_ide_enqueue_scripts' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\graphiql_ide_enqueue_scripts' );
