@@ -1,0 +1,35 @@
+{
+  "name": "@wpgraphql-ide/document-editor",
+  "version": "0.0.1",
+  "author": "WPGraphQL",
+  "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wp-graphql/wpgraphql-ide.git",
+    "directory": "packages/document-editor"
+  },
+  "bugs": {
+    "url": "https://github.com/wp-graphql/wpgraphql-ide/issues"
+  },
+  "main": "build/index.js",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@wordpress/data": "^5.0.0",
+    "@wordpress/dom": "^3.53.0",
+    "@wordpress/element": "^3.53.0",
+    "@wordpress/hooks": "^3.53.0",
+    "@wpgraphql-ide/activity-bar": "file:packages/activity-bar",
+    "@wpgraphql-ide/activity-panel": "file:packages/activity-panel",
+    "@wpgraphql-ide/app": "file:packages/app",
+    "@wpgraphql-ide/components": "file:packages/components",
+    "@wpgraphql-ide/document-editor": "file:packages/document-editor",
+    "@wpgraphql-ide/preferences": "file:packages/preferences",
+    "@wpgraphql-ide/response-inspector": "file:packages/response-inspector"
+  },
+  "publishConfig": {
+    "access": "private"
+  }
+}
