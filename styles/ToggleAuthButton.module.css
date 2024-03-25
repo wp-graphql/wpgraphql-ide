@@ -1,0 +1,25 @@
+.authAvatar {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-size: cover;
+    position: relative;
+}
+  
+.authAvatarPublic {
+    filter: grayscale(100%) !important;
+}
+  
+.authBadge {
+    width: 10px;
+    height: 10px;
+    background-color: #52c41a; /* Success color */
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: 2px solid white;
+    transition: background-color 1.5s;
+}
