@@ -4,6 +4,13 @@ import { ToolbarButton } from '@wordpress/components';
 
 import styles from '../../../styles/ToggleAuthButton.module.css';
 
+/**
+ * Component to toggle the authentication state within the GraphiQL IDE.
+ * 
+ * @param {Object} props Component props.
+ * @param {boolean} props.isAuthenticated Indicates if the current state is authenticated.
+ * @param {Function} props.toggleAuthentication Function to toggle the authentication state.
+ */
 export const ToggleAuthButton = ( {
 	isAuthenticated,
 	toggleAuthentication,
@@ -21,12 +28,12 @@ export const ToggleAuthButton = ( {
 			onClick={ toggleAuthentication }
 			label={ title }
 		>
-			<div
+			<span
 				className={ styles.authAvatar }
 				style={ { backgroundImage: `url(${ avatarUrl ?? '' })` } }
 			>
 				<span className={ styles.authBadge }></span>
-			</div>
+			</span>
 		</ToolbarButton>
 	);
 };

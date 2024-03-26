@@ -9,8 +9,12 @@
   
 .authAvatarPublic {
     filter: grayscale(100%) !important;
+
+    .authBadge {
+        animation: bounceOut 0.5s forwards;
+    }
 }
-  
+
 .authBadge {
     width: 10px;
     height: 10px;
@@ -21,5 +25,34 @@
     right: 0;
     top: 0;
     border: 2px solid white;
-    transition: background-color 1.5s;
+    transition: background-color 1.5s, transform 1.5s;
+    animation: bounceIn 0.5s forwards;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceOut {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
 }
