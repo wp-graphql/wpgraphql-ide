@@ -296,18 +296,18 @@ function get_plugin_header( string $key = '' ): ?string {
  * @return array<mixed> The possibly filtered app context array.
  */
 function get_app_context(): array {
-    $current_user = wp_get_current_user();
+	$current_user = wp_get_current_user();
 
-    // Get the avatar URL for the current user. Returns an empty string if no user is logged in.
-    $avatar_url = $current_user->exists() ? get_avatar_url( $current_user->ID ) : '';
+	// Get the avatar URL for the current user. Returns an empty string if no user is logged in.
+	$avatar_url = $current_user->exists() ? get_avatar_url( $current_user->ID ) : '';
 
-    return apply_filters(
-        'wpgraphqlide_context',
-        [
-            'pluginVersion'     => get_plugin_header( 'Version' ),
-            'pluginName'        => get_plugin_header( 'Name' ),
-            'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] ),
-            'avatarUrl'         => $avatar_url,
-        ]
-    );
+	return apply_filters(
+		'wpgraphqlide_context',
+		[
+			'pluginVersion'     => get_plugin_header( 'Version' ),
+			'pluginName'        => get_plugin_header( 'Name' ),
+			'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] ),
+			'avatarUrl'         => $avatar_url,
+		]
+	);
 }

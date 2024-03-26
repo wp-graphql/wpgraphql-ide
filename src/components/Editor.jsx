@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { ToolbarGroup } from '@wordpress/components';
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
@@ -24,30 +23,36 @@ export function Editor() {
 	);
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
 
-    const [isAuthenticated, setIsAuthenticated] = useState(() => {
-        const storedState = localStorage.getItem('graphiql:isAuthenticated');
-        return storedState !== null ? storedState === 'true' : true;
-    });
+	const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
+		const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
+		return storedState !== null ? storedState === 'true' : true;
+	} );
 
-    useEffect(() => {
-        localStorage.setItem('graphiql:isAuthenticated', isAuthenticated.toString());
-    }, [isAuthenticated]);
+	useEffect( () => {
+		localStorage.setItem(
+			'graphiql:isAuthenticated',
+			isAuthenticated.toString()
+		);
+	}, [ isAuthenticated ] );
 
-	const fetcher = useCallback(async ( graphQLParams ) => {
-		const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
-		const headers = {
-			'Content-Type': 'application/json',
-		};
+	const fetcher = useCallback(
+		async ( graphQLParams ) => {
+			const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
+			const headers = {
+				'Content-Type': 'application/json',
+			};
 
-		const response = await fetch( graphqlEndpoint, {
-			method: 'POST',
-			headers,
-			body: JSON.stringify( graphQLParams ),
-			credentials: isAuthenticated ? 'same-origin' : 'omit',
-		} );
+			const response = await fetch( graphqlEndpoint, {
+				method: 'POST',
+				headers,
+				body: JSON.stringify( graphQLParams ),
+				credentials: isAuthenticated ? 'same-origin' : 'omit',
+			} );
 
-		return response.json();
-	}, [isAuthenticated]);
+			return response.json();
+		},
+		[ isAuthenticated ]
+	);
 
 	const toggleAuthentication = () => setIsAuthenticated( ! isAuthenticated );
 
@@ -55,16 +60,14 @@ export function Editor() {
 		<>
 			<GraphiQL query={ query } fetcher={ fetcher }>
 				<GraphiQL.Toolbar>
-					<ToolbarGroup>
-						<ToggleAuthButton
-							isAuthenticated={ isAuthenticated }
-							toggleAuthentication={ toggleAuthentication }
-						/>
-						<PrettifyButton />
-						<CopyQueryButton />
-						<MergeFragmentsButton />
-						<ShareDocumentButton />
-					</ToolbarGroup>
+					<ToggleAuthButton
+						isAuthenticated={ isAuthenticated }
+						toggleAuthentication={ toggleAuthentication }
+					/>
+					<PrettifyButton />
+					<CopyQueryButton />
+					<MergeFragmentsButton />
+					<ShareDocumentButton />
 				</GraphiQL.Toolbar>
 				<GraphiQL.Logo>
 					{ ! shouldRenderStandalone && (
