@@ -3,10 +3,13 @@ import React from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 
+import { queryComposerPlugin } from '../query-composer';
+
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
 import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
 import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
+
 
 import 'graphiql/graphiql.min.css';
 
@@ -35,6 +38,8 @@ const toolbarButtons = {
 	share: ShareDocumentButton,
 };
 
+const queryComposer = queryComposerPlugin();
+
 export function Editor() {
 	const query = useSelect( ( select ) => {
 		return select( 'wpgraphql-ide' ).getQuery();
@@ -48,7 +53,11 @@ export function Editor() {
 
 	return (
 		<>
-			<GraphiQL query={ query } fetcher={ fetcher }>
+			<GraphiQL
+				query={ query }
+				fetcher={ fetcher }
+				plugins={[ queryComposer ]}
+			>
 				<GraphiQL.Toolbar>
 					{ Object.entries( toolbarButtons ).map(
 						( [ key, Button ] ) => (
