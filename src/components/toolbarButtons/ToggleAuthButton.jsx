@@ -25,7 +25,7 @@ export const ToggleAuthButton = ( {
 			className={ clsx( 'graphiql-un-styled', 'graphiql-toolbar-button', {
 				[ styles.authAvatarPublic ]: ! isAuthenticated,
 			} ) }
-			onClick={ toggleAuthentication }
+			onClick={ () => toggleAuthentication() }
 			label={ title }
 		>
 			<span

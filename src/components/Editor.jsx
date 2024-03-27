@@ -17,7 +17,6 @@ export function Editor() {
     const shouldRenderStandalone = useSelect(select => select('wpgraphql-ide').shouldRenderStandalone());
     const isAuthenticated = useSelect(select => select('wpgraphql-ide').isAuthenticated());
 
-	console.log({isAuthenticated, shouldRenderStandalone});
     const fetcher = useCallback(async (graphQLParams) => {
         const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
         const headers = { 'Content-Type': 'application/json' };
@@ -32,41 +31,41 @@ export function Editor() {
         return response.json();
     }, [isAuthenticated]);
 
-	const handleToggleAuthentication = () => {
-		dispatch(actions.toggleAuthentication());
-	};
+    const handleToggleAuthentication = () => {
+        dispatch(actions.toggleAuthentication());
+    };
 
-	const handleDrawerClose = () => {
-		dispatch(actions.setDrawerOpen(false));
-	};
-	
-	return (
-		<>
-			<GraphiQL query={ query } fetcher={ fetcher }>
-				<GraphiQL.Toolbar>
-					<ToggleAuthButton
-						isAuthenticated={ isAuthenticated }
-						toggleAuthentication={ handleToggleAuthentication }
-					/>
-					<PrettifyButton />
-					<CopyQueryButton />
-					<MergeFragmentsButton />
-					<ShareDocumentButton />
-				</GraphiQL.Toolbar>
-				<GraphiQL.Logo>
-					{ ! shouldRenderStandalone && (
-						<button
-							className="button EditorDrawerCloseButton"
-							onClick={handleDrawerClose}
-						>
-							X{ ' ' }
-							<span className="screen-reader-text">
-								close drawer
-							</span>
-						</button>
-					) }
-				</GraphiQL.Logo>
-			</GraphiQL>
-		</>
-	);
+    const handleDrawerClose = () => {
+        dispatch(actions.setDrawerOpen(false));
+    };
+    
+    return (
+        <>
+            <GraphiQL query={ query } fetcher={ fetcher }>
+                <GraphiQL.Toolbar>
+                    <ToggleAuthButton
+                        isAuthenticated={isAuthenticated}
+                        toggleAuthentication={handleToggleAuthentication}
+                    />
+                    <PrettifyButton />
+                    <CopyQueryButton />
+                    <MergeFragmentsButton />
+                    <ShareDocumentButton />
+                </GraphiQL.Toolbar>
+                <GraphiQL.Logo>
+                    { ! shouldRenderStandalone && (
+                        <button
+                            className="button EditorDrawerCloseButton"
+                            onClick={handleDrawerClose}
+                        >
+                            X{ ' ' }
+                            <span className="screen-reader-text">
+                                close drawer
+                            </span>
+                        </button>
+                    ) }
+                </GraphiQL.Logo>
+            </GraphiQL>
+        </>
+    );
 }

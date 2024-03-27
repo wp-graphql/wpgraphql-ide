@@ -1,7 +1,7 @@
 import { createReduxStore } from '@wordpress/data';
 import { getAuthenticationStateFromLocalStorage, setAuthenticationStateInLocalStorage } from '../utils/auth';
 
-const initialState = {
+export const initialState = {
     isDrawerOpen: false,
     shouldRenderStandalone: false,
     isInitialStateLoaded: false,
@@ -10,7 +10,7 @@ const initialState = {
     isAuthenticated: getAuthenticationStateFromLocalStorage()
 };
 
-const reducer = ( state = initialState, action ) => {
+export const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case 'SET_RENDER_STANDALONE':
             return {
@@ -41,6 +41,7 @@ const reducer = ( state = initialState, action ) => {
                 },
             };
         case 'TOGGLE_AUTHENTICATION':
+            console.log('Action received in reducer');
             return {
                 ...state,
                 isAuthenticated: !state.isAuthenticated,
@@ -50,7 +51,7 @@ const reducer = ( state = initialState, action ) => {
     }
 };
 
-const actions = {
+export const actions = {
     setQuery: ( query ) => {
         return {
             type: 'SET_QUERY',
@@ -82,16 +83,15 @@ const actions = {
         };
     },
     toggleAuthentication: () => (dispatch, getState) => {
-        // Dispatch action to toggle authentication state
+        console.log('Action: Toggling authentication');
         dispatch({ type: 'TOGGLE_AUTHENTICATION' });
 
-        // Now, directly handle the side effect using the updated state
         const newState = getState();
         setAuthenticationStateInLocalStorage(newState.isAuthenticated);
     },
 };
 
-const selectors = {
+export const selectors = {
     getQuery: state => state.query,
     isDrawerOpen: state => state.isDrawerOpen,
     shouldRenderStandalone: state => state.shouldRenderStandalone,
