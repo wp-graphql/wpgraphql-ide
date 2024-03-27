@@ -1,7 +1,7 @@
 import { createReduxStore } from '@wordpress/data';
 import { getAuthenticationStateFromLocalStorage, setAuthenticationStateInLocalStorage } from '../utils/auth';
 
-export const initialState = {
+const initialState = {
     isDrawerOpen: false,
     shouldRenderStandalone: false,
     isInitialStateLoaded: false,
@@ -10,7 +10,7 @@ export const initialState = {
     isAuthenticated: getAuthenticationStateFromLocalStorage()
 };
 
-export const reducer = ( state = initialState, action ) => {
+const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case 'SET_RENDER_STANDALONE':
             return {
@@ -91,7 +91,7 @@ export const actions = {
     },
 };
 
-export const selectors = {
+const selectors = {
     getQuery: state => state.query,
     isDrawerOpen: state => state.isDrawerOpen,
     shouldRenderStandalone: state => state.shouldRenderStandalone,

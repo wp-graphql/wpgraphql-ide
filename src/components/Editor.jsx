@@ -31,21 +31,13 @@ export function Editor() {
         return response.json();
     }, [isAuthenticated]);
 
-    const handleToggleAuthentication = () => {
-        dispatch(actions.toggleAuthentication());
-    };
-
-    const handleDrawerClose = () => {
-        dispatch(actions.setDrawerOpen(false));
-    };
-    
     return (
         <>
             <GraphiQL query={ query } fetcher={ fetcher }>
                 <GraphiQL.Toolbar>
                     <ToggleAuthButton
                         isAuthenticated={isAuthenticated}
-                        toggleAuthentication={handleToggleAuthentication}
+                        toggleAuthentication={() => dispatch(actions.toggleAuthentication())}
                     />
                     <PrettifyButton />
                     <CopyQueryButton />
@@ -56,7 +48,7 @@ export function Editor() {
                     { ! shouldRenderStandalone && (
                         <button
                             className="button EditorDrawerCloseButton"
-                            onClick={handleDrawerClose}
+                            onClick={() => dispatch(actions.setDrawerOpen(false))}
                         >
                             X{ ' ' }
                             <span className="screen-reader-text">
