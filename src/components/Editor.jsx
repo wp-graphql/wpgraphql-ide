@@ -1,77 +1,63 @@
-/* global WPGRAPHQL_IDE_DATA */
-import React from 'react';
+import React, { useCallback } from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 
+import { actions } from '../store/index';
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
 import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
 import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
+import { ToggleAuthButton } from './toolbarButtons/ToggleAuthButton';
 
 import 'graphiql/graphiql.min.css';
 
-const fetcher = async ( graphQLParams ) => {
-	const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
-
-	const response = await fetch( graphqlEndpoint, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify( graphQLParams ),
-		credentials: 'same-origin', // or 'include' if your endpoint is on a different domain
-	} );
-
-	return response.json();
-};
-
-/**
- * Filter the Buttons to allow 3rd parties to add their own buttons to the GraphiQL Toolbar.
- */
-const toolbarButtons = {
-	copy: CopyQueryButton,
-	prettify: PrettifyButton,
-	merge: MergeFragmentsButton,
-	share: ShareDocumentButton,
-};
-
 export function Editor() {
-	const query = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide' ).getQuery();
-	} );
+    const dispatch = useDispatch();
+    const query = useSelect(select => select('wpgraphql-ide').getQuery());
+    const shouldRenderStandalone = useSelect(select => select('wpgraphql-ide').shouldRenderStandalone());
+    const isAuthenticated = useSelect(select => select('wpgraphql-ide').isAuthenticated());
 
-	const shouldRenderStandalone = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide' ).shouldRenderStandalone();
-	} );
+    const fetcher = useCallback(async (graphQLParams) => {
+        const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
+        const headers = { 'Content-Type': 'application/json' };
 
-	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
+        const response = await fetch(graphqlEndpoint, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(graphQLParams),
+            credentials: isAuthenticated ? 'same-origin' : 'omit',
+        });
 
-	return (
-		<>
-			<GraphiQL query={ query } fetcher={ fetcher }>
-				<GraphiQL.Toolbar>
-					{ Object.entries( toolbarButtons ).map(
-						( [ key, Button ] ) => (
-							<Button key={ key } />
-						)
-					) }
-				</GraphiQL.Toolbar>
-				<GraphiQL.Logo>
-					{ ! shouldRenderStandalone ? (
-						<button
-							className="button EditorDrawerCloseButton"
-							onClick={ () => setDrawerOpen( false ) }
-						>
-							X
-							<span className="screen-reader-text">
-								close drawer
-							</span>
-						</button>
-					) : (
-						<span />
-					) }
-				</GraphiQL.Logo>
-			</GraphiQL>
-		</>
-	);
+        return response.json();
+    }, [isAuthenticated]);
+
+    return (
+        <>
+            <GraphiQL query={ query } fetcher={ fetcher }>
+                <GraphiQL.Toolbar>
+                    <ToggleAuthButton
+                        isAuthenticated={isAuthenticated}
+                        toggleAuthentication={() => dispatch(actions.toggleAuthentication())}
+                    />
+                    <PrettifyButton />
+                    <CopyQueryButton />
+                    <MergeFragmentsButton />
+                    <ShareDocumentButton />
+                </GraphiQL.Toolbar>
+                <GraphiQL.Logo>
+                    { ! shouldRenderStandalone && (
+                        <button
+                            className="button EditorDrawerCloseButton"
+                            onClick={() => dispatch(actions.setDrawerOpen(false))}
+                        >
+                            X{ ' ' }
+                            <span className="screen-reader-text">
+                                close drawer
+                            </span>
+                        </button>
+                    ) }
+                </GraphiQL.Logo>
+            </GraphiQL>
+        </>
+    );
 }
