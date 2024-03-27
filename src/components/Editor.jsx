@@ -7,6 +7,8 @@ import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
 import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
 import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
+import { explorerPlugin } from "@graphiql/plugin-explorer";
+const explorer = explorerPlugin();
 
 import 'graphiql/graphiql.min.css';
 
@@ -45,6 +47,11 @@ export function Editor() {
 	} );
 
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
+
+	let activePlugins = plugins.length > 0 ? plugins : [];
+
+	// Push the explorer plugin to the activePlugins array
+	activePlugins.push( explorer );
 
 	return (
 		<>
