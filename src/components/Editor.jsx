@@ -3,11 +3,11 @@ import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 
 import { actions } from '../store/index';
-import PrettifyButton from './toolbarButtons/PrettifyButton';
-import CopyQueryButton from './toolbarButtons/CopyQueryButton';
-import MergeFragmentsButton from './toolbarButtons/MergeFragmentsButton';
-import ShareDocumentButton from './toolbarButtons/ShareDocumentButton';
-import ToggleAuthButton from './toolbarButtons/ToggleAuthButton';
+import { PrettifyButton } from './toolbarButtons/PrettifyButton';
+import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
+import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
+import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
+import { ToggleAuthButton } from './toolbarButtons/ToggleAuthButton';
 
 import 'graphiql/graphiql.min.css';
 
@@ -17,6 +17,7 @@ export function Editor() {
     const shouldRenderStandalone = useSelect(select => select('wpgraphql-ide').shouldRenderStandalone());
     const isAuthenticated = useSelect(select => select('wpgraphql-ide').isAuthenticated());
 
+	console.log({isAuthenticated, shouldRenderStandalone});
     const fetcher = useCallback(async (graphQLParams) => {
         const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
         const headers = { 'Content-Type': 'application/json' };
@@ -31,9 +32,12 @@ export function Editor() {
         return response.json();
     }, [isAuthenticated]);
 
-	// Correctly handle toggling authentication
 	const handleToggleAuthentication = () => {
 		dispatch(actions.toggleAuthentication());
+	};
+
+	const handleDrawerClose = () => {
+		dispatch(actions.setDrawerOpen(false));
 	};
 	
 	return (
@@ -53,7 +57,7 @@ export function Editor() {
 					{ ! shouldRenderStandalone && (
 						<button
 							className="button EditorDrawerCloseButton"
-							onClick={ () => setDrawerOpen( false ) }
+							onClick={handleDrawerClose}
 						>
 							X{ ' ' }
 							<span className="screen-reader-text">

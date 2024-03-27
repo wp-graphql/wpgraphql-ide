@@ -41,11 +41,9 @@ const reducer = ( state = initialState, action ) => {
                 },
             };
         case 'TOGGLE_AUTHENTICATION':
-            const isAuthenticated = !state.isAuthenticated;
-            setAuthenticationStateInLocalStorage(isAuthenticated);
             return {
                 ...state,
-                isAuthenticated,
+                isAuthenticated: !state.isAuthenticated,
             };
         default:
             return state;
@@ -83,20 +81,14 @@ const actions = {
             config,
         };
     },
-    toggleAuthentication: () => ({
-        type: 'TOGGLE_AUTHENTICATION',
-    }),
-};
+    toggleAuthentication: () => (dispatch, getState) => {
+        // Dispatch action to toggle authentication state
+        dispatch({ type: 'TOGGLE_AUTHENTICATION' });
 
-const localStorageMiddleware = store => next => action => {
-    if (action.type === 'TOGGLE_AUTHENTICATION') {
-        const nextState = !store.getState().isAuthenticated;
-        
-        setAuthenticationStateInLocalStorage(nextState);
-        next(action);
-    } else {
-        next(action);
-    }
+        // Now, directly handle the side effect using the updated state
+        const newState = getState();
+        setAuthenticationStateInLocalStorage(newState.isAuthenticated);
+    },
 };
 
 const selectors = {
@@ -112,4 +104,4 @@ export const store = createReduxStore( 'wpgraphql-ide', {
     reducer,
     selectors,
     actions,
-}, [ localStorageMiddleware ]);
+});
