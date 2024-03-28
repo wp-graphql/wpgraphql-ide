@@ -1,3 +1,5 @@
+import { Composer } from "./components/Composer";
+
 export const queryComposerPlugin = ( props ) => {
 
 	console.log( {
@@ -30,8 +32,7 @@ export const queryComposerPlugin = ( props ) => {
 		},
 		content: () => (
 			<section aria-label="Query Composer" className="graphiql-query-composer">
-				<h2>Query Composer</h2>
-				<pre>{JSON.stringify(props, null, 2)}</pre>
+				<Composer {...props} key="graphiql-query-composer" />
 			</section>
 		),
 	}
