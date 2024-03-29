@@ -2,8 +2,7 @@
 import React from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
-
-import { queryComposerPlugin } from '../query-composer';
+import { explorerPlugin } from '@graphiql/plugin-explorer';
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
@@ -38,7 +37,9 @@ const toolbarButtons = {
 	share: ShareDocumentButton,
 };
 
-const queryComposer = queryComposerPlugin();
+const explorer = explorerPlugin();
+
+import '../../styles/explorer.css';
 
 export function Editor() {
 	const query = useSelect( ( select ) => {
@@ -56,7 +57,7 @@ export function Editor() {
 			<GraphiQL
 				query={ query }
 				fetcher={ fetcher }
-				plugins={[ queryComposer ]}
+				plugins={[ explorer ]}
 			>
 				<GraphiQL.Toolbar>
 					{ Object.entries( toolbarButtons ).map(
