@@ -15,18 +15,32 @@ import 'graphiql/graphiql.min.css';
  * Manages authentication state and integrates custom toolbar buttons.
  */
 export function Editor() {
-	const query = useSelect( ( select ) =>
-		select( 'wpgraphql-ide' ).getQuery()
-	);
-	const shouldRenderStandalone = useSelect( ( select ) =>
-		select( 'wpgraphql-ide' ).shouldRenderStandalone()
-	);
+	const query = useSelect( ( select ) => select( 'wpgraphql-ide' ).getQuery());
+	const shouldRenderStandalone = useSelect( ( select ) => select( 'wpgraphql-ide' ).shouldRenderStandalone());
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
 
 	const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
 		const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
 		return storedState !== null ? storedState === 'true' : true;
 	} );
+
+    const [ schema, setSchema ] = useState(undefined);
+
+    useEffect(() => {
+		// create a ref
+		const ref = React.createRef();
+		// find the target element in the DOM
+		const element = document.querySelector('[aria-label="Re-fetch GraphQL schema"]');
+		// if the element exists
+		if (element) {
+			// assign the ref to the element
+			element.ref = ref;
+			// listen to click events on the element
+			element.addEventListener('click', () => {
+				setSchema(undefined);
+			});
+		}
+	}, [ schema ]);
 
 	useEffect( () => {
 		localStorage.setItem(
@@ -58,7 +72,16 @@ export function Editor() {
 
 	return (
 		<>
-			<GraphiQL query={ query } fetcher={ fetcher }>
+			<GraphiQL
+                query={ query }
+                fetcher={ fetcher }
+                schema={schema}
+                onSchemaChange={(newSchema) => {
+                    if (schema !== newSchema) {
+                      setSchema(newSchema);
+                    }
+                }}
+            >
 				<GraphiQL.Toolbar>
 					<ToggleAuthButton
 						isAuthenticated={ isAuthenticated }
