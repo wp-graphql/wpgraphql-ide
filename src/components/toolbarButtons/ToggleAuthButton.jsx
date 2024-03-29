@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { ToolbarButton } from '@wordpress/components';
+import { ToolbarButton } from '@graphiql/react';
 
 import styles from '../../../styles/ToggleAuthButton.module.css';
 
