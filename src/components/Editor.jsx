@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { parse, visit } from 'graphql';
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
@@ -15,8 +16,12 @@ import 'graphiql/graphiql.min.css';
  * Manages authentication state and integrates custom toolbar buttons.
  */
 export function Editor() {
-	const query = useSelect( ( select ) => select( 'wpgraphql-ide' ).getQuery());
-	const shouldRenderStandalone = useSelect( ( select ) => select( 'wpgraphql-ide' ).shouldRenderStandalone());
+	const query = useSelect( ( select ) =>
+		select( 'wpgraphql-ide' ).getQuery()
+	);
+	const shouldRenderStandalone = useSelect( ( select ) =>
+		select( 'wpgraphql-ide' ).shouldRenderStandalone()
+	);
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
 
 	const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
@@ -24,23 +29,25 @@ export function Editor() {
 		return storedState !== null ? storedState === 'true' : true;
 	} );
 
-    const [ schema, setSchema ] = useState(undefined);
+	const [ schema, setSchema ] = useState( undefined );
 
-    useEffect(() => {
+	useEffect( () => {
 		// create a ref
 		const ref = React.createRef();
 		// find the target element in the DOM
-		const element = document.querySelector('[aria-label="Re-fetch GraphQL schema"]');
+		const element = document.querySelector(
+			'[aria-label="Re-fetch GraphQL schema"]'
+		);
 		// if the element exists
-		if (element) {
+		if ( element ) {
 			// assign the ref to the element
 			element.ref = ref;
 			// listen to click events on the element
-			element.addEventListener('click', () => {
-				setSchema(undefined);
-			});
+			element.addEventListener( 'click', () => {
+				setSchema( undefined );
+			} );
 		}
-	}, [ schema ]);
+	}, [ schema ] );
 
 	useEffect( () => {
 		localStorage.setItem(
@@ -51,6 +58,28 @@ export function Editor() {
 
 	const fetcher = useCallback(
 		async ( graphQLParams ) => {
+			let isIntrospectionQuery = false;
+
+			try {
+				// Parse the GraphQL query to AST only once and in a try-catch to handle potential syntax errors gracefully
+				const queryAST = parse( graphQLParams.query );
+
+				// Visit each node in the AST efficiently to check for introspection fields
+				visit( queryAST, {
+					Field( node ) {
+						if (
+							node.name.value === '__schema' ||
+							node.name.value === '__typename'
+						) {
+							isIntrospectionQuery = true;
+							return visit.BREAK; // Early exit if introspection query is detected
+						}
+					},
+				} );
+			} catch ( error ) {
+				console.error( 'Error parsing GraphQL query:', error );
+			}
+
 			const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
 			const headers = {
 				'Content-Type': 'application/json',
@@ -60,7 +89,11 @@ export function Editor() {
 				method: 'POST',
 				headers,
 				body: JSON.stringify( graphQLParams ),
-				credentials: isAuthenticated ? 'same-origin' : 'omit',
+				credentials: isIntrospectionQuery
+					? 'include'
+					: isAuthenticated
+					? 'same-origin'
+					: 'omit',
 			} );
 
 			return response.json();
@@ -73,15 +106,15 @@ export function Editor() {
 	return (
 		<>
 			<GraphiQL
-                query={ query }
-                fetcher={ fetcher }
-                schema={schema}
-                onSchemaChange={(newSchema) => {
-                    if (schema !== newSchema) {
-                      setSchema(newSchema);
-                    }
-                }}
-            >
+				query={ query }
+				fetcher={ fetcher }
+				schema={ schema }
+				onSchemaChange={ ( newSchema ) => {
+					if ( schema !== newSchema ) {
+						setSchema( newSchema );
+					}
+				} }
+			>
 				<GraphiQL.Toolbar>
 					<ToggleAuthButton
 						isAuthenticated={ isAuthenticated }
