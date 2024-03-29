@@ -140,6 +140,8 @@ export async function openDrawer( page ) {
 			state: 'visible',
 		} );
 	}
+
+	await page.waitForLoadState( 'networkidle' );
 }
 
 export async function closeDrawer( page ) {
