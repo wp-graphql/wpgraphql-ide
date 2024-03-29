@@ -15,15 +15,15 @@ test.describe( 'GraphiQL Query Composer', () => {
 		await expect( page.locator( '.graphiql-container' ) ).toBeVisible();
 
 		// query composer should be hidden by default
-		await expect( page.locator( '.graphiql-query-composer' ) ).toBeHidden();
+		await expect( page.locator( '.docExplorerWrap' ) ).toBeHidden();
 
 		// open query composer and check if it is visible
-		await page.click( '[aria-label="Show Query Composer"]' );
-		await expect( page.locator( '.graphiql-query-composer' ) ).toBeVisible();
+		await page.click( '[aria-label="Show GraphiQL Explorer"]' );
+		await expect( page.locator( '.docExplorerWrap' ) ).toBeVisible();
 
 		// close query composer and check if it is hidden
-		await page.click( '[aria-label="Hide Query Composer"]' );
-		await expect( page.locator( '.graphiql-query-composer' ) ).toBeHidden();
+		await page.click( '[aria-label="Hide GraphiQL Explorer"]' );
+		await expect( page.locator( '.docExplorerWrap' ) ).toBeHidden();
 
 	});
 
