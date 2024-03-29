@@ -42,15 +42,12 @@
 		"@wordpress/element": "^5.23.0",
 		"@wordpress/hooks": "^3.49.0",
 		"@wordpress/icons": "^9.43.0",
-		"antd": "^5.15.4",
 		"copy-to-clipboard": "^3.3.3",
 		"graphiql": "^3.0.10",
 		"graphql": "^16.8.1",
 		"graphql-ws": "^5.14.2",
 		"lz-string": "^1.5.0",
 		"react": "^18.2.0",
-		"styled-components": "^6.1.8",
-		"use-error-boundary": "^2.0.6",
 		"vaul": "^0.9.0"
 	},
 	"lint-staged": {

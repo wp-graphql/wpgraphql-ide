@@ -53,7 +53,8 @@ export function Editor() {
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
 
 	return (
-		<>
+		// this id is used to scope styles to the app.
+		<span id="wpgraphql-ide-app">
 			<GraphiQL
 				query={ query }
 				fetcher={ fetcher }
@@ -82,6 +83,6 @@ export function Editor() {
 					) }
 				</GraphiQL.Logo>
 			</GraphiQL>
-		</>
+		</span>
 	);
 }
