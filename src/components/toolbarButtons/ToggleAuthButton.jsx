@@ -17,8 +17,8 @@ export const ToggleAuthButton = ( {
 } ) => {
 	const avatarUrl = window.WPGRAPHQL_IDE_DATA?.context?.avatarUrl;
 	const title = isAuthenticated
-		? 'Switch to execute as the logged-in user'
-		: 'Switch to execute as a public user';
+		? 'Switch to execute as a public user'
+		: 'Switch to execute as the logged-in user';
 
 	return (
 		<ToolbarButton
