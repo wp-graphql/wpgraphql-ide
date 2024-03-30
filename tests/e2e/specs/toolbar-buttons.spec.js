@@ -1,6 +1,15 @@
 import {loginToWordPressAdmin, openDrawer, typeQuery, visitAdminFacingPage} from "../utils";
 import {expect, test } from "@wordpress/e2e-test-utils-playwright";
-import { selectors } from "./drawer.spec";
+
+export const selectors = {
+	graphiqlContainer: '.graphiql-container',
+	graphiqlResponse: '.graphiql-response',
+	editorDrawerButton: '.EditorDrawerButton',
+	editorDrawerCloseButton: '.EditorDrawerCloseButton',
+	executeQueryButton: '.graphiql-execute-button',
+	queryInput: '[aria-label="Query Editor"] .CodeMirror',
+	variablesInput: '[aria-label="Variables"] .CodeMirror',
+};
 
 // Login to WordPress before each test
 test.beforeEach( async ( { page } ) => {
@@ -54,7 +63,7 @@ test.describe( 'Toolbar Buttons', () => {
 
 		// Execute the viewer query again
 		await page.click( '.graphiql-execute-button' );
-		
+
 		// The viewer field should exist in the response, but the admin username should not because a public request gets null for the viewer query
 		await expect( response ).toContainText( 'viewer' );
 		await expect( response ).not.toContainText( 'admin' );
