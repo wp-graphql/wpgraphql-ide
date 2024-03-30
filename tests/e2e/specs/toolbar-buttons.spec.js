@@ -13,7 +13,6 @@ export const selectors = {
 
 // Login to WordPress before each test
 test.beforeEach( async ( { page } ) => {
-	await page.evaluate(() => window.localStorage.clear());
 	await loginToWordPressAdmin( page );
 } );
 
