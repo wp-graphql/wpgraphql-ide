@@ -1,8 +1,8 @@
 /* global WPGRAPHQL_IDE_DATA */
 import React from 'react';
 import { Icon, external } from '@wordpress/icons';
-import { VisuallyHidden, ToolbarButton } from '@wordpress/components';
-import { useEditorContext } from '@graphiql/react';
+import { VisuallyHidden } from '@wordpress/components';
+import { useEditorContext, ToolbarButton } from '@graphiql/react';
 import LZString from 'lz-string';
 import { useCopyToClipboard } from '../../hooks/useCopyToClipboard';
 

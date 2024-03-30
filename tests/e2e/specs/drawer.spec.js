@@ -13,7 +13,7 @@ import { getHashedQueryParams } from '../../../src/components/toolbarButtons/Sha
 
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 
-const selectors = {
+export const selectors = {
 	graphiqlContainer: '.graphiql-container',
 	graphiqlResponse: '.graphiql-response',
 	editorDrawerButton: '.EditorDrawerButton',
