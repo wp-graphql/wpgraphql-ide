@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
+import { explorerPlugin } from '@graphiql/plugin-explorer';
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
@@ -9,12 +10,24 @@ import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
 import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
 import { ToggleAuthButton } from './toolbarButtons/ToggleAuthButton';
 
+
 import 'graphiql/graphiql.min.css';
 
 /**
  * Editor component encapsulating the GraphiQL IDE.
  * Manages authentication state and integrates custom toolbar buttons.
  */
+const toolbarButtons = {
+	copy: CopyQueryButton,
+	prettify: PrettifyButton,
+	merge: MergeFragmentsButton,
+	share: ShareDocumentButton,
+};
+
+const explorer = explorerPlugin();
+
+import '../../styles/explorer.css';
+
 export function Editor() {
 	const query = useSelect( ( select ) =>
 		select( 'wpgraphql-ide' ).getQuery()
@@ -104,7 +117,7 @@ export function Editor() {
 	const toggleAuthentication = () => setIsAuthenticated( ! isAuthenticated );
 
 	return (
-		<>
+		<span id="wpgraphql-ide-app">
 			<GraphiQL
 				query={ query }
 				fetcher={ fetcher }
@@ -114,6 +127,7 @@ export function Editor() {
 						setSchema( newSchema );
 					}
 				} }
+				plugins={[ explorer ]}
 			>
 				<GraphiQL.Toolbar>
 					<ToggleAuthButton
@@ -139,6 +153,6 @@ export function Editor() {
 					) }
 				</GraphiQL.Logo>
 			</GraphiQL>
-		</>
+		</span>
 	);
 }
