@@ -158,7 +158,7 @@ const developmentConfigs = require( './tools/webpack/development' );
 const packagesConfig = require( './tools/webpack/packages' );
 
 module.exports = [
-	...blocksConfig,
+	// ...blocksConfig,
 	packagesConfig,
 	...developmentConfigs,
 ];
