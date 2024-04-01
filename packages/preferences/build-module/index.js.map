@@ -1,1 +1,0 @@
-{"version":3,"names":["Preferences","createElement"],"sources":["@wordpress/preferences/src/index.js"],"sourcesContent":["const Preferences = () => {\n\treturn (\n\t\t<div>\n\t\t\t<h1>Preferences</h1>\n\t\t</div>\n\t);\n}\n\nexport default Preferences;\n"],"mappings":";AAAA,MAAMA,WAAW,GAAGA,CAAA,KAAM;EACzB,OACCC,aAAA,cACCA,aAAA,aAAI,aAAe,CACf,CAAC;AAER,CAAC;AAED,eAAeD,WAAW"}

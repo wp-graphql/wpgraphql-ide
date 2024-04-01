@@ -12,6 +12,7 @@
     "url": "https://github.com/wp-graphql/wpgraphql-ide/issues"
   },
   "main": "build/index.js",
+  "module": "build-module/index.js",
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
