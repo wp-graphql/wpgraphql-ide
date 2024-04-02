@@ -1,4 +1,6 @@
 {
+	"name": "@wpgraphql/ide",
+	"version": "1.0.1",
 	"private": true,
 	"scripts": {
 		"check-engines": "wp-scripts check-engines",
@@ -13,6 +15,8 @@
 		"lint:js:fix": "wp-scripts lint-js --fix ./src",
 		"lint:js:src": "wp-scripts lint-js ./src",
 		"wp-env": "wp-env",
+		"changeset": "changeset",
+        "version": "changeset version",
 		"prepare": "husky install"
 	},
 	"devDependencies": {
@@ -36,6 +40,7 @@
 		"sort-package-json": "^2.7.0"
 	},
 	"dependencies": {
+		"@changesets/cli": "^2.27.1",
 		"@graphiql/plugin-explorer": "^1.0.3",
 		"@wordpress/components": "^27.0.0",
 		"@wordpress/data": "^9.22.0",
