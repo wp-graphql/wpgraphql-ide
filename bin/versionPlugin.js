@@ -148,7 +148,7 @@ async function generateReadmeChangelog(readmeTxtFile, changelog) {
     changelog = await readFile(changelog);
 
     changelog = changelog.replace(
-      "# WPGraphQL Content Blocks",
+      "# WPGraphQL IDE",
       "== Changelog =="
     );
 
