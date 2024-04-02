@@ -21,17 +21,13 @@ async function versionPlugin() {
   const pluginFile = path.join(pluginPath, "wpgraphql-ide.php");
   const readmeTxt = path.join(pluginPath, "readme.txt");
   const changelog = path.join(pluginPath, "CHANGELOG.md");
-  const constantsFile = path.join(
-    pluginPath,
-    "wpgraphql-ide.php"
-  );
 
   const version = await getNewVersion(pluginPath);
 
   if (version) {
     await bumpPluginHeader(pluginFile, version);
     await bumpStableTag(readmeTxt, version);
-    await bumpVersionConstant(constantsFile, version);
+    await bumpVersionConstant(pluginFile, version);
     await generateReadmeChangelog(readmeTxt, changelog);
   }
 }
@@ -68,7 +64,7 @@ async function bumpStableTag(readmeTxt, version) {
 async function bumpVersionConstant(pluginFile, version) {
   return bumpVersion(
     pluginFile,
-    /^\s*\$this->define\(\s*'WPGRAPHQL_IDE_VERSION', '([0-9.]+)/gm,
+    /^\s*define\(\s*'WPGRAPHQL_IDE_VERSION',\s*'([0-9.]+)'\s*\);/,
     version
   );
 }
