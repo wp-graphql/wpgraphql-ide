@@ -51,7 +51,7 @@ const baseConfig = {
 	watchOptions: {
 		ignored: [
 			'**/node_modules',
-			'**/packages/*/src/**/*.{js,jsx,ts,tsx,scss}',
+			'**/packages/*/src/**/*.{js,ts,tsx,scss}',
 		],
 		aggregateTimeout: 500,
 	},
@@ -63,6 +63,12 @@ const plugins = [
 	// content as a convenient interactive zoomable treemap.
 	process.env.WP_BUNDLE_ANALYZER && new BundleAnalyzerPlugin(),
 	new DefinePlugin( {
+		// Inject the `IS_GUTENBERG_PLUGIN` global, used for feature flagging.
+		'process.env.IS_GUTENBERG_PLUGIN':
+		process.env.npm_package_config_IS_GUTENBERG_PLUGIN,
+		// Inject the `IS_WORDPRESS_CORE` global, used for feature flagging.
+		'process.env.IS_WORDPRESS_CORE':
+		process.env.npm_package_config_IS_WORDPRESS_CORE,
 		// Inject the `SCRIPT_DEBUG` global, used for dev versions of JavaScript.
 		SCRIPT_DEBUG: mode === 'development',
 	} ),

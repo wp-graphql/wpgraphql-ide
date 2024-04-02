@@ -64,7 +64,7 @@ function isSourceFile( filename ) {
 		.replace( /\\/g, '/' );
 
 	return (
-		/\/src\/.+\.(js|jsx|json|scss|ts|tsx)$/.test( relativePath ) &&
+		/\/src\/.+\.(js|json|scss|ts|tsx)$/.test( relativePath ) &&
 		! [
 			/\/(benchmark|__mocks__|__tests__|test|storybook|stories|e2e-test-utils-playwright)\/.+/,
 			/.\.(spec|test)\.js$/,

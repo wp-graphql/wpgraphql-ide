@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@wpgraphql-ide/*": [ "./*", "./packages/*/src" ],
-      "@ui/*": ["./packages/components/src/*"]
+      "@wpgraphql-ide/*": [ "./*", "./packages/*/src" ]
     }
   },
   "exclude": [

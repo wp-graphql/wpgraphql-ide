@@ -27,7 +27,7 @@
     "@wpgraphql-ide/app": "file:packages/app",
     "@wpgraphql-ide/components": "file:packages/components",
     "@wpgraphql-ide/document-editor": "file:packages/document-editor",
-    "@wpgraphql-ide/preferences": ".",
+    "@wpgraphql-ide/preferences": "file:packages/preferences",
     "@wpgraphql-ide/response-inspector": "file:packages/response-inspector"
   },
   "publishConfig": {
