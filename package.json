@@ -2,13 +2,13 @@
 	"private": true,
 	"scripts": {
 		"check-engines": "wp-scripts check-engines",
-    "build": "npm run build:packages && wp-scripts build",
-    "dev": "npm run build:packages && concurrently \"wp-scripts start\" \"npm run dev:packages\"",
-    "dev:packages": "node ./bin/packages/watch.js",
-    "prebuild:packages": "npm run clean:packages && lerna run build",
-    "build:packages": "node ./bin/packages/build.js",
-    "clean:packages": "rimraf \"./packages/*/@(build|build-module|build-style)\"",
-    "start": "npm run dev",
+		"build": "npm run build:packages && wp-scripts build",
+		"dev": "npm run build:packages && concurrently \"wp-scripts start\" \"npm run dev:packages\"",
+		"dev:packages": "node ./bin/packages/watch.js",
+		"prebuild:packages": "npm run clean:packages && lerna run build",
+		"build:packages": "node ./bin/packages/build.js",
+		"clean:packages": "rimraf \"./packages/*/@(build|build-module|build-style)\"",
+		"start": "npm run dev",
 		"test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
 		"test:e2e:ui": "wp-scripts test-playwright --config tests/e2e/playwright.config.js --ui",
 		"test:unit": "jest --config tests/unit/jest.config.js",
@@ -21,6 +21,7 @@
 		"prepare": "husky install"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.24.3",
 		"@babel/preset-env": "^7.23.9",
 		"@babel/preset-react": "^7.23.3",
 		"@emotion/babel-plugin": "^11.11.0",
@@ -38,22 +39,32 @@
 		"babel-jest": "^29.7.0",
 		"babel-plugin-inline-json-import": "^0.3.2",
 		"browserslist": "^4.22.2",
-    "chalk": "4.1.1",
+		"chalk": "4.1.1",
 		"clsx": "^2.0.0",
 		"concurrently": "^8.2.2",
+		"copy-webpack-plugin": "^12.0.2",
 		"docker-compose": "^0.24.6",
 		"dotenv": "^16.4.4",
-    "fast-glob": "3.2.7",
+		"fast-glob": "3.2.7",
 		"husky": "^9.0.11",
-    "lerna": "7.1.4",
+		"lerna": "7.1.4",
 		"lint-staged": "^15.2.2",
+		"make-dir": "^4.0.0",
 		"moment-timezone-data-webpack-plugin": "^1.5.1",
-    "node-watch": "0.7.0",
-    "progress": "2.0.3",
+		"node-watch": "0.7.0",
+		"postcss": "^8.4.38",
+		"progress": "2.0.3",
+		"rtlcss": "^4.1.1",
+		"sass": "^1.72.0",
 		"sort-package-json": "^2.7.0",
+		"terser-webpack-plugin": "^5.3.10",
+		"webpack": "^5.91.0",
+		"webpack-bundle-analyzer": "^4.10.1",
 		"worker-farm": "1.7.0"
-  },
+	},
 	"dependencies": {
+		"@radix-ui/react-accordion": "^1.1.2",
+		"@radix-ui/react-slot": "^1.0.2",
 		"@wordpress/components": "^27.0.0",
 		"@wordpress/data": "^9.22.0",
 		"@wordpress/element": "^5.23.0",
@@ -78,7 +89,7 @@
 	"lint-staged": {
 		"package.json": "sort-package-json"
 	},
-  "browserslist": [
-    "extends @wordpress/browserslist-config"
-  ]
+	"browserslist": [
+		"extends @wordpress/browserslist-config"
+	]
 }

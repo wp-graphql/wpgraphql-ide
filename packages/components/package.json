@@ -17,6 +17,10 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
+  "sideEffects": [
+    "build-style/**",
+    "src/**/*.css"
+  ],
   "dependencies": {
     "@wordpress/data": "^9.23.0",
     "@wordpress/dom": "^3.53.0",
@@ -28,9 +32,17 @@
     "@wpgraphql-ide/components": "file:packages/components",
     "@wpgraphql-ide/document-editor": "file:packages/document-editor",
     "@wpgraphql-ide/preferences": "file:packages/preferences",
-    "@wpgraphql-ide/response-inspector": "file:packages/response-inspector"
+    "@wpgraphql-ide/response-inspector": "file:packages/response-inspector",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.364.0",
+    "tailwind-merge": "^2.2.2",
+    "tailwindcss-animate": "^1.0.7"
   },
   "publishConfig": {
     "access": "private"
+  },
+  "devDependencies": {
+    "rtlcss": "^4.1.1"
   }
 }

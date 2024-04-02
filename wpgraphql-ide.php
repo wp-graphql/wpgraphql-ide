@@ -257,6 +257,7 @@ function enqueue_react_app_with_styles(): void {
 
 	// Avoid running custom styles through a build process for an improved developer experience.
 	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
+
 }
 //add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 //add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
@@ -340,6 +341,12 @@ function graphiql_ide_enqueue_scripts() {
 			'ver' => $version,
 			'in_footer' => true,
 		];
+
+		if ( file_exists( WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/' . basename( dirname( $path ) ) . '/globals.css' ) ) {
+			wp_enqueue_style( $handle, plugins_url( 'build/' . basename( dirname( $path ) ) . '/globals.css', __FILE__ ), [], $version );
+		}
+
+
 
 	}
 

@@ -75,7 +75,7 @@ const bundledPackagesPhpConfig = [
 	},
 } ) );
 
-const gutenbergPackages = Object.keys( dependencies )
+const wpgraphqlIdePackages = Object.keys( dependencies )
 	.filter(
 		( packageName ) =>
 			! BUNDLED_PACKAGES.includes( packageName ) &&
@@ -128,7 +128,7 @@ module.exports = {
 	...baseConfig,
 	name: 'packages',
 	entry: Object.fromEntries(
-		gutenbergPackages.map( ( packageName ) => [
+		wpgraphqlIdePackages.map( ( packageName ) => [
 			packageName,
 			{
 				import: `./packages/${ packageName }`,
@@ -162,7 +162,7 @@ module.exports = {
 		...plugins,
 		new DependencyExtractionWebpackPlugin( { injectPolyfill: true } ),
 		new CopyWebpackPlugin( {
-			patterns: gutenbergPackages
+			patterns: wpgraphqlIdePackages
 				.map( ( packageName ) => ( {
 					from: '*.css',
 					context: `./packages/${ packageName }/build-style`,

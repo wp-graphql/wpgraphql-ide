@@ -51,7 +51,7 @@ const baseConfig = {
 	watchOptions: {
 		ignored: [
 			'**/node_modules',
-			'**/packages/*/src/**/*.{js,ts,tsx,scss}',
+			'**/packages/*/src/**/*.{js,jsx,ts,tsx,scss,css}',
 		],
 		aggregateTimeout: 500,
 	},

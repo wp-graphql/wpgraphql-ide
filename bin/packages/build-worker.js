@@ -101,31 +101,31 @@ async function buildCSS( file ) {
 		readFile( file, 'utf8' ),
 	] );
 
-	const importLists = [
-		'colors',
-		'breakpoints',
-		'variables',
-		'mixins',
-		'animations',
-		'z-index',
-	]
-		// Editor and component styles should be excluded from the default CSS vars output.
-		.concat(
-			file.includes( 'common.scss' ) ||
-			! (
-				file.includes( 'block-library' ) ||
-				file.includes( 'components' )
-			)
-				? [ 'default-custom-properties' ]
-				: []
-		)
-		.map( ( imported ) => `@import "${ imported }";` )
-		.join( ' ' );
-
+	// const importLists = [
+	// 	'colors',
+	// 	'breakpoints',
+	// 	'variables',
+	// 	'mixins',
+	// 	'animations',
+	// 	'z-index',
+	// ]
+	// 	// Editor and component styles should be excluded from the default CSS vars output.
+	// 	.concat(
+	// 		file.includes( 'common.scss' ) ||
+	// 		! (
+	// 			file.includes( 'block-library' ) ||
+	// 			file.includes( 'components' )
+	// 		)
+	// 			? [ 'default-custom-properties' ]
+	// 			: []
+	// 	)
+	// 	.map( ( imported ) => `@import "${ imported }";` )
+	// 	.join( ' ' );
+	//
 	const builtSass = await renderSass( {
 		file,
 		includePaths: [ path.join( PACKAGES_DIR, 'base-styles' ) ],
-		data: ''.concat( '@use "sass:math";', importLists, contents ),
+		data: ''.concat( '@use "sass:math";', contents ),
 	} );
 
 	const result = await postcss(
@@ -154,7 +154,7 @@ async function buildJS( file ) {
 		JS_ENVIRONMENTS
 	) ) {
 		const destPath = getBuildPath(
-			file.replace( /\.tsx?$/, '.js' ),
+			file.replace( /\.(tsx|jsx)?$/, '.js' ),
 			buildDir
 		);
 		const babelOptions = getBabelConfig(
@@ -187,7 +187,9 @@ async function buildJS( file ) {
  */
 const BUILD_TASK_BY_EXTENSION = {
 	'.scss': buildCSS,
+	'.css': buildCSS,
 	'.js': buildJS,
+	'.jsx': buildJS,
 	'.ts': buildJS,
 	'.tsx': buildJS,
 };
