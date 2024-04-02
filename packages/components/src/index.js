@@ -1,7 +1,11 @@
-const ExampleComponent = () => {
-	return <div>Example Component</div>
-}
+export {
+	Button,
+	buttonVariants
+} from './components/ui/button'
 
-export default {
-	exampleComponent: ExampleComponent,
-}
+export {
+	Badge,
+	badgeVariants
+} from './components/ui/badge'
+
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './components/ui/resizable'

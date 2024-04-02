@@ -30,52 +30,7 @@ const WPGRAPHQL_IDE_NAMESPACE = '@wpgraphql-ide/';
 // !!
 const BUNDLED_PACKAGES = [];
 
-// PHP files in packages that have to be copied during build.
-const bundledPackagesPhpConfig = [
-	{
-		from: './packages/style-engine/',
-		to: 'build/style-engine/',
-		replaceClasses: [
-			'WP_Style_Engine_CSS_Declarations',
-			'WP_Style_Engine_CSS_Rules_Store',
-			'WP_Style_Engine_CSS_Rule',
-			'WP_Style_Engine_Processor',
-			'WP_Style_Engine',
-		],
-	},
-].map( ( { from, to, replaceClasses } ) => ( {
-	from: `${ from }/*.php`,
-	to( { absoluteFilename } ) {
-		const [ , filename ] = absoluteFilename.match(
-			/([\w-]+)(\.php){1,1}$/
-		);
-		return join( to, `${ filename }-gutenberg.php` );
-	},
-	transform: ( content ) => {
-		const classSuffix = '_Gutenberg';
-		const functionPrefix = 'gutenberg_';
-		content = content.toString();
-		// Replace class names.
-		content = content.replace(
-			new RegExp( replaceClasses.join( '|' ), 'g' ),
-			( match ) => `${ match }${ classSuffix }`
-		);
-		// Replace function names.
-		content = Array.from(
-			content.matchAll( /^\s*function ([^\(]+)/gm )
-		).reduce( ( result, [ , functionName ] ) => {
-			// Prepend the Gutenberg prefix, substituting any
-			// other core prefix (e.g. "wp_").
-			return result.replace(
-				new RegExp( functionName, 'g' ),
-				( match ) => functionPrefix + match.replace( /^wp_/, '' )
-			);
-		}, content );
-		return content;
-	},
-} ) );
-
-const gutenbergPackages = Object.keys( dependencies )
+const wpgraphqlIdePackages = Object.keys( dependencies )
 	.filter(
 		( packageName ) =>
 			! BUNDLED_PACKAGES.includes( packageName ) &&
@@ -128,7 +83,7 @@ module.exports = {
 	...baseConfig,
 	name: 'packages',
 	entry: Object.fromEntries(
-		gutenbergPackages.map( ( packageName ) => [
+		wpgraphqlIdePackages.map( ( packageName ) => [
 			packageName,
 			{
 				import: `./packages/${ packageName }`,
@@ -162,7 +117,7 @@ module.exports = {
 		...plugins,
 		new DependencyExtractionWebpackPlugin( { injectPolyfill: true } ),
 		new CopyWebpackPlugin( {
-			patterns: gutenbergPackages
+			patterns: wpgraphqlIdePackages
 				.map( ( packageName ) => ( {
 					from: '*.css',
 					context: `./packages/${ packageName }/build-style`,
@@ -170,7 +125,6 @@ module.exports = {
 					transform: stylesTransform,
 					noErrorOnMissing: true,
 				} ) )
-				// .concat( bundledPackagesPhpConfig )
 				.concat( vendorsCopyConfig ),
 		} ),
 		new MomentTimezoneDataPlugin( {

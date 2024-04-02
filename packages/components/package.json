@@ -13,6 +13,11 @@
   },
   "main": "build/index.js",
   "module": "build-module/index.js",
+  "sideEffects": [
+    "build-style/**",
+    "src/**/*.css",
+    "{src,build,build-module}/{index.js,store/index.js,hooks/**}"
+  ],
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
@@ -25,12 +30,22 @@
     "@wpgraphql-ide/activity-bar": "file:packages/activity-bar",
     "@wpgraphql-ide/activity-panel": "file:packages/activity-panel",
     "@wpgraphql-ide/app": "file:packages/app",
-    "@wpgraphql-ide/components": "file:packages/components",
     "@wpgraphql-ide/document-editor": "file:packages/document-editor",
     "@wpgraphql-ide/preferences": "file:packages/preferences",
-    "@wpgraphql-ide/response-inspector": "file:packages/response-inspector"
+    "@wpgraphql-ide/response-inspector": "file:packages/response-inspector",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.364.0",
+    "react-resizable-panels": "^2.0.16",
+    "tailwind-merge": "^2.2.2",
+    "tailwindcss-animate": "^1.0.7"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "public"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
   }
 }

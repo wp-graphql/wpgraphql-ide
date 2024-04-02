@@ -24,7 +24,7 @@
     "@wordpress/hooks": "^1.0.2",
     "@wpgraphql-ide/activity-bar": "file:packages/activity-bar",
     "@wpgraphql-ide/activity-panel": "file:packages/activity-panel",
-    "@wpgraphql-ide/app": "file:packages/app",
+    "@wpgraphql-ide/app": ".",
     "@wpgraphql-ide/components": "file:packages/components",
     "@wpgraphql-ide/document-editor": "file:packages/document-editor",
     "@wpgraphql-ide/preferences": "file:packages/preferences",
