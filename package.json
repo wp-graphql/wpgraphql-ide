@@ -1,6 +1,6 @@
 {
 	"name": "@wpgraphql/ide",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"private": true,
 	"scripts": {
 		"check-engines": "wp-scripts check-engines",
