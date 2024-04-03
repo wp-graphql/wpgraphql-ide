@@ -18,7 +18,7 @@ export const hooks = createHooks();
 window.WPGraphQLIDE = {
 	hooks,
 	store,
-	GraphQL
+	GraphQL,
 };
 
 /**

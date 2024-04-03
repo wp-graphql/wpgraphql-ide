@@ -134,7 +134,7 @@ function register_wpadminbar_menus(): void {
 				'href'  => '#',
 			]
 		);
-	}   
+	}
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 
@@ -311,3 +311,52 @@ function get_app_context(): array {
 		]
 	);
 }
+
+/**
+ * Add styles to hide generic admin notices on the graphiql-ide page
+ * and play nice with notices added via register_graphql_admin_notice
+ *
+ * @param array $notices The array of notices to render
+ */
+add_action( 'graphql_admin_notices_render_notices', function( array $notices ) {
+
+	echo '
+		<style>
+            body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
+                display: block;
+                position: absolute;
+                top: 0;
+                right: 0;
+                z-index: 1;
+                min-width: 40%;
+            }
+            body.graphql_page_graphql-ide #wpbody .graphiql-container {
+                padding-top: ' . count( $notices ) * 45 .'px;
+            }
+            body.graphql_page_graphql-ide #wpgraphql-ide-root {
+                height: calc(100vh - var(--wp-admin--admin-bar--height) - '. count( $notices ) * 45 . 'px);
+            }
+        </style>
+	';
+
+}, 10, 1 );
+
+/**
+ * Add styles to apply top margin to notices added via register_graphql_admin_notice
+ *
+ * @param string $notice_slug The slug of the notice
+ * @param array $notice The notice data
+ * @param bool $is_dismissable Whether the notice is dismissable
+ * @param int $count The count of notices
+ */
+add_action( 'graphql_admin_notices_render_notice', function( string $notice_slug, array $notice, bool $is_dismissable, int $count ) {
+
+	echo '
+	<style>
+        body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-'. esc_attr( $notice_slug ) .' {
+            top: ' . esc_attr( ( $count * 45 ) . 'px' ) . '
+        }
+    </style>
+	';
+
+}, 10, 4 );
