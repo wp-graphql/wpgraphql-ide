@@ -16,7 +16,7 @@
 		"lint:js:src": "wp-scripts lint-js ./src",
 		"wp-env": "wp-env",
 		"changeset": "changeset",
-		"version": "changeset version",
+		"version": "changeset version && node bin/versionPlugin.js",
 		"prepare": "husky install"
 	},
 	"devDependencies": {
