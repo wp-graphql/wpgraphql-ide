@@ -43,6 +43,7 @@
     "access": "private"
   },
   "devDependencies": {
+    "postcss-import": "^16.1.0",
     "rtlcss": "^4.1.1"
   }
 }

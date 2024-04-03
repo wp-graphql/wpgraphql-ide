@@ -59,6 +59,7 @@ artifacts
 # build/release artifacts
 build/
 build-module/
+build-style/
 wpgraphql-ide/
 wpgraphql-ide.zip
 /test-results/

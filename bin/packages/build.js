@@ -109,7 +109,7 @@ function createStyleEntryTransform() {
 		objectMode: true,
 		async transform( file, encoding, callback ) {
 			// Only stylesheets are subject to this transform.
-			if ( path.extname( file ) !== '.css' ) {
+			if ( path.extname( file ) !== '.scss' ) {
 				this.push( file );
 				callback();
 				return;
@@ -125,7 +125,7 @@ function createStyleEntryTransform() {
 			packages.add( packageName );
 			const entries = await glob(
 				path
-					.resolve( PACKAGES_DIR, packageName, 'src/*.css' )
+					.resolve( PACKAGES_DIR, packageName, 'src/*.scss' )
 					.replace( /\\/g, '/' )
 			);
 
@@ -223,7 +223,7 @@ if ( files.length ) {
 		[
 			`${ PACKAGES_DIR }/*/src/**/*.{js,jsx,ts,tsx}`,
 			`${ PACKAGES_DIR }/*/src/**/**/*.{js,jsx,ts,tsx}`,
-			`${ PACKAGES_DIR }/*/src/*.css`,
+			`${ PACKAGES_DIR }/*/src/*.scss`,
 		],
 		{
 			ignore: [
