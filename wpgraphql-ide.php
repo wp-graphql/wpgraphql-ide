@@ -360,3 +360,21 @@ add_action( 'graphql_admin_notices_render_notice', function( string $notice_slug
 	';
 
 }, 10, 4 );
+
+/**
+ * Filter to allow graphql admin notices to be displayed on the dedicated IDE page.
+ *
+ * @param bool $is_plugin_scoped_page True if the current page is within scope of the plugin's pages.
+ * @param string $current_page_id The ID of the current admin page.
+ * @param array<string> $allowed_pages The list of allowed pages.
+ */
+add_filter( 'graphql_admin_notices_is_plugin_scoped_page', function( bool $is_plugin_scoped_page, string $current_page_id, array $allowed_pages ) {
+
+	// If the current page is the dedicated IDE page, we want to allow notices to be displayed.
+	if ( 'graphql_page_graphql-ide' === $current_page_id ) {
+		return true;
+	}
+
+	return $is_plugin_scoped_page;
+
+}, 10, 3 );
