@@ -135,7 +135,7 @@ function register_wpadminbar_menus(): void {
 				'href'  => '#',
 			]
 		);
-	}   
+	}
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 
@@ -312,3 +312,82 @@ function get_app_context(): array {
 		]
 	);
 }
+
+/**
+ * Add styles to hide generic admin notices on the graphiql-ide page
+ * and play nice with notices added via register_graphql_admin_notice
+ *
+ * @param array $notices The array of notices to render
+ */
+add_action(
+	'graphql_admin_notices_render_notices',
+	static function ( array $notices ) {
+
+		echo '
+		<style>
+            body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
+                display: block;
+                position: absolute;
+                top: 0;
+                right: 0;
+                z-index: 1;
+                min-width: 40%;
+            }
+            body.graphql_page_graphql-ide #wpbody .graphiql-container {
+                padding-top: ' . count( $notices ) * 45 . 'px;
+            }
+            body.graphql_page_graphql-ide #wpgraphql-ide-root {
+                height: calc(100vh - var(--wp-admin--admin-bar--height) - ' . count( $notices ) * 45 . 'px);
+            }
+        </style>
+	';
+	},
+	10,
+	1 
+);
+
+/**
+ * Add styles to apply top margin to notices added via register_graphql_admin_notice
+ *
+ * @param string $notice_slug The slug of the notice
+ * @param array $notice The notice data
+ * @param bool $is_dismissable Whether the notice is dismissable
+ * @param int $count The count of notices
+ */
+add_action(
+	'graphql_admin_notices_render_notice',
+	static function ( string $notice_slug, array $notice, bool $is_dismissable, int $count ) {
+
+		echo '
+	<style>
+        body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-' . esc_attr( $notice_slug ) . ' {
+            top: ' . esc_attr( ( $count * 45 ) . 'px' ) . '
+        }
+    </style>
+	';
+	},
+	10,
+	4 
+);
+
+/**
+ * Filter to allow graphql admin notices to be displayed on the dedicated IDE page.
+ *
+ * @param bool $is_plugin_scoped_page True if the current page is within scope of the plugin's pages.
+ * @param string $current_page_id The ID of the current admin page.
+ * @param array<string> $allowed_pages The list of allowed pages.
+ */
+add_filter(
+	'graphql_admin_notices_is_allowed_admin_page',
+	static function ( bool $is_plugin_scoped_page, string $current_page_id, array $allowed_pages ) {
+
+		// If the current page is the dedicated IDE page, we want to allow notices to be displayed.
+		if ( 'graphql_page_graphql-ide' === $current_page_id ) {
+			return true;
+		}
+
+		return $is_plugin_scoped_page;
+	},
+	10,
+	3 
+);

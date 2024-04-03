@@ -4,6 +4,11 @@
  * Based on https://raw.githubusercontent.com/emilkowalski/vaul/main/src/style.css
  */
 
+
+.graphql_page_graphql-ide #wpbody-content > *:not(#wpgraphql-ide-root):not(.wpgraphql-admin-notice) {
+	display: none;
+}
+
 [vaul-drawer] {
   touch-action: none;
   transform: translate3d(0, 100%, 0);
