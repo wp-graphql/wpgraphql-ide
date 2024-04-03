@@ -318,9 +318,11 @@ function get_app_context(): array {
  *
  * @param array $notices The array of notices to render
  */
-add_action( 'graphql_admin_notices_render_notices', function( array $notices ) {
+add_action(
+	'graphql_admin_notices_render_notices',
+	static function ( array $notices ) {
 
-	echo '
+		echo '
 		<style>
             body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
                 display: block;
@@ -331,15 +333,17 @@ add_action( 'graphql_admin_notices_render_notices', function( array $notices ) {
                 min-width: 40%;
             }
             body.graphql_page_graphql-ide #wpbody .graphiql-container {
-                padding-top: ' . count( $notices ) * 45 .'px;
+                padding-top: ' . count( $notices ) * 45 . 'px;
             }
             body.graphql_page_graphql-ide #wpgraphql-ide-root {
-                height: calc(100vh - var(--wp-admin--admin-bar--height) - '. count( $notices ) * 45 . 'px);
+                height: calc(100vh - var(--wp-admin--admin-bar--height) - ' . count( $notices ) * 45 . 'px);
             }
         </style>
 	';
-
-}, 10, 1 );
+	},
+	10,
+	1 
+);
 
 /**
  * Add styles to apply top margin to notices added via register_graphql_admin_notice
@@ -349,17 +353,21 @@ add_action( 'graphql_admin_notices_render_notices', function( array $notices ) {
  * @param bool $is_dismissable Whether the notice is dismissable
  * @param int $count The count of notices
  */
-add_action( 'graphql_admin_notices_render_notice', function( string $notice_slug, array $notice, bool $is_dismissable, int $count ) {
+add_action(
+	'graphql_admin_notices_render_notice',
+	static function ( string $notice_slug, array $notice, bool $is_dismissable, int $count ) {
 
-	echo '
+		echo '
 	<style>
-        body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-'. esc_attr( $notice_slug ) .' {
+        body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-' . esc_attr( $notice_slug ) . ' {
             top: ' . esc_attr( ( $count * 45 ) . 'px' ) . '
         }
     </style>
 	';
-
-}, 10, 4 );
+	},
+	10,
+	4 
+);
 
 /**
  * Filter to allow graphql admin notices to be displayed on the dedicated IDE page.
@@ -368,13 +376,17 @@ add_action( 'graphql_admin_notices_render_notice', function( string $notice_slug
  * @param string $current_page_id The ID of the current admin page.
  * @param array<string> $allowed_pages The list of allowed pages.
  */
-add_filter( 'graphql_admin_notices_is_plugin_scoped_page', function( bool $is_plugin_scoped_page, string $current_page_id, array $allowed_pages ) {
+add_filter(
+	'graphql_admin_notices_is_plugin_scoped_page',
+	static function ( bool $is_plugin_scoped_page, string $current_page_id, array $allowed_pages ) {
 
-	// If the current page is the dedicated IDE page, we want to allow notices to be displayed.
-	if ( 'graphql_page_graphql-ide' === $current_page_id ) {
-		return true;
-	}
+		// If the current page is the dedicated IDE page, we want to allow notices to be displayed.
+		if ( 'graphql_page_graphql-ide' === $current_page_id ) {
+			return true;
+		}
 
-	return $is_plugin_scoped_page;
-
-}, 10, 3 );
+		return $is_plugin_scoped_page;
+	},
+	10,
+	3 
+);
