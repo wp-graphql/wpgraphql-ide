@@ -3,6 +3,7 @@ import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
+import { helpPlugin } from './help'
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
@@ -25,6 +26,7 @@ const toolbarButtons = {
 };
 
 const explorer = explorerPlugin();
+const help = helpPlugin();
 
 import '../../styles/explorer.css';
 
@@ -127,7 +129,7 @@ export function Editor() {
 						setSchema( newSchema );
 					}
 				} }
-				plugins={[ explorer ]}
+				plugins={[ explorer, help ]}
 			>
 				<GraphiQL.Toolbar>
 					<ToggleAuthButton

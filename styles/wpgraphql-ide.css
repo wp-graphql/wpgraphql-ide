@@ -235,3 +235,7 @@ body.graphql_page_graphql-ide .AppRoot {
 	hsla(var(--color-neutral), var(--alpha-background-heavy))!important;
 	background: transparent;
 }
+
+.graphiql-container .graphiql-editor-tools>button.active {
+	background-color: hsla(var(--color-neutral), var(--alpha-background-medium));
+}
