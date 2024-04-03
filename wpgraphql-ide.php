@@ -377,7 +377,7 @@ add_action(
  * @param array<string> $allowed_pages The list of allowed pages.
  */
 add_filter(
-	'graphql_admin_notices_is_plugin_scoped_page',
+	'graphql_admin_notices_is_allowed_admin_page',
 	static function ( bool $is_plugin_scoped_page, string $current_page_id, array $allowed_pages ) {
 
 		// If the current page is the dedicated IDE page, we want to allow notices to be displayed.
