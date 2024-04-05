@@ -1,53 +1,53 @@
 name: Release Plugin
 
 on:
-    push:
-        branches:
-            - main
-        tags:
-            - 'v*'
-    pull_request:
-      branches:
-        - main
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
 jobs:
-    build-and-release:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [20]
-        steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v4
+  build-and-release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
-            - name: Install Dependencies using npm ci
-              run: npm ci
+      - name: Install Dependencies using npm ci
+        run: npm ci
 
-            - name: Run Lint and Tests
-              run: |
-                  npm run lint:js
-                  npm run test
+      - name: Run Lint and Tests
+        run: |
+          npm run lint:js
+          npm run test
 
-            - name: Build Package
-              run: npm run build
+      - name: Build Package
+        run: npm run build
 
-            - name: Zip Artifacts
-              run: |
-                  mkdir -p wpgraphql-ide/
-                  rsync -av --exclude-from='.distignore' --delete-excluded ./ wpgraphql-ide/ && zip -r wpgraphql-ide.zip wpgraphql-ide/ && rm -rf wpgraphql-ide/
-                  ls -la
+      - name: Zip Artifacts
+        run: |
+          mkdir -p wpgraphql-ide/
+          rsync -av --exclude-from='.distignore' --delete-excluded ./ wpgraphql-ide/ && zip -r wpgraphql-ide.zip wpgraphql-ide/ && rm -rf wpgraphql-ide/
+          ls -la
 
-            - name: Upload release artifact
-              uses: softprops/action-gh-release@v1
-              with:
-                  files: wpgraphql-ide.zip
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload release artifact
+        uses: softprops/action-gh-release@v1
+        with:
+          files: wpgraphql-ide.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        permissions:
-            contents: write
+    permissions:
+      contents: write
