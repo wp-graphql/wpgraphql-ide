@@ -2,9 +2,13 @@ name: Release Plugin
 
 on:
     push:
+        branches:
+            - main
         tags:
             - 'v*'
-
+    pull_request:
+      branches:
+        - main
 jobs:
     build-and-release:
         runs-on: ubuntu-latest
