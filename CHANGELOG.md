@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+### Patch Changes
+
+- 6d73d1b: Fix automation of release artifact
+
 ## 1.1.0
 
 ### Minor Changes
