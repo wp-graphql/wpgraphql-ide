@@ -20,7 +20,7 @@ GraphQL IDE for WPGraphQL
 
 == Screenshots ==
 
-# Changelog
+== Changelog ==
 
 = 1.1.0 =
 
