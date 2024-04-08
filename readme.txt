@@ -3,7 +3,7 @@ Contributors: jasonbahl, joefusco
 Tags: headless, decoupled, graphql, devtools
 Requires at least: 5.7
 Tested up to: 6.5
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,7 +22,14 @@ GraphQL IDE for WPGraphQL
 
 == Changelog ==
 
-= [1.1.0] - 2024-04-03 =
+= 1.1.1 =
+
+### Patch Changes
+
+- 45333ab: Fix automation of release artifact
+- 6d73d1b: Fix automation of release artifact
+
+= [1.1.0] - 2024-04-3 =
 
 ### Minor Changes
 
@@ -43,8 +50,4 @@ GraphQL IDE for WPGraphQL
 
 - Focusable dismiss button to close the drawer
 
-= [1.0.0] - 2023-11-22 =
-
-### Added
-
-- GraphiQL 3.*
+[View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
