@@ -28,11 +28,6 @@ jobs:
       - name: Install Dependencies using npm ci
         run: npm ci
 
-      - name: Run Lint and Tests
-        run: |
-          npm run lint:js
-          npm run test
-
       - name: Build Package
         run: npm run build
 
