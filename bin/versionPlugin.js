@@ -9,24 +9,12 @@
 const fs = require("fs/promises");
 const path = require("node:path");
 
-/**
- * Reads the content of a file.
- * @param {string} filename - The path to the file to be read.
- * @returns {Promise<string>} The content of the file.
- */
 const readFile = (filename) => fs.readFile(filename, { encoding: "utf8" });
-
-/**
- * Writes content to a file.
- * @param {string} file - The path to the file where content will be written.
- * @param {string} data - The content to write to the file.
- * @returns {Promise<void>}
- */
 const writeFile = fs.writeFile;
 
 /**
- * Executes versioning operations for the WordPress plugin including updating
- * the version in various files and generating a changelog in the readme.txt.
+ * Runs all WordPress plugin versioning operations for this plugin
+ * including version bumps and readme.txt changelog updates.
  */
 async function versionPlugin() {
   const pluginPath = path.join(__dirname, "../");
@@ -45,27 +33,33 @@ async function versionPlugin() {
 }
 
 /**
- * Updates the version number in the plugin's PHP header.
- * @param {string} pluginFile - Path to the plugin's main PHP file.
- * @param {string} version - New version number.
+ * Updates the version number found in the header comment of a given
+ * WordPress plugin's main PHP file.
+ *
+ * @param {String} pluginFile Full path to a file containing a WordPress
+ *                            plugin header comment.
+ * @param {String} version    The new version number.
  */
 async function bumpPluginHeader(pluginFile, version) {
   return bumpVersion(pluginFile, /^\s*\*\s*Version:\s*([0-9.]+)$/gm, version);
 }
 
 /**
- * Updates the stable tag in the plugin's readme.txt.
- * @param {string} readmeTxt - Path to the readme.txt file.
- * @param {string} version - New version number.
+ * Updates the stable tag found in a given WordPress plugin's readme.txt file.
+ *
+ * @param {String} readmeTxt Full path to a file containing a WordPress
+ *                            readme.txt file.
+ * @param {String} version    The new version number.
  */
 async function bumpStableTag(readmeTxt, version) {
   return bumpVersion(readmeTxt, /^Stable tag:\s*([0-9.]+)$/gm, version);
 }
 
 /**
- * Updates the version constant within the plugin.
- * @param {string} pluginFile - Path to the plugin's main PHP file.
- * @param {string} version - New version number.
+ * Updates the version constant found in the WPGraphQLContentBlocks.php file.
+ *
+ * @param {String} pluginFile Full path to a file containing PHP constants.
+ * @param {String} version    The new version number.
  */
 async function bumpVersionConstant(pluginFile, version) {
   return bumpVersion(
@@ -76,10 +70,20 @@ async function bumpVersionConstant(pluginFile, version) {
 }
 
 /**
- * Replaces a version number within a file based on a regular expression match.
- * @param {string} file - Path to the file to be updated.
- * @param {RegExp} regex - Regular expression to match the current version string.
- * @param {string} version - New version number to replace the old version.
+ * Replaces the version number in the first line of a file matching the given
+ * regular expression.
+ *
+ * Note that this function depends on a properly formatted regular expression.
+ * The given regex should meet the following criteria:
+ *
+ *   1. Begins with ^ and ends with $ so that we can match an entire line.
+ *   2. Contains one and only one capturing group that matches only the version
+ *      number portion of the line. For example, in the line " * Version: 1.0.0"
+ *      capturing group 1 of the regex must resolve to "1.0.0".
+ *
+ * @param {String} file    Full path to the file to update.
+ * @param {RegExp} regex   A valid regular expression as noted above.
+ * @param {String} version The new version number.
  */
 async function bumpVersion(file, regex, version) {
   try {
@@ -90,7 +94,10 @@ async function bumpVersion(file, regex, version) {
       throw new Error(`Version string does not exist in ${file}`);
     }
 
+    // Replace the version number in the captured line.
     let versionString = matches[0].replace(matches[1], version);
+
+    // Replace the captured line with the new version string.
     data = data.replace(matches[0], versionString);
 
     return writeFile(file, data);
@@ -100,15 +107,18 @@ async function bumpVersion(file, regex, version) {
 }
 
 /**
- * Retrieves the current version number from the plugin's package.json file.
- * @param {string} pluginPath - Path to the directory containing package.json.
- * @returns {Promise<string>} The current version number.
+ * Get the current version number from a plugin's package.json file.
+ *
+ * @param {String} pluginPath Full path to the directory containing the plugin's
+ *                            package.json file.
+ * @returns The version number string found in the plugin's package.json.
  */
 async function getNewVersion(pluginPath) {
   const packageJsonFile = path.join(pluginPath, "package.json");
 
   try {
     let packageJson = await readFile(packageJsonFile);
+
     return JSON.parse(packageJson)?.version;
   } catch (e) {
     if (e instanceof SyntaxError) {
@@ -120,23 +130,51 @@ async function getNewVersion(pluginPath) {
 }
 
 /**
- * Generates or updates the changelog section in the plugin's readme.txt.
- * @param {string} readmeTxtFile - Path to the readme.txt file.
- * @param {string} changelog - Path to the CHANGELOG.md file.
+ * Updates the plugin's readme.txt changelog with the latest 3 releases
+ * found in the plugin's CHANGELOG.md file.
+ *
+ * @param {String} readmeTxtFile Full path to the plugin's readme.txt file.
+ * @param {String} changelog     Full path to the plugin's CHANGELOG.md file.
  */
 async function generateReadmeChangelog(readmeTxtFile, changelog) {
   let output = "";
 
   try {
     let readmeTxt = await readFile(readmeTxtFile);
-    changelog = await readFile(changelog);
+    let changelogContent = await readFile(changelog);
 
-    // Custom logic to format and insert changelog entries into readme.txt
-    // Assumes specific formatting of the CHANGELOG.md
+    // Remove the "# Changelog" header if it exists in CHANGELOG.md
+    changelogContent = changelogContent.replace("# Changelog", "");
+
+    // Split the contents by new line
+    const changelogLines = changelogContent.split(/\r?\n/);
+    const processedLines = [];
+    let versionCount = 0;
+
+    // Process all lines in current version
+    changelogLines.every((line) => {
+      // Version numbers in CHANGELOG.md are h2
+      if (line.startsWith("## ")) {
+        if (versionCount == 3) {
+          return false; // Stop processing after 3 versions
+        }
+        // Format version number for WordPress
+        line = line.replace("## ", "= ") + " =";
+        versionCount++;
+      }
+
+      processedLines.push(line);
+
+      return true; // Continue processing
+    });
+
+    changelogContent = processedLines.join("\n");
 
     const changelogStart = readmeTxt.indexOf("== Changelog ==");
+    const readmeTxtBeforeChangelog = readmeTxt.substring(0, changelogStart + "== Changelog ==".length);
 
-    output = readmeTxt.substring(0, changelogStart) + changelog;
+    // Combine the original part of readme.txt up to the changelog section with the new changelog content
+    output = readmeTxtBeforeChangelog + changelogContent;
     output +=
       "\n[View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)";
 
