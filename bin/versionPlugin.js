@@ -141,24 +141,22 @@ async function generateReadmeChangelog(readmeTxtFile, changelog) {
 
   try {
     let readmeTxt = await readFile(readmeTxtFile);
-    changelog = await readFile(changelog);
+    let changelogContent = await readFile(changelog);
 
-    changelog = changelog.replace(
-      "# WPGraphQL IDE",
-      "== Changelog =="
-    );
+    // Remove the "# Changelog" header if it exists in CHANGELOG.md
+    changelogContent = changelogContent.replace("# Changelog", "");
 
-    // split the contents by new line
-    const changelogLines = changelog.split(/\r?\n/);
+    // Split the contents by new line
+    const changelogLines = changelogContent.split(/\r?\n/);
     const processedLines = [];
     let versionCount = 0;
 
-    // print all lines in current version
+    // Process all lines in current version
     changelogLines.every((line) => {
       // Version numbers in CHANGELOG.md are h2
       if (line.startsWith("## ")) {
         if (versionCount == 3) {
-          return false;
+          return false; // Stop processing after 3 versions
         }
         // Format version number for WordPress
         line = line.replace("## ", "= ") + " =";
@@ -167,14 +165,16 @@ async function generateReadmeChangelog(readmeTxtFile, changelog) {
 
       processedLines.push(line);
 
-      return true;
+      return true; // Continue processing
     });
 
-    changelog = processedLines.join("\n");
+    changelogContent = processedLines.join("\n");
 
     const changelogStart = readmeTxt.indexOf("== Changelog ==");
+    const readmeTxtBeforeChangelog = readmeTxt.substring(0, changelogStart + "== Changelog ==".length);
 
-    output = readmeTxt.substring(0, changelogStart) + changelog;
+    // Combine the original part of readme.txt up to the changelog section with the new changelog content
+    output = readmeTxtBeforeChangelog + changelogContent;
     output +=
       "\n[View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)";
 
