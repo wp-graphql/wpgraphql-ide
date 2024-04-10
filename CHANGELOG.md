@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2
+
+### Patch Changes
+
+- 4660517: Fix automation of release artifact
+
 ## 1.1.1
 
 ### Patch Changes
