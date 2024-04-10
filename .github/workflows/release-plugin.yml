@@ -1,4 +1,4 @@
-name: Release
+name: Release Plugin
 
 on:
   push:
@@ -10,10 +10,10 @@ jobs:
     name: Release
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 18.x
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
