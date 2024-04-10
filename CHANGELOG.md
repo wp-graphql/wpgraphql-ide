@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1
+
+### Patch Changes
+
+- 45333ab: Fix automation of release artifact
+- 6d73d1b: Fix automation of release artifact
+
 ## [1.1.0] - 2024-04-3
 
 ### Minor Changes
@@ -25,4 +32,4 @@
 
 ### Added
 
-- GraphiQL 3.*
+- GraphiQL 3.\*
