@@ -4,14 +4,11 @@ on:
   push:
     branches:
       - main
-    tags:
-      - "v*"
+
 jobs:
-  build-and-release:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20]
+  release:
+    name: Release
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -19,10 +16,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          node-version: 18.x
 
-      - name: Install Dependencies using npm ci
+      - name: Install Dependencies
         run: npm ci
 
       - name: Create Release Pull Request or Create GitHub Release
@@ -34,7 +30,7 @@ jobs:
           version: npm run version
           title: "Release Plugin"
           commit: "Release Plugin"
-          
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
