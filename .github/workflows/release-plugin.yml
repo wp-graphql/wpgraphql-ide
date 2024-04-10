@@ -25,21 +25,25 @@ jobs:
       - name: Install Dependencies using npm ci
         run: npm ci
 
-      - name: Build Package
-        run: npm run build
-
-      - name: Zip Artifacts
-        run: |
-          mkdir -p wpgraphql-ide/
-          rsync -av --exclude-from='.distignore' --delete-excluded ./ wpgraphql-ide/ && zip -r wpgraphql-ide.zip wpgraphql-ide/ && rm -rf wpgraphql-ide/
-          ls -la
-
-      - name: Upload release artifact
-        uses: softprops/action-gh-release@v1
+      - name: Create Release Pull Request or Create GitHub Release
+        id: changesets
+        uses: changesets/action@v1
         with:
-          files: wpgraphql-ide.zip
+          # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: npm run release
+          version: npm run version
+          title: "Release Plugin"
+          commit: "Release Plugin"
+          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    permissions:
-      contents: write
+      - name: Upload release artifact
+        if: steps.changesets.outputs.published == 'true'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: "@wpgraphql/ide.zip"
+          asset_name: wpgraphql-ide.zip
+          tag: ${{ format('v{0}', fromJSON(steps.changesets.outputs.publishedPackages)[0].version) }}
+          overwrite: true
