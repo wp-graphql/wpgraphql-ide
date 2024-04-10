@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.3
+
+### Patch Changes
+
+- 3f6969a: Fix automation of release artifact
+
 ## 1.1.2
 
 ### Patch Changes
