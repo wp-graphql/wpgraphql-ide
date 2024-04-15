@@ -34,6 +34,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check published output
+        run: |
+          echo "Published: ${{ steps.changesets.outputs.published }}"
+
       - name: Upload release artifact
         if: steps.changesets.outputs.published == 'true'
         uses: svenstaro/upload-release-action@v2
