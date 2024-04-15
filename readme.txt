@@ -26,6 +26,12 @@ GraphQL IDE for WPGraphQL
 
 ### Patch Changes
 
+- 1f3d5b4: Fix automation of release artifact
+
+= 1.1.3 =
+
+### Patch Changes
+
 - 3f6969a: Fix automation of release artifact
 
 = 1.1.2 =
@@ -33,12 +39,5 @@ GraphQL IDE for WPGraphQL
 ### Patch Changes
 
 - 4660517: Fix automation of release artifact
-
-= 1.1.1 =
-
-### Patch Changes
-
-- 45333ab: Fix automation of release artifact
-- 6d73d1b: Fix automation of release artifact
 
 [View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
