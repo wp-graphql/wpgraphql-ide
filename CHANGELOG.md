@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.7
+
+### Patch Changes
+
+- 195dba9: fix: update z-index of the CodeMirror-info tooltip to show above the drawer
+
 ## 1.1.6
 
 ### Patch Changes
