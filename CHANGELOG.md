@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.4
+
+### Patch Changes
+
+- f0aaec1: automate github release upload
+
 ## 1.1.3
 
 ### Patch Changes
