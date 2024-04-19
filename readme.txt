@@ -3,7 +3,7 @@ Contributors: jasonbahl, joefusco
 Tags: headless, decoupled, graphql, devtools
 Requires at least: 5.7
 Tested up to: 6.5
-Stable tag: 1.1.4
+Stable tag: 1.1.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,22 +22,22 @@ GraphQL IDE for WPGraphQL
 
 == Changelog ==
 
+= 1.1.6 =
+
+### Patch Changes
+
+- b3164da: fix GitHub release upload
+
+= 1.1.5 =
+
+### Patch Changes
+
+- 364b930: Fix release automation
+
 = 1.1.4 =
 
 ### Patch Changes
 
 - f0aaec1: automate github release upload
-
-= 1.1.3 =
-
-### Patch Changes
-
-- 1f3d5b4: Fix automation of release artifact
-
-= 1.1.3 =
-
-### Patch Changes
-
-- 3f6969a: Fix automation of release artifact
 
 [View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
