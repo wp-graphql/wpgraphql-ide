@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.6
+
+### Patch Changes
+
+- b3164da: fix GitHub release upload
+
 ## 1.1.5
 
 ### Patch Changes
