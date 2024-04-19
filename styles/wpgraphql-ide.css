@@ -239,3 +239,6 @@ body.graphql_page_graphql-ide .AppRoot {
 .graphiql-container .graphiql-editor-tools>button.active {
 	background-color: hsla(var(--color-neutral), var(--alpha-background-medium));
 }
+
+/** Fix for the CodeMirror info tooltip */
+.CodeMirror-info { z-index: 999999; }
