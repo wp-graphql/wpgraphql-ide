@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.5
+
+### Patch Changes
+
+- 364b930: Fix release automation
+
 ## 1.1.4
 
 ### Patch Changes
