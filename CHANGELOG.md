@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.8
+
+### Patch Changes
+
+- b005b0e: update tested up to version to WordPress 6.5
+
 ## 1.1.7
 
 ### Patch Changes
