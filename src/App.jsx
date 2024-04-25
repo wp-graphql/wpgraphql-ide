@@ -1,5 +1,5 @@
 /* global WPGRAPHQL_IDE_DATA */
-import { createRoot, useEffect } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { doAction } from '@wordpress/hooks';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, print } from 'graphql';
@@ -8,7 +8,7 @@ import LZString from 'lz-string';
 import { EditorDrawer } from './components/EditorDrawer';
 import { Editor } from './components/Editor';
 
-const { isDedicatedIdePage } = window.WPGRAPHQL_IDE_DATA;
+const { isDedicatedIdePage, context: { drawerButtonLabel } } = window.WPGRAPHQL_IDE_DATA;
 
 const url = new URL( window.location.href );
 const params = url.searchParams;
@@ -129,7 +129,7 @@ export function RenderApp() {
 
 	return (
 		<div className="AppRoot">
-			<EditorDrawer>
+			<EditorDrawer buttonLabel={drawerButtonLabel}>
 				<Editor />
 			</EditorDrawer>
 		</div>
