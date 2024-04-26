@@ -133,7 +133,7 @@ function register_wpadminbar_menus(): void {
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide-button',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel']. '</div>',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel'] . '</div>',
 				'href'  => '#',
 			]
 		);
@@ -410,7 +410,7 @@ add_filter(
  */
 add_filter(
 	'script_loader_tag',
-	static function( string $tag, string $handle ) {
+	static function ( string $tag, string $handle ) {
 
 		if ( 'wpgraphql-ide' === $handle ) {
 			return str_replace( ' src', ' defer="defer" src', $tag );
