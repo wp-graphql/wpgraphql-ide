@@ -32,12 +32,12 @@ import '../../styles/explorer.css';
 
 export function Editor() {
 	const query = useSelect( ( select ) =>
-		select( 'wpgraphql-ide' ).getQuery()
+		select( 'wpgraphql-ide/app' ).getQuery()
 	);
 	const shouldRenderStandalone = useSelect( ( select ) =>
-		select( 'wpgraphql-ide' ).shouldRenderStandalone()
+		select( 'wpgraphql-ide/app' ).shouldRenderStandalone()
 	);
-	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
+	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide/app' );
 
 	const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
 		const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
