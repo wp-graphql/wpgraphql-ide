@@ -1,7 +1,7 @@
 import { createReduxStore } from '@wordpress/data';
 
 const initialState = {
-	buttons: []
+	buttons: {}
 };
 
 const reducer = ( state = initialState, action ) => {
@@ -9,7 +9,10 @@ const reducer = ( state = initialState, action ) => {
 		case 'REGISTER_BUTTON':
 			return {
 				...state,
-				buttons: state.buttons.push(action.name),
+				buttons: {
+                    ...state.buttons,
+                    [action.name]: action.config
+                },
 			};
 	}
 	return state;
