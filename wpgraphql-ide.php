@@ -311,8 +311,8 @@ function get_app_context(): array {
 			'pluginName'               => get_plugin_header( 'Name' ),
 			'externalFragments'        => apply_filters( 'wpgraphqlide_external_fragments', [] ),
 			'avatarUrl'                => $avatar_url,
-			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', '🚀' ),
-			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', '⏳' ),
+			'drawerButtonLabel'        => '🚀',
+			'drawerButtonLoadingLabel' => '⏳',
 		]
 	);
 }
