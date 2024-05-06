@@ -1,26 +1,33 @@
-// Import WordPress dependencies for hooks, data handling, and component rendering.
+/**
+ * @file
+ * Initializes the WPGraphQL IDE by setting up the necessary WordPress hooks,
+ * registering the global store, and exposing the GraphQL functionality through a global IDE object.
+ */
+
+// External dependencies
 import { createHooks } from '@wordpress/hooks';
 import { register } from '@wordpress/data';
-import { render, createRoot } from '@wordpress/element';
+import { createRoot } from '@wordpress/element';
 import * as GraphQL from 'graphql/index.js';
 
-// Import local store configuration and the main App component.
+// Internal dependencies
 import { store } from './store';
 import { App } from './App';
 
 /**
- * Registers the store with WordPress data module to make it globally accessible.
+ * Registers the application's data store with WordPress to enable global state management.
  */
 register( store );
 
 /**
- * Creates a central event hook system for the WPGraphQL IDE, facilitating the extension
- * of functionality through external scripts and internal hooks.
+ * Initializes a hooks system to extend the functionality of the WPGraphQL IDE through
+ * external scripts and internal plugin hooks.
  */
 export const hooks = createHooks();
 
 /**
- * Exposes a global IDE variable, making it accessible for extensions and external scripts.
+ * Exposes a global `WPGraphQLIDE` variable that includes hooks, store, and GraphQL references,
+ * making them accessible for extensions and external scripts.
  */
 window.WPGraphQLIDE = {
 	hooks,
@@ -29,27 +36,12 @@ window.WPGraphQLIDE = {
 };
 
 /**
- * Function to abstract the differences in rendering methods between different versions of React.
- * Uses `createRoot` if available, falling back to `render` if not, to accommodate different React versions.
- *
- * @param {HTMLElement}  root      - The DOM element where the React component will be mounted.
- * @param {ReactElement} component - The React component to render.
- */
-function compatibleRender( root, component ) {
-	if ( typeof createRoot !== 'undefined' ) {
-		createRoot( root ).render( component );
-	} else {
-		render( component, root );
-	}
-}
-
-/**
- * Immediately attempt to render the React application to the designated mount point.
- * This assumes that the script is loaded with 'defer', ensuring the DOM is parsed beforehand.
+ * Attempts to render the React application to a specified mount point in the DOM.
+ * Logs an error to the console if the mount point is missing.
  */
 const appMountPoint = document.getElementById( 'wpgraphql-ide-root' );
 if ( appMountPoint ) {
-	compatibleRender( appMountPoint, <App /> );
+	createRoot( appMountPoint ).render( <App /> );
 } else {
 	console.error(
 		'WPGraphQL IDE mount point not found. Please ensure an element with ID "wpgraphql-ide-root" exists.'
