@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPGRAPHQL_IDE_VERSION', '1.0.1' );
+define( 'WPGRAPHQL_IDE_VERSION', '1.1.8' );
 define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
 define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -236,7 +236,7 @@ function enqueue_react_app_with_styles(): void {
 		plugins_url( 'build/index.js', __FILE__ ),
 		$asset_file['dependencies'],
 		$asset_file['version'],
-		true
+		false
 	);
 
 	wp_localize_script(
@@ -311,8 +311,8 @@ function get_app_context(): array {
 			'pluginName'               => get_plugin_header( 'Name' ),
 			'externalFragments'        => apply_filters( 'wpgraphqlide_external_fragments', [] ),
 			'avatarUrl'                => $avatar_url,
-			'drawerButtonLabel'        => '🚀',
-			'drawerButtonLoadingLabel' => '⏳',
+			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', '🚀' ),
+			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', '⏳' ),
 		]
 	);
 }
