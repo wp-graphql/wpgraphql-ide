@@ -8,7 +8,10 @@ import LZString from 'lz-string';
 import { EditorDrawer } from './components/EditorDrawer';
 import { Editor } from './components/Editor';
 
-const { isDedicatedIdePage, context: { drawerButtonLabel } } = window.WPGRAPHQL_IDE_DATA;
+const {
+	isDedicatedIdePage,
+	context: { drawerButtonLabel },
+} = window.WPGRAPHQL_IDE_DATA;
 
 const url = new URL( window.location.href );
 const params = url.searchParams;
@@ -129,7 +132,7 @@ export function RenderApp() {
 
 	return (
 		<div className="AppRoot">
-			<EditorDrawer buttonLabel={drawerButtonLabel}>
+			<EditorDrawer buttonLabel={ drawerButtonLabel }>
 				<Editor />
 			</EditorDrawer>
 		</div>

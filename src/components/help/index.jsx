@@ -6,12 +6,12 @@ export const helpPlugin = () => {
 		title: 'Help',
 		icon: () => (
 			<Icon
-				icon={help}
-				style={{
+				icon={ help }
+				style={ {
 					fill: 'hsla(var(--color-neutral), var(--alpha-tertiary))',
-				}}
+				} }
 			/>
 		),
-		content: () => <HelpPanel/>,
+		content: () => <HelpPanel />,
 	};
 };
