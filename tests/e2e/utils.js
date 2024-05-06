@@ -127,13 +127,6 @@ export async function visitPluginsPage( page ) {
 	} );
 }
 
-export async function visitSpecificPage(page, path) {
-    const fullUrl = `${wpHomeUrl}${path}`;
-    await page.goto(fullUrl, {
-        waitUntil: 'networkidle',
-    });
-}
-
 export async function openDrawer( page ) {
 	const isDrawerVisible = await page
 		.locator( '.graphiql-container' )
