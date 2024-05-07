@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPGRAPHQL_IDE_VERSION', '1.0.1' );
+define( 'WPGRAPHQL_IDE_VERSION', '1.1.8' );
 define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
 define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -117,6 +117,8 @@ function register_wpadminbar_menus(): void {
 
 	global $wp_admin_bar;
 
+	$app_context = get_app_context();
+
 	// Link to the new dedicated IDE page.
 	$wp_admin_bar->add_node(
 		[
@@ -131,7 +133,7 @@ function register_wpadminbar_menus(): void {
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide-button',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"></div>',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel'] . '</div>',
 				'href'  => '#',
 			]
 		);
@@ -234,7 +236,7 @@ function enqueue_react_app_with_styles(): void {
 		plugins_url( 'build/index.js', __FILE__ ),
 		$asset_file['dependencies'],
 		$asset_file['version'],
-		true
+		false
 	);
 
 	wp_localize_script(
@@ -305,10 +307,12 @@ function get_app_context(): array {
 	return apply_filters(
 		'wpgraphqlide_context',
 		[
-			'pluginVersion'     => get_plugin_header( 'Version' ),
-			'pluginName'        => get_plugin_header( 'Name' ),
-			'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] ),
-			'avatarUrl'         => $avatar_url,
+			'pluginVersion'            => get_plugin_header( 'Version' ),
+			'pluginName'               => get_plugin_header( 'Name' ),
+			'externalFragments'        => apply_filters( 'wpgraphqlide_external_fragments', [] ),
+			'avatarUrl'                => $avatar_url,
+			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', '🚀' ),
+			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', '⏳' ),
 		]
 	);
 }
@@ -390,4 +394,30 @@ add_filter(
 	},
 	10,
 	3 
+);
+
+/**
+ * Modifies the script tag for specific scripts to add the 'defer' attribute.
+ *
+ * This function checks if the script handle matches 'wpgraphql-ide' and, if so, 
+ * adds the 'defer' attribute to the script tag. This allows the script to be executed 
+ * after the HTML document is parsed but before the DOMContentLoaded event.
+ *
+ * @param string $tag    The HTML `<script>` tag of the enqueued script.
+ * @param string $handle The script's registered handle in WordPress.
+ *
+ * @return string Modified script tag with 'defer' attribute included if handle matches; otherwise, unchanged.
+ */
+add_filter(
+	'script_loader_tag',
+	static function ( string $tag, string $handle ) {
+
+		if ( 'wpgraphql-ide' === $handle ) {
+			return str_replace( ' src', ' defer="defer" src', $tag );
+		}
+
+		return $tag;
+	},
+	10,
+	2
 );
