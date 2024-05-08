@@ -72,12 +72,12 @@ export const helpCards = [
 		linkUrl: 'https://www.wpgraphql.com/Extensions',
 	},
 	{
-		title: 'Join us in Slack',
+		title: 'Join us in Discord',
 		description:
-			'There are ~3,000 people in the WPGraphQL Slack community asking questions and helping each other. Join us today!',
-		linkText: 'Join us in Slack',
+			'Join the WPGraphQL Community in Discord where you can ask questions, show off projects and help other WPGraphQL users. Join us today!',
+		linkText: 'Join us in Discord',
 		linkUrl:
-			'https://join.slack.com/t/wp-graphql/shared_invite/zt-3vloo60z-PpJV2PFIwEathWDOxCTTLA',
+			'https://discord.gg/AGVBqqyaUY',
 	},
 ];
 

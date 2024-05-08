@@ -3,14 +3,13 @@ import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
-import { helpPlugin } from './help'
+import { helpPlugin } from './help';
 
 import { PrettifyButton } from './toolbarButtons/PrettifyButton';
 import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
 import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
 import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
 import { ToggleAuthButton } from './toolbarButtons/ToggleAuthButton';
-
 
 import 'graphiql/graphiql.min.css';
 
@@ -129,7 +128,7 @@ export function Editor() {
 						setSchema( newSchema );
 					}
 				} }
-				plugins={[ explorer, help ]}
+				plugins={ [ explorer, help ] }
 			>
 				<GraphiQL.Toolbar>
 					<ToggleAuthButton

@@ -186,3 +186,30 @@ async function selectAndClearTextUsingKeyboard( page, selector ) {
 	await page.keyboard.press( selectAllCommand ); // Select all text using OS-specific shortcut
 	await page.keyboard.press( 'Backspace' ); // Clear selected text
 }
+
+export async function simulateHeavyJSLoad(page) {
+    await page.evaluate(() => {
+        // Simulate heavy DOM manipulations
+        for (let i = 0; i < 500; i++) {
+            const div = document.createElement('div');
+            div.textContent = `Heavy content ${i}`;
+            div.style.backgroundColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+            document.body.appendChild(div);
+        }
+
+        // Simulate heavy computations
+        const heavyComputation = Array.from({ length: 50000 }, (_, i) => i ** 2).reduce((a, b) => a + b);
+        console.log('Heavy computation result:', heavyComputation);
+
+        // Simulate asynchronous operations
+        new Promise(resolve => setTimeout(resolve, 5000)).then(() => console.log('Delayed operation completed'));
+
+        // Simulate frequent DOM updates
+        setInterval(() => {
+            const randomDiv = document.querySelector(`div:nth-child(${Math.floor(Math.random() * 500) + 1})`);
+            if (randomDiv) {
+                randomDiv.style.backgroundColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+            }
+        }, 10);
+    });
+}

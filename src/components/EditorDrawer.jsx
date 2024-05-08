@@ -2,9 +2,7 @@ import React from 'react';
 import { Drawer as VaulDrawer } from 'vaul';
 import { useDispatch, useSelect } from '@wordpress/data';
 
-export function EditorDrawer( { children } ) {
-	const buttonLabel = '🚀';
-
+export function EditorDrawer( { children, buttonLabel } ) {
 	const isDrawerOpen = useSelect( ( select ) => {
 		return select( 'wpgraphql-ide/app' ).isDrawerOpen();
 	} );
