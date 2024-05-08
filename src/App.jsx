@@ -138,3 +138,5 @@ export function RenderApp() {
 		</div>
 	);
 }
+
+export default App;
