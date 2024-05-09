@@ -85,16 +85,16 @@ export function Editor() {
 
 			const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
 
-			const base64Credentials = btoa(`growth:growth`);
-			
+			const base64Credentials = btoa( `growth:growth` );
+
 			const headers = {
 				'Content-Type': 'application/json',
-				'Authorization': `Basic ${base64Credentials}`
+				Authorization: `Basic ${ base64Credentials }`,
 			};
 
 			console.log( {
-				graphQLParams
-			})
+				graphQLParams,
+			} );
 
 			const response = await fetch( graphqlEndpoint, {
 				method: 'POST',
@@ -108,8 +108,8 @@ export function Editor() {
 			} );
 
 			console.log( {
-				response
-			})
+				response,
+			} );
 
 			return response.json();
 		},

@@ -17,9 +17,7 @@ export const DynamicToolbarButtons = () => {
 					return null;
 				}
 
-				return (
-					<ButtonComponent.component key={ key } />
-				);
+				return <ButtonComponent.component key={ key } />;
 			} ) }
 		</>
 	);
