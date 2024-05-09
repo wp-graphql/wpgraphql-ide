@@ -7,14 +7,13 @@ const initialState = {
 const reducer = ( state = initialState, action ) => {
 	switch ( action.type ) {
 		case 'REGISTER_BUTTON':
-			// Validate buttons
+			// Ensure button name is unique
 			if ( action.name in state.buttons ) {
 				console.warn( {
 					message: `The "${ action.name }" button already exists. Name must be unique.`,
 					existingButton: state.buttons[ action.name ],
-					duplicateButton: action.config,
+					duplicateButton: action.component,
 				} );
-
 				return state;
 			}
 
@@ -22,7 +21,7 @@ const reducer = ( state = initialState, action ) => {
 				...state,
 				buttons: {
 					...state.buttons,
-					[ action.name ]: action.config,
+					[ action.name ]: action.component,
 				},
 			};
 		default:
@@ -31,22 +30,16 @@ const reducer = ( state = initialState, action ) => {
 };
 
 const actions = {
-	registerButton: ( name, config ) => {
-		return {
-			type: 'REGISTER_BUTTON',
-			name,
-			config,
-		};
-	},
+	registerButton: ( name, component ) => ( {
+		type: 'REGISTER_BUTTON',
+		name,
+		component,
+	} ),
 };
 
 const selectors = {
-	buttons: ( state ) => {
-		return state.buttons;
-	},
-	getButtonByName: ( state, name ) => {
-		return state.buttons[ name ];
-	},
+	buttons: ( state ) => state.buttons,
+	getButtonByName: ( state, name ) => state.buttons[ name ],
 };
 
 const store = createReduxStore( 'wpgraphql-ide/editor-toolbar', {

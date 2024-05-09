@@ -3,26 +3,11 @@ import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
-import { helpPlugin } from './help';
 
-import { PrettifyButton } from './toolbarButtons/PrettifyButton';
-import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
-import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
-import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
-import { ToggleAuthButton } from './toolbarButtons/ToggleAuthButton';
+import { helpPlugin } from './help';
+import { DynamicToolbarButtons } from './DynamicToolbarButtons';
 
 import 'graphiql/graphiql.min.css';
-
-/**
- * Editor component encapsulating the GraphiQL IDE.
- * Manages authentication state and integrates custom toolbar buttons.
- */
-const toolbarButtons = {
-	copy: CopyQueryButton,
-	prettify: PrettifyButton,
-	merge: MergeFragmentsButton,
-	share: ShareDocumentButton,
-};
 
 const explorer = explorerPlugin();
 const help = helpPlugin();
@@ -131,15 +116,12 @@ export function Editor() {
 				plugins={ [ explorer, help ] }
 			>
 				<GraphiQL.Toolbar>
-					<ToggleAuthButton
+					<DynamicToolbarButtons
 						isAuthenticated={ isAuthenticated }
 						toggleAuthentication={ toggleAuthentication }
 					/>
-					<PrettifyButton />
-					<CopyQueryButton />
-					<MergeFragmentsButton />
-					<ShareDocumentButton />
 				</GraphiQL.Toolbar>
+
 				<GraphiQL.Logo>
 					{ ! shouldRenderStandalone && (
 						<button

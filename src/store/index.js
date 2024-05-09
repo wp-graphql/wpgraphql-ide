@@ -29,7 +29,7 @@ export function registerEditorToolbarButton( name, config ) {
 			name,
 			config
 		);
-		console.log( `Button registered: ${ name }` );
+		console.log( `Button registered: ${ name }`, config );
 		hooks.doAction( 'afterRegisterToolbarButton', name, config );
 	} catch ( error ) {
 		console.error( `Failed to register button: ${ name }`, error );
