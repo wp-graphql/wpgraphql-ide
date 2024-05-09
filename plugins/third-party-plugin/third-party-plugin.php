@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'THIRD_PARTY_PLUGIN_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
 define( 'THIRD_PARTY_PLUGIN_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'THIRD_PARTY_PLUGIN_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

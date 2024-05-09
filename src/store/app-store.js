@@ -6,6 +6,7 @@ const initialState = {
 	isInitialStateLoaded: false,
 	registeredPlugins: {},
 	query: null,
+	isAuthenticated: true,
 };
 
 const reducer = ( state = initialState, action ) => {
@@ -37,6 +38,11 @@ const reducer = ( state = initialState, action ) => {
 					...state.registeredPlugins,
 					[ action.name ]: action.config,
 				},
+			};
+		case 'TOGGLE_AUTHENTICATION':
+			return {
+				...state,
+				isAuthenticated: ! state.isAuthenticated,
 			};
 	}
 	return state;
@@ -72,6 +78,11 @@ const actions = {
 			config,
 		};
 	},
+	toggleAuthentication: () => {
+		return {
+			type: 'TOGGLE_AUTHENTICATION',
+		};
+	},
 };
 
 const selectors = {
@@ -97,6 +108,9 @@ const selectors = {
 			pluginsArray.push( plugin() );
 		} );
 		return pluginsArray;
+	},
+	isAuthenticated: ( state ) => {
+		return state.isAuthenticated;
 	},
 };
 

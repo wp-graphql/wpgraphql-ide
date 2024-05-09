@@ -1,10 +1,7 @@
 import React from 'react';
 import { useSelect } from '@wordpress/data';
 
-export const DynamicToolbarButtons = ( {
-	isAuthenticated,
-	toggleAuthentication,
-} ) => {
+export const DynamicToolbarButtons = () => {
 	const buttons = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/editor-toolbar' ).buttons()
 	);
@@ -21,11 +18,7 @@ export const DynamicToolbarButtons = ( {
 				}
 
 				return (
-					<ButtonComponent
-						key={ key }
-						isAuthenticated={ isAuthenticated }
-						toggleAuthentication={ toggleAuthentication }
-					/>
+					<ButtonComponent.component key={ key } />
 				);
 			} ) }
 		</>

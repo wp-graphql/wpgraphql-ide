@@ -23,10 +23,14 @@ export function Editor() {
 	);
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide/app' );
 
-	const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
-		const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
-		return storedState !== null ? storedState === 'true' : true;
-	} );
+	// const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
+	// 	const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
+	// 	return storedState !== null ? storedState === 'true' : true;
+	// } );
+
+	const isAuthenticated = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).isAuthenticated()
+	);
 
 	const [ schema, setSchema ] = useState( undefined );
 
@@ -80,9 +84,17 @@ export function Editor() {
 			}
 
 			const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
+
+			const base64Credentials = btoa(`growth:growth`);
+			
 			const headers = {
 				'Content-Type': 'application/json',
+				'Authorization': `Basic ${base64Credentials}`
 			};
+
+			console.log( {
+				graphQLParams
+			})
 
 			const response = await fetch( graphqlEndpoint, {
 				method: 'POST',
@@ -91,16 +103,18 @@ export function Editor() {
 				credentials: isIntrospectionQuery
 					? 'include'
 					: isAuthenticated
-					? 'same-origin'
+					? 'include'
 					: 'omit',
 			} );
+
+			console.log( {
+				response
+			})
 
 			return response.json();
 		},
 		[ isAuthenticated ]
 	);
-
-	const toggleAuthentication = () => setIsAuthenticated( ! isAuthenticated );
 
 	return (
 		<span id="wpgraphql-ide-app">
@@ -116,10 +130,7 @@ export function Editor() {
 				plugins={ [ explorer, help ] }
 			>
 				<GraphiQL.Toolbar>
-					<DynamicToolbarButtons
-						isAuthenticated={ isAuthenticated }
-						toggleAuthentication={ toggleAuthentication }
-					/>
+					<DynamicToolbarButtons />
 				</GraphiQL.Toolbar>
 
 				<GraphiQL.Logo>
