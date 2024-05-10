@@ -19,6 +19,10 @@ define( 'THIRD_PARTY_PLUGIN_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 add_action( 'wpgraphqlide_enqueue_script', function() {
     $asset_file = include THIRD_PARTY_PLUGIN_PLUGIN_DIR_PATH . 'build/index.asset.php';
 
+	if ( empty( $asset_file['dependencies'] ) ) {
+		return;
+	}
+
     wp_enqueue_script(
         'third-party-plugin',
         plugins_url( 'build/index.js', __FILE__ ),
