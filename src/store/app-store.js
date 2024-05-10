@@ -11,7 +11,7 @@ const initialState = {
 };
 
 const setQuery = ( state, action ) => {
-	const editedQuery = action.query;
+	let editedQuery = action.query;
 	const query = state.query;
 
 	let update = false;
@@ -41,11 +41,6 @@ const setQuery = ( state, action ) => {
 	};
 };
 
-const prettifyQuery = ( state, action ) => {
-	action.query = parse( query );
-	return setQuery( state, action );
-};
-
 const reducer = ( state = initialState, action ) => {
 	switch ( action.type ) {
 		case 'SET_RENDER_STANDALONE':
@@ -55,8 +50,6 @@ const reducer = ( state = initialState, action ) => {
 			};
 		case 'SET_QUERY':
 			return setQuery( state, action );
-		case 'PRETTIFY_QUERY':
-			return prettifyQuery( state, action );
 		case 'SET_DRAWER_OPEN':
 			return {
 				...state,
@@ -91,9 +84,17 @@ const actions = {
 		};
 	},
 	prettifyQuery: ( query ) => {
+
+		let editedQuery = query;
+		try {
+			editedQuery = print( parse( editedQuery ) );
+		} catch ( error ) {
+			console.warn( error );
+		}
+
 		return {
-			type: 'PRETTIFY_QUERY',
-			query,
+			type: 'SET_QUERY',
+			query: editedQuery,
 		};
 	},
 	setDrawerOpen: ( isDrawerOpen ) => {
