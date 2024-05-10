@@ -18,6 +18,9 @@ export function Editor() {
 	const query = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/app' ).getQuery()
 	);
+	
+	const { setQuery } = useDispatch( 'wpgraphql-ide/app' );
+
 	const shouldRenderStandalone = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/app' ).shouldRenderStandalone()
 	);
@@ -58,6 +61,31 @@ export function Editor() {
 			isAuthenticated.toString()
 		);
 	}, [ isAuthenticated ] );
+
+	// const handleEditQuery = (editedQuery) => {
+	// 	let update = false;
+	
+	// 	if (editedQuery === query) {
+	// 	  return;
+	// 	}
+	
+	// 	if (null === editedQuery || "" === editedQuery) {
+	// 	  update = true;
+	// 	} else {
+	// 	  try {
+	// 		parse(editedQuery);
+	// 		update = true;
+	// 	  } catch (error) {
+	// 		return;
+	// 	  }
+	// 	}
+	
+	// 	// If the query is valid and should be updated
+	// 	if (update) {
+	// 	  // Update the state with the new query
+	// 	  setQuery(editedQuery);
+	// 	}
+	// };
 
 	const fetcher = useCallback(
 		async ( graphQLParams ) => {
@@ -121,6 +149,7 @@ export function Editor() {
 			<GraphiQL
 				query={ query }
 				fetcher={ fetcher }
+				onEditQuery={ setQuery }
 				schema={ schema }
 				onSchemaChange={ ( newSchema ) => {
 					if ( schema !== newSchema ) {

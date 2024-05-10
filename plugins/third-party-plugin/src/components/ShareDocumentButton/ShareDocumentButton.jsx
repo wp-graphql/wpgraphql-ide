@@ -2,9 +2,9 @@
 import React from 'react';
 import { Icon, external } from '@wordpress/icons';
 import { VisuallyHidden } from '@wordpress/components';
-import { useEditorContext, ToolbarButton } from '@graphiql/react';
+import { useEditorContext } from '@graphiql/react';
 import LZString from 'lz-string';
-import { useCopyToClipboard } from '../../hooks/useCopyToClipboard';
+import { useCopyToClipboard } from '../../../../../src/hooks/useCopyToClipboard';
 
 /**
  * React component for a toolbar button that generates and copies a shareable document link.
@@ -17,7 +17,7 @@ import { useCopyToClipboard } from '../../hooks/useCopyToClipboard';
  * @param {Object} props Component properties.
  * @return {React.Element} A ToolbarButton element for the share document functionality.
  */
-export const ShareDocumentButton = () => {
+export const ShareDocumentButton = ({ ToolbarButton }) => {
 	const { queryEditor } = useEditorContext();
 	const [ copyToClipboard ] = useCopyToClipboard();
 	const { dedicatedIdeBaseUrl } = window.WPGRAPHQL_IDE_DATA;

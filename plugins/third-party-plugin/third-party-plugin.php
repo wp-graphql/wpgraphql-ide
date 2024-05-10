@@ -26,5 +26,13 @@ add_action( 'wpgraphqlide_enqueue_script', function() {
         $asset_file['version'],
         true
     );
+
+    wp_enqueue_style(
+        'third-party-plugin',
+        plugins_url( 'build/index.css', __FILE__ ),
+        [],
+        $asset_file['version'],
+    );
+
 });
 

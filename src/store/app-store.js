@@ -1,4 +1,5 @@
 import { createReduxStore } from '@wordpress/data';
+import { parse } from 'graphql';
 
 const initialState = {
 	isDrawerOpen: false,
@@ -9,6 +10,37 @@ const initialState = {
 	isAuthenticated: true,
 };
 
+const setQuery = (state, action) => {
+	const editedQuery = action.query;
+	const query       = state.query;
+
+	let update = false;
+
+	if (editedQuery === query) {
+		return { ...state };
+	}
+	
+	if (null === editedQuery || "" === editedQuery) {
+		update = true;
+	} else {
+		try {
+			parse(editedQuery);
+			update = true;
+		} catch (error) {
+			return { ...state };
+		}
+	}
+
+	if (!update) {
+		return { ...state };
+	}
+
+	return {
+		...state,
+		query: action.query,
+	};
+}
+
 const reducer = ( state = initialState, action ) => {
 	switch ( action.type ) {
 		case 'SET_RENDER_STANDALONE':
@@ -17,10 +49,7 @@ const reducer = ( state = initialState, action ) => {
 				shouldRenderStandalone: action.shouldRenderStandalone,
 			};
 		case 'SET_QUERY':
-			return {
-				...state,
-				query: action.query,
-			};
+			return setQuery( state, action );
 		case 'SET_DRAWER_OPEN':
 			return {
 				...state,
@@ -49,10 +78,17 @@ const reducer = ( state = initialState, action ) => {
 };
 const actions = {
 	setQuery: ( query ) => {
+		
 		return {
 			type: 'SET_QUERY',
 			query,
 		};
+	},
+	prettifyQuery: (query) => {
+		return {
+			type: 'PRETTIFY_QUERY',
+			query,
+		}
 	},
 	setDrawerOpen: ( isDrawerOpen ) => {
 		return {

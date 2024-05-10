@@ -6,7 +6,7 @@
     background-size: cover;
     position: relative;
 }
-  
+
 .authAvatarPublic {
     filter: grayscale(100%) !important;
 
