@@ -58,8 +58,8 @@ artifacts
 
 # build/release artifacts
 build/
-wpgraphql-ide/
-wpgraphql-ide.zip
+third-party-plugin/
+third-party-plugin.php
 /test-results/
 /playwright-report/
 /blob-report/
