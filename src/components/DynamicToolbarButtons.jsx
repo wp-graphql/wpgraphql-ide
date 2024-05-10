@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelect } from '@wordpress/data';
-import { ToolbarButton } from '@graphiql/react'
+import { ToolbarButton } from '@graphiql/react';
 
 export const DynamicToolbarButtons = () => {
 	const buttons = useSelect( ( select ) =>
@@ -25,7 +25,7 @@ export const DynamicToolbarButtons = () => {
 							ToolbarButton={ ToolbarButton }
 						/>
 					</>
-				)
+				);
 			} ) }
 		</>
 	);

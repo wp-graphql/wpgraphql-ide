@@ -18,7 +18,7 @@ export function Editor() {
 	const query = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/app' ).getQuery()
 	);
-	
+
 	const { setQuery } = useDispatch( 'wpgraphql-ide/app' );
 
 	const shouldRenderStandalone = useSelect( ( select ) =>
@@ -64,11 +64,11 @@ export function Editor() {
 
 	// const handleEditQuery = (editedQuery) => {
 	// 	let update = false;
-	
+
 	// 	if (editedQuery === query) {
 	// 	  return;
 	// 	}
-	
+
 	// 	if (null === editedQuery || "" === editedQuery) {
 	// 	  update = true;
 	// 	} else {
@@ -79,7 +79,7 @@ export function Editor() {
 	// 		return;
 	// 	  }
 	// 	}
-	
+
 	// 	// If the query is valid and should be updated
 	// 	if (update) {
 	// 	  // Update the state with the new query

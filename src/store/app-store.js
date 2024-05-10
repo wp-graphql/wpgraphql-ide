@@ -1,5 +1,5 @@
 import { createReduxStore } from '@wordpress/data';
-import { parse } from 'graphql';
+import { parse, print } from 'graphql';
 
 const initialState = {
 	isDrawerOpen: false,
@@ -10,28 +10,28 @@ const initialState = {
 	isAuthenticated: true,
 };
 
-const setQuery = (state, action) => {
+const setQuery = ( state, action ) => {
 	const editedQuery = action.query;
-	const query       = state.query;
+	const query = state.query;
 
 	let update = false;
 
-	if (editedQuery === query) {
+	if ( editedQuery === query ) {
 		return { ...state };
 	}
-	
-	if (null === editedQuery || "" === editedQuery) {
+
+	if ( null === editedQuery || '' === editedQuery ) {
 		update = true;
 	} else {
 		try {
-			parse(editedQuery);
+			parse( editedQuery );
 			update = true;
-		} catch (error) {
+		} catch ( error ) {
 			return { ...state };
 		}
 	}
 
-	if (!update) {
+	if ( ! update ) {
 		return { ...state };
 	}
 
@@ -39,7 +39,12 @@ const setQuery = (state, action) => {
 		...state,
 		query: action.query,
 	};
-}
+};
+
+const prettifyQuery = ( state, action ) => {
+	action.query = parse( query );
+	return setQuery( state, action );
+};
 
 const reducer = ( state = initialState, action ) => {
 	switch ( action.type ) {
@@ -50,6 +55,8 @@ const reducer = ( state = initialState, action ) => {
 			};
 		case 'SET_QUERY':
 			return setQuery( state, action );
+		case 'PRETTIFY_QUERY':
+			return prettifyQuery( state, action );
 		case 'SET_DRAWER_OPEN':
 			return {
 				...state,
@@ -78,17 +85,16 @@ const reducer = ( state = initialState, action ) => {
 };
 const actions = {
 	setQuery: ( query ) => {
-		
 		return {
 			type: 'SET_QUERY',
 			query,
 		};
 	},
-	prettifyQuery: (query) => {
+	prettifyQuery: ( query ) => {
 		return {
 			type: 'PRETTIFY_QUERY',
 			query,
-		}
+		};
 	},
 	setDrawerOpen: ( isDrawerOpen ) => {
 		return {
