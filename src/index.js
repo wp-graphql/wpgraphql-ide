@@ -6,7 +6,8 @@
 
 // External dependencies
 import { createRoot } from '@wordpress/element';
-import { registerStores, registerEditorToolbarButton } from './store';
+import { registerStores } from './store';
+import { registerEditorToolbarButton } from './store/editor-toolbar';
 import * as GraphQL from 'graphql/index.js';
 
 // Local imports including the hook configuration and the main App component.

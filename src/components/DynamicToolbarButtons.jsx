@@ -9,22 +9,16 @@ export const DynamicToolbarButtons = () => {
 
 	return (
 		<>
-			{ Object.entries( buttons ).map( ( [ key, ButtonComponent ] ) => {
-				if (
-					typeof ButtonComponent !== 'function' &&
-					typeof ButtonComponent !== 'object'
-				) {
-					console.error( `Invalid component for key: ${ key }` );
-					return null;
-				}
+			{ Object.entries( buttons ).map( ([key, config]) => {
+				const props = config();
 
+				// If a component is provided, use it, otherwise use the default ToolbarButton
+				const Component = props.component || ToolbarButton;
 				return (
-					<>
-						<ButtonComponent.component
-							key={ key }
-							ToolbarButton={ ToolbarButton }
-						/>
-					</>
+					<Component
+						key={ key }
+						{ ...props }
+					/>
 				);
 			} ) }
 		</>

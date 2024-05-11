@@ -9,10 +9,10 @@
 
 .authAvatarPublic {
     filter: grayscale(100%) !important;
+}
 
-    .authBadge {
-        animation: bounceOut 0.5s forwards;
-    }
+.authAvatarPublic .authBadge {
+	animation: bounceOut 0.5s forwards;
 }
 
 .authBadge {

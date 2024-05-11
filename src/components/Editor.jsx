@@ -13,6 +13,7 @@ const explorer = explorerPlugin();
 const help = helpPlugin();
 
 import '../../styles/explorer.css';
+import {ToolbarButton} from "@graphiql/react";
 
 export function Editor() {
 	const query = useSelect( ( select ) =>
@@ -142,6 +143,10 @@ export function Editor() {
 			return response.json();
 		},
 		[ isAuthenticated ]
+	);
+
+	const buttons = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/editor-toolbar' ).buttons()
 	);
 
 	return (

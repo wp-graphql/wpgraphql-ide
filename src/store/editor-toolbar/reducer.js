@@ -1,5 +1,3 @@
-import { createReduxStore } from '@wordpress/data';
-
 const initialState = {
 	buttons: {},
 };
@@ -29,23 +27,4 @@ const reducer = ( state = initialState, action ) => {
 	}
 };
 
-const actions = {
-	registerButton: ( name, component ) => ( {
-		type: 'REGISTER_BUTTON',
-		name,
-		component,
-	} ),
-};
-
-const selectors = {
-	buttons: ( state ) => state.buttons,
-	getButtonByName: ( state, name ) => state.buttons[ name ],
-};
-
-const store = createReduxStore( 'wpgraphql-ide/editor-toolbar', {
-	reducer,
-	selectors,
-	actions,
-} );
-
-export default store;
+export default reducer;
