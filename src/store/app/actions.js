@@ -37,7 +37,10 @@ const actions = {
 		const documentAst = parse( query );
 		const schema = select( 'wpgraphql-ide/app' ).schema();
 		const merged = print( mergeAst( documentAst, schema ) );
-		dispatch( 'wpgraphql-ide/app' ).setQuery( merged );
+		return {
+			type: 'SET_QUERY',
+			query: merged,
+		};
 	},
 	setDrawerOpen: ( isDrawerOpen ) => {
 		return {

@@ -10,6 +10,7 @@ import React from 'react';
 import {useCopyToClipboard} from "../../../src/hooks/useCopyToClipboard";
 import LZString from "lz-string";
 import { Icon, external } from '@wordpress/icons';
+import { CopyIcon } from '@graphiql/react';
 
 
 window.addEventListener( 'WPGraphQLIDEReady', () => {
@@ -118,19 +119,20 @@ window.addEventListener( 'WPGraphQLIDEReady', () => {
 		}
 	} );
 
-	// registerEditorToolbarButton( 'merge-fragments', () => {
-	// 	const query = useSelect( ( select ) => select( 'wpgraphql-ide/app' ).getQuery() );
+	registerEditorToolbarButton( 'copy-query', () => {
+		const [ copyToClipboard ] = useCopyToClipboard();
+		const query = useSelect( ( select ) => select( 'wpgraphql-ide/app' ).getQuery() );
 
-	// 	return {
-	// 		label: 'Merge fragments into query (Shift-Ctrl-M)',
-	// 		children: (
-	// 			<MergeIcon className="graphiql-toolbar-icon" aria-hidden="true" />
-	// 		),
-	// 		onClick: () => {
-	// 			copyQuery(query);
-	// 		}
-	// 	}
-	// } );
+		return {
+			label: 'Copy query (Shift-Ctrl-C)',
+			children: (
+				<CopyIcon className="graphiql-toolbar-icon" aria-hidden="true" />
+			),
+			onClick: () => {
+				copyToClipboard(query)
+			}
+		}
+	} );
 
 } );
 
