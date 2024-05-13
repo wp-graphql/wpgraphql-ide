@@ -1,6 +1,6 @@
 import { parse, print } from 'graphql';
 import { mergeAst } from '@graphiql/toolkit';
-import { select, dispatch } from '@wordpress/data';
+import { select } from '@wordpress/data';
 
 /**
  * The initial state of the app.

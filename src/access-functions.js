@@ -1,16 +1,4 @@
-import { createReduxStore, dispatch } from '@wordpress/data';
-import reducer from './reducer';
-import actions from './actions';
-import selectors from './selectors';
-import hooks from '../../wordpress-hooks';
-
-const store = createReduxStore( 'wpgraphql-ide/editor-toolbar', {
-	reducer,
-	selectors,
-	actions,
-} );
-
-export default store;
+import hooks from './wordpress-hooks';
 
 /**
  * Public function to register a new editor toolbar button.
@@ -20,9 +8,9 @@ export default store;
  *
  * @return {void}
  */
-export function registerEditorToolbarButton( name, config ) {
+export function registerDocumentEditorToolbarButton( name, config ) {
 	try {
-		dispatch( 'wpgraphql-ide/editor-toolbar' ).registerButton(
+		dispatch( 'wpgraphql-ide/document-editor' ).registerButton(
 			name,
 			config
 		);
@@ -31,4 +19,8 @@ export function registerEditorToolbarButton( name, config ) {
 		console.error( `Failed to register button: ${ name }`, error );
 		hooks.doAction( 'registerToolbarButtonError', name, config, error );
 	}
+}
+
+export function helloJoe() {
+	console.log( 'Hi Joe' );
 }

@@ -4,16 +4,15 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
 
-import { helpPlugin } from './help';
-import { DynamicToolbarButtons } from './DynamicToolbarButtons';
+import { helpPlugin } from '../../../components/help';
+import { EditorToolbar } from '../../document-editor/document-editor';
 
 import 'graphiql/graphiql.min.css';
 
 const explorer = explorerPlugin();
 const help = helpPlugin();
 
-import '../../styles/explorer.css';
-import { ToolbarButton } from '@graphiql/react';
+import '../../../../styles/explorer.css';
 
 export function Editor() {
 	const query = useSelect( ( select ) =>
@@ -148,7 +147,7 @@ export function Editor() {
 	);
 
 	const buttons = useSelect( ( select ) =>
-		select( 'wpgraphql-ide/editor-toolbar' ).buttons()
+		select( 'wpgraphql-ide/document-editor' ).buttons()
 	);
 
 	return (
@@ -166,7 +165,7 @@ export function Editor() {
 				plugins={ [ explorer, help ] }
 			>
 				<GraphiQL.Toolbar>
-					<DynamicToolbarButtons />
+					<EditorToolbar />
 				</GraphiQL.Toolbar>
 
 				<GraphiQL.Logo>

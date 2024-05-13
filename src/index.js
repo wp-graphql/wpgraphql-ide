@@ -6,16 +6,18 @@
 
 // External dependencies
 import { createRoot } from '@wordpress/element';
-import { registerStores } from './store';
-import { registerEditorToolbarButton } from './store/editor-toolbar';
 import * as GraphQL from 'graphql/index.js';
+import * as accessFunctions from './access-functions';
 
 // Local imports including the hook configuration and the main App component.
 import hooks from './wordpress-hooks';
-import App from './App';
+import App from './regions/app/components/App';
+import { init as initializeRegions } from './regions';
 
-// Register all application stores.
-registerStores();
+/**
+ * Initializes the application's regions by registering stores.
+ */
+initializeRegions();
 
 /**
  * Exposes a global `WPGraphQLIDE` variable that includes hooks, store, and GraphQL references,
@@ -24,7 +26,7 @@ registerStores();
 window.WPGraphQLIDE = {
 	hooks,
 	GraphQL,
-	registerEditorToolbarButton,
+	...accessFunctions,
 };
 
 /**

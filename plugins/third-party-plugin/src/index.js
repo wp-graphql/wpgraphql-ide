@@ -1,13 +1,11 @@
 /* global WPGRAPHQL_IDE_DATA */
-import MergeFragmentsButton from './components/MergeFragmentsButton';
-import CopyQueryButton from './components/CopyQueryButton';
-import {select, dispatch, useSelect, useDispatch} from "@wordpress/data";
-import { useMergeQuery, MergeIcon } from '@graphiql/react';
+import { select, dispatch, useSelect, useDispatch } from "@wordpress/data";
+import { MergeIcon } from '@graphiql/react';
 import styles from "./components/ToggleAuthenticationButton/ToggleAuthenticationButton.module.css";
 import clsx from "clsx";
-import {PrettifyIcon} from "@graphiql/react";
+import { PrettifyIcon } from "@graphiql/react";
 import React from 'react';
-import {useCopyToClipboard} from "../../../src/hooks/useCopyToClipboard";
+import { useCopyToClipboard } from "../../../src/hooks/useCopyToClipboard";
 import LZString from "lz-string";
 import { Icon, external } from '@wordpress/icons';
 import { CopyIcon } from '@graphiql/react';

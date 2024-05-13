@@ -2,9 +2,9 @@ import React from 'react';
 import { useSelect } from '@wordpress/data';
 import { ToolbarButton } from '@graphiql/react';
 
-export const DynamicToolbarButtons = () => {
+export const EditorToolbar = () => {
 	const buttons = useSelect( ( select ) =>
-		select( 'wpgraphql-ide/editor-toolbar' ).buttons()
+		select( 'wpgraphql-ide/document-editor' ).buttons()
 	);
 
 	return (

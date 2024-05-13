@@ -5,8 +5,8 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, print } from 'graphql';
 import LZString from 'lz-string';
 
-import { EditorDrawer } from './components/EditorDrawer';
-import { Editor } from './components/Editor';
+import { EditorDrawer } from './EditorDrawer';
+import { Editor } from './Editor';
 
 const {
 	isDedicatedIdePage,
