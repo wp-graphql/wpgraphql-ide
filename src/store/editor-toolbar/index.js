@@ -1,8 +1,8 @@
-import {createReduxStore, dispatch} from '@wordpress/data';
+import { createReduxStore, dispatch } from '@wordpress/data';
 import reducer from './reducer';
 import actions from './actions';
 import selectors from './selectors';
-import hooks from "../../wordpress-hooks";
+import hooks from '../../wordpress-hooks';
 
 const store = createReduxStore( 'wpgraphql-ide/editor-toolbar', {
 	reducer,
@@ -15,8 +15,8 @@ export default store;
 /**
  * Public function to register a new editor toolbar button.
  *
- * @param {string} name The name of the button to register.
- * @param {object} config The configuration object for the button.
+ * @param {string} name   The name of the button to register.
+ * @param {Object} config The configuration object for the button.
  *
  * @return {void}
  */

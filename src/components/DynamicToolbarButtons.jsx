@@ -9,17 +9,12 @@ export const DynamicToolbarButtons = () => {
 
 	return (
 		<>
-			{ Object.entries( buttons ).map( ([key, config]) => {
+			{ Object.entries( buttons ).map( ( [ key, config ] ) => {
 				const props = config();
 
 				// If a component is provided, use it, otherwise use the default ToolbarButton
 				const Component = props.component || ToolbarButton;
-				return (
-					<Component
-						key={ key }
-						{ ...props }
-					/>
-				);
+				return <Component key={ key } { ...props } />;
 			} ) }
 		</>
 	);

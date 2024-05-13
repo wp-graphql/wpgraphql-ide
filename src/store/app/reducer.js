@@ -1,8 +1,8 @@
-import {parse} from "graphql";
+import { parse } from 'graphql';
 
 /**
  * The initial state of the app.
- * @type {object}
+ * @type {Object}
  */
 const initialState = {
 	isDrawerOpen: false,
@@ -10,19 +10,20 @@ const initialState = {
 	isInitialStateLoaded: false,
 	registeredPlugins: {},
 	query: null,
+	schema: undefined, // undefined is necessary to trigger the initial fetch
 	isAuthenticated: true,
 };
 
 /**
  * Set the query in the state as long as it is a valid GraphQL query and not the same as the current query.
  *
- * @param {object} state The current state of the store.
- * @param {object} action The action to be performed.
+ * @param {Object} state  The current state of the store.
+ * @param {Object} action The action to be performed.
  *
- * @return {object}
+ * @return {Object}
  */
 const setQuery = ( state, action ) => {
-	let editedQuery = action.query;
+	const editedQuery = action.query;
 	const query = state.query;
 
 	let update = false;
@@ -54,9 +55,9 @@ const setQuery = ( state, action ) => {
 
 /**
  * The reducer for the app store.
- * @param {object} state The current state of the store.
- * @param {object} action The action to be performed.
- * @return {object}
+ * @param {Object} state  The current state of the store.
+ * @param {Object} action The action to be performed.
+ * @return {Object}
  */
 const reducer = ( state = initialState, action ) => {
 	switch ( action.type ) {
@@ -67,6 +68,11 @@ const reducer = ( state = initialState, action ) => {
 			};
 		case 'SET_QUERY':
 			return setQuery( state, action );
+		case 'SET_SCHEMA':
+			return {
+				...state,
+				schema: action.schema,
+			};
 		case 'SET_DRAWER_OPEN':
 			return {
 				...state,

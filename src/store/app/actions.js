@@ -1,9 +1,11 @@
-import {parse, print} from "graphql";
+import { parse, print } from 'graphql';
+import { mergeAst } from '@graphiql/toolkit';
+import { select, dispatch } from '@wordpress/data';
 
 /**
  * The initial state of the app.
  *
- * @type {object}
+ * @type {Object}
  */
 const actions = {
 	setQuery: ( query ) => {
@@ -12,8 +14,13 @@ const actions = {
 			query,
 		};
 	},
+	setSchema: ( schema ) => {
+		return {
+			type: 'SET_SCHEMA',
+			schema,
+		};
+	},
 	prettifyQuery: ( query ) => {
-
 		let editedQuery = query;
 		try {
 			editedQuery = print( parse( editedQuery ) );
@@ -25,6 +32,12 @@ const actions = {
 			type: 'SET_QUERY',
 			query: editedQuery,
 		};
+	},
+	mergeQuery: ( query ) => {
+		const documentAst = parse( query );
+		const schema = select( 'wpgraphql-ide/app' ).schema();
+		const merged = print( mergeAst( documentAst, schema ) );
+		dispatch( 'wpgraphql-ide/app' ).setQuery( merged );
 	},
 	setDrawerOpen: ( isDrawerOpen ) => {
 		return {

@@ -1,10 +1,14 @@
 /**
  * Selectors for the app state.
- * @type {object}
+ * @type {Object}
  */
 const selectors = {
+	// TODO: update "getQuery" to simply "query" since we are in the context of selectors.
 	getQuery: ( state ) => {
 		return state.query;
+	},
+	schema: ( state ) => {
+		return state.schema;
 	},
 	isDrawerOpen: ( state ) => {
 		return state.isDrawerOpen;

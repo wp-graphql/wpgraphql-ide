@@ -12,4 +12,3 @@ export function registerStores() {
 	register( appStore );
 	register( editorToolbarStore );
 }
-

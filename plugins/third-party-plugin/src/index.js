@@ -2,12 +2,14 @@
 import MergeFragmentsButton from './components/MergeFragmentsButton';
 import CopyQueryButton from './components/CopyQueryButton';
 import {select, dispatch, useSelect, useDispatch} from "@wordpress/data";
+import { useMergeQuery, MergeIcon } from '@graphiql/react';
 import styles from "./components/ToggleAuthenticationButton/ToggleAuthenticationButton.module.css";
 import clsx from "clsx";
 import {PrettifyIcon} from "@graphiql/react";
 import React from 'react';
 import {useCopyToClipboard} from "../../../src/hooks/useCopyToClipboard";
 import LZString from "lz-string";
+import { Icon, external } from '@wordpress/icons';
 
 
 window.addEventListener( 'WPGraphQLIDEReady', () => {
@@ -70,7 +72,6 @@ window.addEventListener( 'WPGraphQLIDEReady', () => {
 
 
 	registerEditorToolbarButton( 'share-document', () => {
-
 		const [ copyToClipboard ] = useCopyToClipboard();
 		const { dedicatedIdeBaseUrl } = window.WPGRAPHQL_IDE_DATA;
 		const query = useSelect(
@@ -78,7 +79,6 @@ window.addEventListener( 'WPGraphQLIDEReady', () => {
 		);
 
 		const generateShareLink = () => {
-
 			const hashedQueryParamObject = getHashedQueryParams( { query } );
 			const fullUrl = `${ dedicatedIdeBaseUrl }&wpgraphql_ide=${ hashedQueryParamObject }`;
 			copyToClipboard( fullUrl );
@@ -89,20 +89,47 @@ window.addEventListener( 'WPGraphQLIDEReady', () => {
 		return {
 			label: 'Share current document',
 			// component: ShareDocumentButton
+			children: (
+				<Icon
+					icon={ external }
+					style={ {
+						fill: 'hsla(var(--color-neutral), var(--alpha-tertiary))',
+					} }
+				/>
+			),
 			onClick: () => {
 				generateShareLink();
 			}
 		}
 	} );
 
-	// registerEditorToolbarButton( 'merge-fragments-button', {
-	// 	title: 'Merge fragments into query (Shift-Ctrl-M)',
-	// 	component: MergeFragmentsButton
-	// } );
+	registerEditorToolbarButton( 'merge-fragments', () => {
+		const query = useSelect( ( select ) => select( 'wpgraphql-ide/app' ).getQuery() );
+		const { mergeQuery } = useDispatch( 'wpgraphql-ide/app' );
 
-	// registerEditorToolbarButton( 'merge-fragments-button', {
-	// 	title: 'Copy query (Shift-Ctrl-C)',
-	// 	component: CopyQueryButton
+		return {
+			label: 'Merge fragments into query (Shift-Ctrl-M)',
+			children: (
+				<MergeIcon className="graphiql-toolbar-icon" aria-hidden="true" />
+			),
+			onClick: () => {
+				mergeQuery(query);
+			}
+		}
+	} );
+
+	// registerEditorToolbarButton( 'merge-fragments', () => {
+	// 	const query = useSelect( ( select ) => select( 'wpgraphql-ide/app' ).getQuery() );
+
+	// 	return {
+	// 		label: 'Merge fragments into query (Shift-Ctrl-M)',
+	// 		children: (
+	// 			<MergeIcon className="graphiql-toolbar-icon" aria-hidden="true" />
+	// 		),
+	// 		onClick: () => {
+	// 			copyQuery(query);
+	// 		}
+	// 	}
 	// } );
 
 } );

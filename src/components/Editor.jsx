@@ -13,7 +13,7 @@ const explorer = explorerPlugin();
 const help = helpPlugin();
 
 import '../../styles/explorer.css';
-import {ToolbarButton} from "@graphiql/react";
+import { ToolbarButton } from '@graphiql/react';
 
 export function Editor() {
 	const query = useSelect( ( select ) =>
@@ -25,7 +25,7 @@ export function Editor() {
 	const shouldRenderStandalone = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/app' ).shouldRenderStandalone()
 	);
-	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide/app' );
+	const { setDrawerOpen, setSchema } = useDispatch( 'wpgraphql-ide/app' );
 
 	// const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
 	// 	const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
@@ -36,7 +36,9 @@ export function Editor() {
 		select( 'wpgraphql-ide/app' ).isAuthenticated()
 	);
 
-	const [ schema, setSchema ] = useState( undefined );
+	const schema = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).schema()
+	);
 
 	useEffect( () => {
 		// create a ref
