@@ -5,7 +5,7 @@ import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
 
 import { helpPlugin } from '../../../components/help';
-import { EditorToolbar } from '../../document-editor/document-editor';
+import { EditorToolbar } from '../../document-editor/components/EditorToolbar';
 
 import 'graphiql/graphiql.min.css';
 
