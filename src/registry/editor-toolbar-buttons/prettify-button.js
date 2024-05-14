@@ -1,8 +1,10 @@
-import {PrettifyIcon} from "@graphiql/react";
-import { useDispatch, useSelect } from "@wordpress/data";
+import { PrettifyIcon } from '@graphiql/react';
+import { useDispatch, useSelect } from '@wordpress/data';
 
 export const prettifyButton = () => {
-	const query = useSelect( ( select ) => select( 'wpgraphql-ide/app' ).getQuery() );
+	const query = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).getQuery()
+	);
 	const { prettifyQuery } = useDispatch( 'wpgraphql-ide/app' );
 
 	return {
@@ -15,6 +17,6 @@ export const prettifyButton = () => {
 		),
 		onClick: () => {
 			prettifyQuery( query );
-		}
-	}
+		},
+	};
 };

@@ -1,13 +1,13 @@
-import {useCopyToClipboard} from "../hooks/useCopyToClipboard";
-import {external, Icon} from "@wordpress/icons";
-import {useSelect} from "@wordpress/data";
-import LZString from "lz-string";
+import { useCopyToClipboard } from '../../hooks/useCopyToClipboard';
+import { external, Icon } from '@wordpress/icons';
+import { useSelect } from '@wordpress/data';
+import LZString from 'lz-string';
 
 export const shareButton = () => {
 	const [ copyToClipboard ] = useCopyToClipboard();
 	const { dedicatedIdeBaseUrl } = window.WPGRAPHQL_IDE_DATA;
-	const query = useSelect(
-		( select ) => select( 'wpgraphql-ide/app' ).getQuery()
+	const query = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).getQuery()
 	);
 
 	const generateShareLink = () => {
@@ -31,8 +31,8 @@ export const shareButton = () => {
 		),
 		onClick: () => {
 			generateShareLink();
-		}
-	}
+		},
+	};
 };
 
 /**

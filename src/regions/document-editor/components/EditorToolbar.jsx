@@ -9,8 +9,8 @@ export const EditorToolbar = () => {
 
 	return (
 		<>
-			{ Object.entries( buttons ).map( ( [ key, config ] ) => {
-				const props = config();
+			{ Object.entries( buttons ).map( ( [ key, button ] ) => {
+				const props = button.config();
 
 				// If a component is provided, use it, otherwise use the default ToolbarButton
 				const Component = props.component || ToolbarButton;

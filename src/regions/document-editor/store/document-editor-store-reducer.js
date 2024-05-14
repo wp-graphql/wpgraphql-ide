@@ -10,16 +10,21 @@ const reducer = ( state = initialState, action ) => {
 				console.warn( {
 					message: `The "${ action.name }" button already exists. Name must be unique.`,
 					existingButton: state.buttons[ action.name ],
-					duplicateButton: action.component,
+					duplicateButton: action.config,
 				} );
 				return state;
 			}
+
+			const button = {
+				config: action.config,
+				priority: action.priority || 10, // default priority to 10 if not provided
+			};
 
 			return {
 				...state,
 				buttons: {
 					...state.buttons,
-					[ action.name ]: action.component,
+					[ action.name ]: button,
 				},
 			};
 		default:

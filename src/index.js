@@ -16,6 +16,17 @@ import { init as initializeRegions } from './regions';
 import { init as initializeRegistry } from './registry';
 
 /**
+ * Initializes the application's regions by registering stores.
+ */
+const init = () => {
+	initializeRegions();
+	initializeRegistry();
+	hooks.doAction( 'wpgraphql-ide.init' );
+};
+
+init();
+
+/**
  * Exposes a global `WPGraphQLIDE` variable that includes hooks, store, and GraphQL references,
  * making them accessible for extensions and external scripts.
  */
@@ -24,18 +35,6 @@ window.WPGraphQLIDE = {
 	GraphQL,
 	...accessFunctions,
 };
-
-console.log( {
-	WPGraphQLIDE: window.WPGraphQLIDE
-})
-
-/**
- * Initializes the application's regions by registering stores.
- */
-initializeRegions();
-initializeRegistry();
-
-
 
 /**
  * Attempts to render the React application to a specified mount point in the DOM.

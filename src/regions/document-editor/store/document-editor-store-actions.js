@@ -1,8 +1,9 @@
 const actions = {
-	registerButton: ( name, component ) => ( {
+	registerButton: ( name, config, priority ) => ( {
 		type: 'REGISTER_BUTTON',
 		name,
-		component,
+		config,
+		priority,
 	} ),
 };
 
