@@ -14,4 +14,13 @@ export const init = () => {
 		mergeFragmentsButton
 	);
 	registerDocumentEditorToolbarButton( 'copy-query', copyQueryButton );
+	registerDocumentEditorToolbarButton( 'invalid-button', () => {
+		return {
+			title: 'MyButton',
+			notOnClick: () => {
+				console.log( 'I meant to type onClick!' );
+			},
+			child: <h2>I meant to type children</h2>,
+		};
+	} );
 };
