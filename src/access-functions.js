@@ -1,4 +1,5 @@
 import hooks from './wordpress-hooks';
+import { dispatch } from '@wordpress/data'
 
 /**
  * Public function to register a new editor toolbar button.
@@ -21,6 +22,3 @@ export function registerDocumentEditorToolbarButton( name, config ) {
 	}
 }
 
-export function helloJoe() {
-	console.log( 'Hi Joe' );
-}

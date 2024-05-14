@@ -13,11 +13,7 @@ import * as accessFunctions from './access-functions';
 import hooks from './wordpress-hooks';
 import App from './regions/app/components/App';
 import { init as initializeRegions } from './regions';
-
-/**
- * Initializes the application's regions by registering stores.
- */
-initializeRegions();
+import { init as initializeRegistry } from './registry';
 
 /**
  * Exposes a global `WPGraphQLIDE` variable that includes hooks, store, and GraphQL references,
@@ -28,6 +24,18 @@ window.WPGraphQLIDE = {
 	GraphQL,
 	...accessFunctions,
 };
+
+console.log( {
+	WPGraphQLIDE: window.WPGraphQLIDE
+})
+
+/**
+ * Initializes the application's regions by registering stores.
+ */
+initializeRegions();
+initializeRegistry();
+
+
 
 /**
  * Attempts to render the React application to a specified mount point in the DOM.
