@@ -1,6 +1,6 @@
 import { register, createReduxStore } from '@wordpress/data';
 
-import selectors from './store/document-editor-store-actions';
+import selectors from './store/document-editor-store-selectors';
 import reducer from './store/document-editor-store-reducer';
 import actions from './store/document-editor-store-actions';
 
