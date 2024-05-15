@@ -12,9 +12,9 @@ export const EditorToolbar = () => {
 			{ Object.entries( buttons ).map( ( [ key, button ] ) => {
 				const props = button.config();
 
-				const buttonName = buttons[key].name ?? key;
+				const buttonName = buttons[ key ].name ?? key;
 
-				if ( ! isValidButton(props, buttonName) ) {
+				if ( ! isValidButton( props, buttonName ) ) {
 					return null;
 				}
 
@@ -29,15 +29,21 @@ export const EditorToolbar = () => {
 const isValidButton = ( config, name ) => {
 	let hasError = false;
 	if ( undefined === config.label ) {
-		console.warn( `Button "${name}" needs a "label" defined`, { config } );
+		console.warn( `Button "${ name }" needs a "label" defined`, {
+			config,
+		} );
 		hasError = true;
 	}
 	if ( undefined === config.children ) {
-		console.warn( `Button "${name}" needs "children" defined`, { config } );
+		console.warn( `Button "${ name }" needs "children" defined`, {
+			config,
+		} );
 		hasError = true;
 	}
 	if ( undefined === config.onClick ) {
-		console.warn( `Button "${name}" needs "onClick" defined`, { config } );
+		console.warn( `Button "${ name }" needs "onClick" defined`, {
+			config,
+		} );
 		hasError = true;
 	}
 
@@ -46,4 +52,4 @@ const isValidButton = ( config, name ) => {
 	}
 
 	return true;
-}
+};
