@@ -1,5 +1,6 @@
-import {loginToWordPressAdmin, openDrawer, typeQuery, visitAdminFacingPage} from "../utils";
-import {expect, test } from "@wordpress/e2e-test-utils-playwright";
+import { describe, test, beforeEach } from '@playwright/test';
+import { loginToWordPressAdmin, openDrawer, typeQuery } from "../utils";
+import { expect } from '@playwright/test';
 
 export const selectors = {
 	graphiqlContainer: '.graphiql-container',
@@ -12,78 +13,82 @@ export const selectors = {
 };
 
 // Login to WordPress before each test
-test.beforeEach( async ( { page } ) => {
-	await loginToWordPressAdmin( page );
-} );
+beforeEach(async ({ page }) => {
+	await loginToWordPressAdmin(page);
+});
 
-async function openGraphiQL({ page }) {
-	await expect( page.locator( '.graphiql-container' ) ).toBeHidden();
-	await openDrawer( page );
+async function openGraphiQL(page) {
+	await expect(page.locator(selectors.graphiqlContainer)).toBeHidden();
+	await openDrawer(page);
 }
 
-test.describe( 'Toolbar Buttons', () => {
+describe('Toolbar Buttons', () => {
 
-	test( 'Clicking the Execute button executes a query', async ( { page } ) => {
-		await openGraphiQL( { page } );
-		await typeQuery( page, 'query { posts { nodes { title } } }' );
-		const response = await page.locator( selectors.graphiqlResponse );
-		await expect( response ).not.toContainText( 'posts' );
-		await page.click( '.graphiql-execute-button' );
-		await expect( response ).toContainText( 'posts' );
-		await expect( response ).toContainText( 'nodes' );
+	beforeEach(async ({ page }) => {
+		await openGraphiQL(page);
 	});
 
-	test( 'Clicking the auth button toggles the auth state and allows queries to be executed public or authenticated', async ( { page } ) => {
-		await openGraphiQL( { page } );
-
-		// auth button is in an authenticated state by default
-		await expect( page.locator( '.graphiql-auth-button' ) ).not.toHaveClass( /is-public/ );
-		await expect( page.locator( '.graphiql-auth-button' ) ).toHaveClass( /is-authenticated/ );
-
-		// type a query that asks for the viewer (which requires auth)
-		await typeQuery( page, 'query { viewer { name } }' );
-		const response = await page.locator( selectors.graphiqlResponse );
-
-		// Assert that the response does not contain the viewer field or admin username
-		await expect( response ).not.toContainText( 'viewer' );
-		await expect( response ).not.toContainText( 'admin' );
-
-		// Execute the query and assert that the response contains the viewer field and admin username
-		await page.click( '.graphiql-execute-button' );
-		await expect( response ).toContainText( 'viewer' );
-		await expect( response ).toContainText( 'admin' );
-
-		// Toggle the auth state to public
-		await page.click( '.graphiql-auth-button' );
-
-		// Assert that the auth button is now in a public state
-		await expect( page.locator( '.graphiql-auth-button' ) ).not.toHaveClass( /is-authenticated/ );
-		await expect( page.locator( '.graphiql-auth-button' ) ).toHaveClass( /is-public/ );
-
-		// Execute the viewer query again
-		await page.click( '.graphiql-execute-button' );
-
-		// The viewer field should exist in the response, but the admin username should not because a public request gets null for the viewer query
-		await expect( response ).toContainText( 'viewer' );
-		await expect( response ).not.toContainText( 'admin' );
-
-		const authButton = await page.$( '.graphiql-auth-button' );
-		const filterValue = await authButton.evaluate( node => window.getComputedStyle(node).filter );
-		expect(filterValue).toBe( 'grayscale(100%)' );
+	test('Clicking the Execute button executes a query', async ({ page }) => {
+		await typeQuery(page, 'query { posts { nodes { title } } }');
+		const response = page.locator(selectors.graphiqlResponse);
+		await expect(response).not.toContainText('posts');
+		await page.click(selectors.executeQueryButton);
+		await expect(response).toContainText('posts');
+		await expect(response).toContainText('nodes');
 	});
 
-// assert that private data is returned when toggle authentication button is enabled (color)
+	describe('Auth button', () => {
 
+		beforeEach(async ({ page }) => {
+			await typeQuery(page, 'query { viewer { name } }');
+		});
 
+		test('Default state is authenticated', async ({ page }) => {
+			const authButton = page.locator('.graphiql-auth-button');
+			await expect(authButton).not.toHaveClass(/is-public/);
+			await expect(authButton).toHaveClass(/is-authenticated/);
+		});
 
+		test('Private data is returned when authenticated', async ({ page }) => {
+			const response = page.locator(selectors.graphiqlResponse);
+			await expect(response).not.toContainText('viewer');
+			await expect(response).not.toContainText('admin');
+			await page.click(selectors.executeQueryButton);
+			await expect(response).toContainText('viewer');
+			await expect(response).toContainText('admin');
+		});
 
+		test('Auth button is not grayscale when authenticated', async ({ page }) => {
+			const authButton = page.locator('.graphiql-auth-button');
+			const filterValue = await authButton.evaluate(node => window.getComputedStyle(node).filter);
+			expect(filterValue).not.toBe('grayscale(1)');
+		});
 
-// assert that private data is not returned when toggle authentication button disabled (grayscale)
-// assert that clipboard contains query when copy button is clicked
-// assert that malformatted query is formatted as expected when prettify button is clicked
-// assert that a valid share URL is copied to clipboard when share query button is clicked
-// assert that fragments are merged into the query as expected when the merge fragments button is clicked
+		describe('Toggling auth state to public', () => {
 
+			beforeEach(async ({ page }) => {
+				const authButton = page.locator('.graphiql-auth-button');
+				await authButton.click();
+			});
 
+			test('Auth button is in public state', async ({ page }) => {
+				const authButton = page.locator('.graphiql-auth-button');
+				await expect(authButton).not.toHaveClass(/is-authenticated/);
+				await expect(authButton).toHaveClass(/is-public/);
+			});
 
-} );
+			test('Private data is not returned when public', async ({ page }) => {
+				const response = page.locator(selectors.graphiqlResponse);
+				await page.click(selectors.executeQueryButton);
+				await expect(response).toContainText('viewer');
+				await expect(response).not.toContainText('admin');
+			});
+
+			test('Auth button is grayscale when public', async ({ page }) => {
+				const authButton = page.locator('.graphiql-auth-button');
+				const filterValue = await authButton.evaluate(node => window.getComputedStyle(node).filter);
+				expect(filterValue).toBe('grayscale(1)');
+			});
+		});
+	});
+});
