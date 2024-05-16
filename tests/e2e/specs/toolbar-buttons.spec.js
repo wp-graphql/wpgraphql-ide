@@ -98,7 +98,8 @@ describe('Toolbar Buttons', () => {
 			await typeQuery(page, 'query{viewer{name}   }'); // poorly formatted query
 		});
 
-		test('', async ({ page }) => {
+		test('misformatted query is \'prettified\' when button is clicked', async ({ page }) => {
+			const authButton = page.locator('.graphiql-auth-button');
 
 		});
 
