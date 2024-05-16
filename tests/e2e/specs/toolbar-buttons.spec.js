@@ -91,4 +91,16 @@ describe('Toolbar Buttons', () => {
 			});
 		});
 	});
+
+	describe('Prettify button', () => {
+
+		beforeEach(async ({ page }) => {
+			await typeQuery(page, 'query{viewer{name}   }'); // poorly formatted query
+		});
+
+		test('', async ({ page }) => {
+
+		});
+
+	});
 });
