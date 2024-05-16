@@ -122,10 +122,6 @@ export function Editor() {
 				Authorization: `Basic ${ base64Credentials }`,
 			};
 
-			console.log( {
-				graphQLParams,
-			} );
-
 			const response = await fetch( graphqlEndpoint, {
 				method: 'POST',
 				headers,
@@ -135,10 +131,6 @@ export function Editor() {
 					: isAuthenticated
 					? 'include'
 					: 'omit',
-			} );
-
-			console.log( {
-				response,
 			} );
 
 			return response.json();
