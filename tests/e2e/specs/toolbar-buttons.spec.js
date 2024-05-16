@@ -67,7 +67,22 @@ test.describe( 'Toolbar Buttons', () => {
 		await expect( response ).toContainText( 'viewer' );
 		await expect( response ).not.toContainText( 'admin' );
 
+		const authButton = await page.$( '.graphiql-auth-button' );
+		const filterValue = await authButton.evaluate( node => window.getComputedStyle(node).filter );
+		expect(filterValue).toBe( 'grayscale(100%)' );
 	});
+
+// assert that private data is returned when toggle authentication button is enabled (color)
+
+
+
+
+
+// assert that private data is not returned when toggle authentication button disabled (grayscale)
+// assert that clipboard contains query when copy button is clicked
+// assert that malformatted query is formatted as expected when prettify button is clicked
+// assert that a valid share URL is copied to clipboard when share query button is clicked
+// assert that fragments are merged into the query as expected when the merge fragments button is clicked
 
 
 
