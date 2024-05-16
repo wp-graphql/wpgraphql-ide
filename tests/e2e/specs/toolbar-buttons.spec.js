@@ -10,6 +10,8 @@ export const selectors = {
 	executeQueryButton: '.graphiql-execute-button',
 	queryInput: '[aria-label="Query Editor"] .CodeMirror',
 	variablesInput: '[aria-label="Variables"] .CodeMirror',
+	prettifyButton: '.graphiql-prettify-button',
+	authButton: '.graphiql-toggle-auth-button',
 };
 
 // Login to WordPress before each test
@@ -44,7 +46,7 @@ describe('Toolbar Buttons', () => {
 		});
 
 		test('Default state is authenticated', async ({ page }) => {
-			const authButton = page.locator('.graphiql-auth-button');
+			const authButton = page.locator(selectors.authButton);
 			await expect(authButton).not.toHaveClass(/is-public/);
 			await expect(authButton).toHaveClass(/is-authenticated/);
 		});
@@ -59,7 +61,7 @@ describe('Toolbar Buttons', () => {
 		});
 
 		test('Auth button is not grayscale when authenticated', async ({ page }) => {
-			const authButton = page.locator('.graphiql-auth-button');
+			const authButton = page.locator(selectors.authButton);
 			const filterValue = await authButton.evaluate(node => window.getComputedStyle(node).filter);
 			expect(filterValue).not.toBe('grayscale(1)');
 		});
@@ -67,12 +69,12 @@ describe('Toolbar Buttons', () => {
 		describe('Toggling auth state to public', () => {
 
 			beforeEach(async ({ page }) => {
-				const authButton = page.locator('.graphiql-auth-button');
+				const authButton = page.locator(selectors.authButton);
 				await authButton.click();
 			});
 
 			test('Auth button is in public state', async ({ page }) => {
-				const authButton = page.locator('.graphiql-auth-button');
+				const authButton = page.locator(selectors.authButton);
 				await expect(authButton).not.toHaveClass(/is-authenticated/);
 				await expect(authButton).toHaveClass(/is-public/);
 			});
@@ -85,7 +87,7 @@ describe('Toolbar Buttons', () => {
 			});
 
 			test('Auth button is grayscale when public', async ({ page }) => {
-				const authButton = page.locator('.graphiql-auth-button');
+				const authButton = page.locator(selectors.authButton);
 				const filterValue = await authButton.evaluate(node => window.getComputedStyle(node).filter);
 				expect(filterValue).toBe('grayscale(1)');
 			});
@@ -98,10 +100,30 @@ describe('Toolbar Buttons', () => {
 			await typeQuery(page, 'query{viewer{name}   }'); // poorly formatted query
 		});
 
-		test('misformatted query is \'prettified\' when button is clicked', async ({ page }) => {
-			const authButton = page.locator('.graphiql-auth-button');
+		test('Misformatted query is prettified when button is clicked', async ({ page }) => {
+			const prettifyButton = page.locator(selectors.prettifyButton);
+			const queryInputBeforeClick = page.locator(selectors.queryInput);
 
+			// Ensure the query is initially poorly formatted
+			await expect(queryInputBeforeClick).toContainText('query{viewer{name}   }');
+
+			// Make sure the prettify button is visible and interactable
+			await expect(prettifyButton).toBeVisible();
+			await expect(prettifyButton).toBeEnabled();
+
+			// Click the prettify button
+			await prettifyButton.click();
+
+			const queryInputAfterClick = page.locator(selectors.queryInput);
+
+			// Verify that the query is now formatted properly
+			await expect(queryInputAfterClick).toHaveText(`
+{
+  viewer {
+    name
+  }
+}
+			`);
 		});
-
 	});
 });

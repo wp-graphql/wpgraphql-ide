@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { useSelect } from '@wordpress/data';
 import { ToolbarButton } from '@graphiql/react';
 
@@ -11,16 +12,26 @@ export const EditorToolbar = () => {
 		<>
 			{ Object.entries( buttons ).map( ( [ key, button ] ) => {
 				const props = button.config();
-
 				const buttonName = buttons[ key ].name ?? key;
 
 				if ( ! isValidButton( props, buttonName ) ) {
 					return null;
 				}
 
+				const baseClassName = `graphiql-${buttonName}-button`;
+
+				// Merge the base className with any classNames provided in props.
+				const mergedClassName = clsx(baseClassName, props?.className);
+
 				// If a component is provided, use it, otherwise use the default ToolbarButton
 				const Component = props.component || ToolbarButton;
-				return <Component key={ key } { ...props } />;
+				return (
+					<Component
+						{ ...props }
+						className={mergedClassName} // mergedClassName must be below { ...props } in order to render with the correct classNames
+						key={ key }
+					/>
+				);
 			} ) }
 		</>
 	);
