@@ -20,12 +20,6 @@ const config = defineConfig( {
 	globalSetup: require.resolve( './config/global-setup.js' ),
 	webServer: {
 		...baseConfig.webServer,
-        command: `
-            npm run wp-env -- start && 
-            curl -X POST -F 'username=admin' -F 'password=password' \
-            -F 'permalink_structure=/index.php/%year%/%monthnum%/%day%/%postname%/' \
-            http://localhost:8888/wp-admin/options-permalink.php
-        `,
 	},
 } );
 
