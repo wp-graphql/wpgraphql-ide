@@ -34,10 +34,6 @@ jobs:
             - name: Start WordPress Environment
               run: npm run wp-env -- start
 
-            - name: Show Chromium version
-              run: |
-                node -e "const { chromium } = require('playwright'); (async () => { const browser = await chromium.launch(); console.log(await browser.version()); await browser.close(); })()"
-
             - name: Run E2E tests
               run: npm run test:e2e
 
