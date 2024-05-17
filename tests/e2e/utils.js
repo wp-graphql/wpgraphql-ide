@@ -52,6 +52,33 @@ export async function loginToWordPressAdmin( page ) {
 }
 
 /**
+ * Returns the value of a CodeMirror editor.
+ * @param locator The Playwright locator for the CodeMirror editor.
+ * @return {Promise<*>}
+ */
+export async function getCodeMirrorValue( locator ) {
+	return await locator.evaluate((queryEditorElement) => {
+		// Access the CodeMirror instance and get its value
+		const codeMirrorInstance = queryEditorElement.CodeMirror;
+		return codeMirrorInstance.getValue();
+	});
+}
+
+/**
+ * Returns the value of a CodeMirror editor.
+ * @param locator The Playwright locator for the CodeMirror editor.
+ * @param string The value to set in the CodeMirror editor.
+ * @return {Promise<*>}
+ */
+export async function setCodeMirrorValue( locator, value ) {
+	return await locator.evaluate((queryEditorElement, val) => {
+		// Access the CodeMirror instance and get its value
+		const codeMirrorInstance = queryEditorElement.CodeMirror;
+		codeMirrorInstance.setValue( val );
+	}, value );
+}
+
+/**
  * Types a GraphQL query into the CodeMirror editor.
  * @param {import('@playwright/test').Page} page  The Playwright page object.
  * @param {string}                          query The GraphQL query to type.
@@ -212,4 +239,27 @@ export async function simulateHeavyJSLoad(page) {
             }
         }, 10);
     });
+}
+
+/**
+ * Sets the value of the 'graphiql:query' key in local storage.
+ * @param {import('@playwright/test').Page} page The Playwright page object.
+ * @param {string} value The value to set for the 'graphiql:query' key in local storage.
+ * @returns {Promise<void>}
+ */
+export async function setQueryInLocalStorage(page, value) {
+	await page.evaluate((val) => {
+		localStorage.setItem('graphiql:query', val);
+	}, value);
+}
+
+/**
+ * Retrieves the value of the 'graphiql:query' key from local storage.
+ * @param {import('@playwright/test').Page} page The Playwright page object.
+ * @returns {Promise<string>} The value of the 'graphiql:query' key from local storage.
+ */
+export async function getQueryFromLocalStorage(page) {
+	return await page.evaluate(() => {
+		return localStorage.getItem('graphiql:query');
+	});
 }
