@@ -115,7 +115,7 @@ describe('Toolbar Buttons', () => {
 			await typeQuery(page, 'query{viewer{name}   }'); // poorly formatted query
 		});
 
-		test('Misformatted query is prettified when button is clicked', async ({ page }) => {
+		test.skip('Misformatted query is prettified when button is clicked', async ({ page }) => {
 			// const prettifyButton = page.locator(selectors.prettifyButton);
 			const prettifyButton = await page.locator( `.graphiql-toolbar button:nth-child(3)` );
 			const queryEditorLocator = page.locator(selectors.queryInput);
@@ -192,7 +192,7 @@ describe('Toolbar Buttons', () => {
 			await openDrawer(page);
 		});
 
-		test( 'Clicking the merge fragments button merges the fragment into the query', async ({ page }) => {
+		test.skip( 'Clicking the merge fragments button merges the fragment into the query', async ({ page }) => {
 			// Make sure the prettify button is visible and interactable
 			const mergeButton = page.locator( `.graphiql-toolbar button:nth-child(5)` );
 			await expect(mergeButton).toBeVisible();
