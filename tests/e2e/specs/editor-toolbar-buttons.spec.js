@@ -133,6 +133,9 @@ describe('Toolbar Buttons', () => {
 			// Click the prettify button
 			await prettifyButton.click();
 
+			// wait for the action to complete
+			await page.waitForTimeout( 1000 );
+
 			const codeMirrorValleAfterClick = await getCodeMirrorValue( queryEditorLocator );
 
 			await expect(codeMirrorValleAfterClick).toBe(`{
