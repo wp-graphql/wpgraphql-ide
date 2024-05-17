@@ -39,13 +39,27 @@ jobs:
         run: |
           git push --follow-tags
 
-      - name: Build and Publish
-        run: npm run release
+      - name: Create Release Pull Request or Create GitHub Release
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: npm run release
+          version: npm run version
+          title: "Release Beta Plugin"
+          commit: "release beta plugin"
 
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
       - name: Exit Prerelease Mode
         run: npx changeset pre exit
 
-      - name: Upload Release Artifact
+      - name: Check published output
+        run: |
+          echo "Published: ${{ steps.changesets.outputs.published }}"
+
+      - name: Upload Pre-Release Artifact
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
