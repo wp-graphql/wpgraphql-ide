@@ -209,19 +209,19 @@ describe('Toolbar Buttons', () => {
 			console.log('Merged Query:', codeMirrorValue);
 
 			// Verify that the query is now merged properly and formatted
-// 			const expectedMergedQuery = `{
-//   viewer {
-//     name
-//   }
-// }`;
-const expectedMergedQueryFromTestsThatIsNotWhatWeGetInBrowserButItsTechnicallyStillValid = `{
-  ... on RootQuery {
-    viewer {
-      name
-    }
+			const expectedMergedQuery = `{
+  viewer {
+    name
   }
 }`;
-			expect(codeMirrorValue).toBe(expectedMergedQueryFromTestsThatIsNotWhatWeGetInBrowserButItsTechnicallyStillValid);
+// const expectedMergedQueryFromTestsThatIsNotWhatWeGetInBrowserButItsTechnicallyStillValid = `{
+//   ... on RootQuery {
+//     viewer {
+//       name
+//     }
+//   }
+// }`;
+			expect(codeMirrorValue).toBe(expectedMergedQuery);
 		});
 
 
