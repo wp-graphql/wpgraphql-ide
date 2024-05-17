@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "wpgraphql-ide": "1.1.9"
+  },
+  "changesets": [
+    "few-coins-design"
+  ]
+}
