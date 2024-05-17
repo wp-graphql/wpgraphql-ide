@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-beta.0
+
+### Major Changes
+
+- 43eea79: Refactored stores, including renaming 'wpgraphql-ide' to 'wpgraphql-ide/app', and adding additional stores such as 'wpgraphql-ide/editor-toolbar
+
 ## 1.1.9
 
 ### Patch Changes
