@@ -52,6 +52,19 @@ export async function loginToWordPressAdmin( page ) {
 }
 
 /**
+ * Returns the value of a CodeMirror editor.
+ * @param locator The Playwright locator for the CodeMirror editor.
+ * @return {Promise<*>}
+ */
+export async function getCodeMirrorValue( locator ) {
+	return await locator.evaluate((queryEditorElement) => {
+		// Access the CodeMirror instance and get its value
+		const codeMirrorInstance = queryEditorElement.CodeMirror;
+		return codeMirrorInstance.getValue();
+	});
+}
+
+/**
  * Types a GraphQL query into the CodeMirror editor.
  * @param {import('@playwright/test').Page} page  The Playwright page object.
  * @param {string}                          query The GraphQL query to type.
