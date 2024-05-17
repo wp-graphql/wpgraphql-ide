@@ -240,3 +240,26 @@ export async function simulateHeavyJSLoad(page) {
         }, 10);
     });
 }
+
+/**
+ * Sets the value of the 'graphiql:query' key in local storage.
+ * @param {import('@playwright/test').Page} page The Playwright page object.
+ * @param {string} value The value to set for the 'graphiql:query' key in local storage.
+ * @returns {Promise<void>}
+ */
+export async function setQueryInLocalStorage(page, value) {
+	await page.evaluate((val) => {
+		localStorage.setItem('graphiql:query', val);
+	}, value);
+}
+
+/**
+ * Retrieves the value of the 'graphiql:query' key from local storage.
+ * @param {import('@playwright/test').Page} page The Playwright page object.
+ * @returns {Promise<string>} The value of the 'graphiql:query' key from local storage.
+ */
+export async function getQueryFromLocalStorage(page) {
+	return await page.evaluate(() => {
+		return localStorage.getItem('graphiql:query');
+	});
+}
