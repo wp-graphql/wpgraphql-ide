@@ -65,6 +65,20 @@ export async function getCodeMirrorValue( locator ) {
 }
 
 /**
+ * Returns the value of a CodeMirror editor.
+ * @param locator The Playwright locator for the CodeMirror editor.
+ * @param string The value to set in the CodeMirror editor.
+ * @return {Promise<*>}
+ */
+export async function setCodeMirrorValue( locator, value ) {
+	return await locator.evaluate((queryEditorElement, val) => {
+		// Access the CodeMirror instance and get its value
+		const codeMirrorInstance = queryEditorElement.CodeMirror;
+		codeMirrorInstance.setValue( val );
+	}, value );
+}
+
+/**
  * Types a GraphQL query into the CodeMirror editor.
  * @param {import('@playwright/test').Page} page  The Playwright page object.
  * @param {string}                          query The GraphQL query to type.

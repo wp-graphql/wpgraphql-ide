@@ -1,5 +1,11 @@
 import { describe, test, beforeEach } from '@playwright/test';
-import {getCodeMirrorValue, loginToWordPressAdmin, openDrawer, typeQuery} from "../utils";
+import {
+	getCodeMirrorValue,
+	loginToWordPressAdmin,
+	openDrawer,
+	setCodeMirrorValue,
+	typeQuery
+} from "../utils";
 import { expect } from '@playwright/test';
 
 export const selectors = {
@@ -167,32 +173,36 @@ describe('Toolbar Buttons', () => {
 
 	describe('Merge Fragments button', () => {
 
-		test( 'Clicking the merge fragments button merges the fragment into the query', async ({ page }) => {
+		beforeEach(async ({ page }) => {
+			const queryEditorLocator = page.locator(selectors.queryInput);
 
-			await typeQuery(page, '{ posts { nodes { ...Post } } } ' +
-				'fragment Post on Post { id }' ); // query with fragment
+			await typeQuery(page, `{ ...TestFragment } fragment TestFragment on RootQuery { viewer { name } }`);// query with fragment
+		});
+
+		test( 'Clicking the merge fragments button merges the fragment into the query', async ({ page }) => {
 
 			// Click the merge button
 			const mergeButton = await page.locator( `.graphiql-toolbar button:nth-child(5)` );
 			await mergeButton.click();
 
-			const queryEditorLocator = page.locator(selectors.queryInput);
+			// wait for the merge to complete
+			await page.waitForTimeout( 1000 );
 
 			// Get the value from the CodeMirror instance
-			const codeMirrorValue = await getCodeMirrorValue(queryEditorLocator);
+			const queryEditorLocator = page.locator(selectors.queryInput);
+			const mergedValue = await getCodeMirrorValue(queryEditorLocator);
 
 			console.log({
-				codeMirrorValue
+				mergedValue
 			})
 
 			// Verify that the query is now formatted properly (with newlines and indentation...this is the playwright way of checking for the line breaks 🤷‍♂️)
-			await expect(codeMirrorValue).toBe('{\n' +
-				'  posts {\n' +
-				'    nodes {\n' +
-				'      id\n' +
-				'    }\n' +
-				'  }\n' +
-				'}');
+			await expect(mergedValue).toBe(`{
+  viewer {
+    name
+  }
+}`
+			);
 		});
 
 
