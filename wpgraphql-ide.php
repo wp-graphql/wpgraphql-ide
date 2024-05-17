@@ -2,9 +2,9 @@
 /**
  * Plugin Name:       WPGraphQL IDE
  * Description:       A next-gen query editor for WPGraphQL.
- * Author:            Joseph Fusco
+ * Author:            WPGraphQL, Joseph Fusco
  * Author URI:        https://github.com/josephfusco
- * GitHub Plugin URI: https://github.com/josephfusco/wpgraphql-ide
+ * GitHub Plugin URI: https://github.com/wp-graphql/wpgraphql-ide
  * License:           GPLv3 or later
  * Text Domain:       wpgraphql-ide
  * Version:           1.1.9
