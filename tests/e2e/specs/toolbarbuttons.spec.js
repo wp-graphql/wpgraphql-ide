@@ -1,5 +1,5 @@
 import { describe, test, beforeEach } from '@playwright/test';
-import { loginToWordPressAdmin, openDrawer, typeQuery } from "../utils";
+import {getCodeMirrorValue, loginToWordPressAdmin, openDrawer, typeQuery} from "../utils";
 import { expect } from '@playwright/test';
 
 export const selectors = {
@@ -116,14 +116,15 @@ describe('Toolbar Buttons', () => {
 
 			const queryInputAfterClick = page.locator(selectors.queryInput);
 
-			// Verify that the query is now formatted properly
-			await expect(queryInputAfterClick).toHaveText(`
-{
-  viewer {
-    name
-  }
-}
-			`);
+			// Verify that the query is now formatted properly (this is the weird format that CodeMirror returns)
+			// but equates to:
+			//
+			// query {
+			//   viewer {
+			//     name
+			//   }
+			// }
+			await expect(queryInputAfterClick).toHaveText(`x1 1{2  viewer {3    name4  }5}`);
 		});
 	});
 });
