@@ -4,10 +4,10 @@ import { useDispatch, useSelect } from '@wordpress/data';
 
 export function EditorDrawer( { children, buttonLabel } ) {
 	const isDrawerOpen = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide' ).isDrawerOpen();
+		return select( 'wpgraphql-ide/app' ).isDrawerOpen();
 	} );
 
-	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
+	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide/app' );
 
 	return (
 		<div className="EditorDrawerRoot">

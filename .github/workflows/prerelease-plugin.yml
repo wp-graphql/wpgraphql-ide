@@ -1,0 +1,55 @@
+name: Pre-Release
+
+on:
+  push:
+    branches:
+      - beta
+
+jobs:
+  pre-release:
+    name: Pre-Release
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Enter Prerelease Mode
+        run: npx changeset pre enter beta
+
+      - name: Create Prerelease Version
+        run: npm run version
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: prerelease version bump"
+
+      - name: Push Changes
+        run: |
+          git push --follow-tags
+
+      - name: Build and Publish
+        run: npm run release
+
+      - name: Exit Prerelease Mode
+        run: npx changeset pre exit
+
+      - name: Upload Release Artifact
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: "wpgraphql-ide.zip"
+          asset_name: wpgraphql-ide.zip
+          tag: ${{ format('v{0}', fromJSON(steps.changesets.outputs.publishedPackages)[0].version) }}
+          overwrite: true

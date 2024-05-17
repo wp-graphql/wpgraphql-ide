@@ -2,9 +2,9 @@
 /**
  * Plugin Name:       WPGraphQL IDE
  * Description:       A next-gen query editor for WPGraphQL.
- * Author:            Joseph Fusco
+ * Author:            WPGraphQL, Joseph Fusco
  * Author URI:        https://github.com/josephfusco
- * GitHub Plugin URI: https://github.com/josephfusco/wpgraphql-ide
+ * GitHub Plugin URI: https://github.com/wp-graphql/wpgraphql-ide
  * License:           GPLv3 or later
  * Text Domain:       wpgraphql-ide
  * Version:           1.1.9
@@ -20,10 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPGRAPHQL_IDE_VERSION', '1.1.8' );
+define( 'WPGRAPHQL_IDE_VERSION', '1.1.9' );
 define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
 define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+// TEMPORARY TEST
+// require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/third-party-plugin/third-party-plugin.php';
 
 /**
  * Generates the SVG logo for GraphQL.

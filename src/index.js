@@ -5,25 +5,26 @@
  */
 
 // External dependencies
-import { createHooks } from '@wordpress/hooks';
-import { register } from '@wordpress/data';
 import { createRoot } from '@wordpress/element';
 import * as GraphQL from 'graphql/index.js';
+import * as accessFunctions from './access-functions';
 
-// Internal dependencies
-import { store } from './store';
-import { App } from './App';
-
-/**
- * Registers the application's data store with WordPress to enable global state management.
- */
-register( store );
+// Local imports including the hook configuration and the main App component.
+import hooks from './wordpress-hooks';
+import App from './regions/app/components/App';
+import { init as initializeRegions } from './regions';
+import { init as initializeRegistry } from './registry';
 
 /**
- * Initializes a hooks system to extend the functionality of the WPGraphQL IDE through
- * external scripts and internal plugin hooks.
+ * Initializes the application's regions by registering stores.
  */
-export const hooks = createHooks();
+const init = () => {
+	initializeRegions();
+	initializeRegistry();
+	hooks.doAction( 'wpgraphql-ide.init' );
+};
+
+init();
 
 /**
  * Exposes a global `WPGraphQLIDE` variable that includes hooks, store, and GraphQL references,
@@ -31,8 +32,8 @@ export const hooks = createHooks();
  */
 window.WPGraphQLIDE = {
 	hooks,
-	store,
 	GraphQL,
+	...accessFunctions,
 };
 
 /**
@@ -42,6 +43,7 @@ window.WPGraphQLIDE = {
 const appMountPoint = document.getElementById( 'wpgraphql-ide-root' );
 if ( appMountPoint ) {
 	createRoot( appMountPoint ).render( <App /> );
+	window.dispatchEvent( new Event( 'WPGraphQLIDEReady' ) );
 } else {
 	console.error(
 		'WPGraphQL IDE mount point not found. Please ensure an element with ID "wpgraphql-ide-root" exists.'

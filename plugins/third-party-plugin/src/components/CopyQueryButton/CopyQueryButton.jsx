@@ -1,7 +1,7 @@
 import React from 'react';
-import { ToolbarButton, useCopyQuery, CopyIcon } from '@graphiql/react';
+import { useCopyQuery, CopyIcon } from '@graphiql/react';
 
-export const CopyQueryButton = ( { onCopyQuery } ) => {
+export const CopyQueryButton = ( { ToolbarButton, onCopyQuery } ) => {
 	const copy = useCopyQuery( { onCopyQuery } );
 
 	return (

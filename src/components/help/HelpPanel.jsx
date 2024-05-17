@@ -76,8 +76,7 @@ export const helpCards = [
 		description:
 			'Join the WPGraphQL Community in Discord where you can ask questions, show off projects and help other WPGraphQL users. Join us today!',
 		linkText: 'Join us in Discord',
-		linkUrl:
-			'https://discord.gg/AGVBqqyaUY',
+		linkUrl: 'https://discord.gg/AGVBqqyaUY',
 	},
 ];
 
