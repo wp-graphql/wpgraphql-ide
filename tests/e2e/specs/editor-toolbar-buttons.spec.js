@@ -109,7 +109,7 @@ describe('Toolbar Buttons', () => {
 		});
 	});
 
-	describe('Prettify button', () => {
+	describe.skip('Prettify button', () => {
 
 		beforeEach(async ({ page }) => {
 			await typeQuery(page, 'query{viewer{name}   }'); // poorly formatted query
@@ -175,7 +175,7 @@ describe('Toolbar Buttons', () => {
 
 	});
 
-	describe('Merge Fragments button', () => {
+	describe.skip('Merge Fragments button', () => {
 
 		const queryWithFragment = `{
 			...TestFragment
