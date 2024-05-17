@@ -176,7 +176,7 @@ describe('Toolbar Buttons', () => {
 		beforeEach(async ({ page }) => {
 			const queryEditorLocator = page.locator(selectors.queryInput);
 
-			await typeQuery(page, `{ ...TestFragment } fragment TestFragment on RootQuery { viewer { name } }`);// query with fragment
+			await typeQuery(page, `query { ...TestFragment } fragment TestFragment on RootQuery { viewer { name } }`);// query with fragment
 		});
 
 		test( 'Clicking the merge fragments button merges the fragment into the query', async ({ page }) => {
@@ -191,10 +191,6 @@ describe('Toolbar Buttons', () => {
 			// Get the value from the CodeMirror instance
 			const queryEditorLocator = page.locator(selectors.queryInput);
 			const mergedValue = await getCodeMirrorValue(queryEditorLocator);
-
-			console.log({
-				mergedValue
-			})
 
 			// Verify that the query is now formatted properly (with newlines and indentation...this is the playwright way of checking for the line breaks 🤷‍♂️)
 			await expect(mergedValue).toBe(`{
