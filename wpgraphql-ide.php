@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPGRAPHQL_IDE_VERSION', '1.1.9' );
+define( 'WPGRAPHQL_IDE_VERSION', '2.0.0' );
 define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
 define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -350,7 +350,7 @@ add_action(
 	';
 	},
 	10,
-	1 
+	1
 );
 
 /**
@@ -374,7 +374,7 @@ add_action(
 	';
 	},
 	10,
-	4 
+	4
 );
 
 /**
@@ -396,14 +396,14 @@ add_filter(
 		return $is_plugin_scoped_page;
 	},
 	10,
-	3 
+	3
 );
 
 /**
  * Modifies the script tag for specific scripts to add the 'defer' attribute.
  *
- * This function checks if the script handle matches 'wpgraphql-ide' and, if so, 
- * adds the 'defer' attribute to the script tag. This allows the script to be executed 
+ * This function checks if the script handle matches 'wpgraphql-ide' and, if so,
+ * adds the 'defer' attribute to the script tag. This allows the script to be executed
  * after the HTML document is parsed but before the DOMContentLoaded event.
  *
  * @param string $tag    The HTML `<script>` tag of the enqueued script.
