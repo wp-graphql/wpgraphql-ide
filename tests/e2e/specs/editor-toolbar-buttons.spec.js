@@ -159,11 +159,11 @@ describe('Toolbar Buttons', () => {
 		test( 'Clicking the copy button copies the query to the clipboard', async ({ page }) => {
 
 			// clear the clipboard
-			await page.evaluate( () => navigator.clipboard.writeText('') );
+			await page.evaluate( () => navigator.clipboard.writeText('empty' ) );
 
 			// assert the clipboard is empty
 			const clipboardTextBefore = await page.evaluate( () => navigator.clipboard.readText() );
-			expect( clipboardTextBefore ).toBe( '' );
+			expect( clipboardTextBefore ).toBe( 'empty' );
 
 			// Click the copy button
 			const copyButton = await page.locator( selectors.copyButton );
@@ -171,7 +171,8 @@ describe('Toolbar Buttons', () => {
 			await copyButton.click();
 			const clipboardText = await page.evaluate( () => navigator.clipboard.readText() );
 
-			expect( clipboardText ).not.toBe( '' );
+			expect( clipboardText ).not.toBe( 'empty' );
+			expect( clipboardText ).toBe( '{ posts { nodes { id } } }' );
 		});
 
 
