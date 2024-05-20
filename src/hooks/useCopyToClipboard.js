@@ -20,10 +20,9 @@ export const useCopyToClipboard = () => {
 	 *
 	 * @param {string} text The text to be copied to the clipboard.
 	 */
-	const copyToClipboard = ( text ) => {
+	const copyToClipboard = async ( text ) => {
 		const wasCopied = copy( text );
-		setIsCopied( wasCopied );
-
+		await setIsCopied( wasCopied );
 		setTimeout( () => setIsCopied( false ), 2500 );
 	};
 

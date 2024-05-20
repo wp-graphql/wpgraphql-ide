@@ -10,10 +10,10 @@ export const shareButton = () => {
 		select( 'wpgraphql-ide/app' ).getQuery()
 	);
 
-	const generateShareLink = () => {
+	const generateShareLink = async () => {
 		const hashedQueryParamObject = getHashedQueryParams( { query } );
 		const fullUrl = `${ dedicatedIdeBaseUrl }&wpgraphql_ide=${ hashedQueryParamObject }`;
-		copyToClipboard( fullUrl );
+		await copyToClipboard( fullUrl );
 
 		// TODO: notify user that a shareable link is copied to clipboard
 	};
@@ -29,8 +29,8 @@ export const shareButton = () => {
 				} }
 			/>
 		),
-		onClick: () => {
-			generateShareLink();
+		onClick: async () => {
+			await generateShareLink();
 		},
 	};
 };
