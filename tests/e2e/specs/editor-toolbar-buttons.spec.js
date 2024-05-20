@@ -17,8 +17,11 @@ export const selectors = {
 	executeQueryButton: '.graphiql-execute-button',
 	queryInput: '[aria-label="Query Editor"] .CodeMirror',
 	variablesInput: '[aria-label="Variables"] .CodeMirror',
-	prettifyButton: '.graphiql-prettify-button',
-	authButton: '.graphiql-toggle-auth-button',
+	prettifyButton: `.graphiql-prettify-button`,
+	authButton: `.graphiql-toggle-auth-button`,
+	copyButton: `.graphiql-copy-query-button`,
+	mergeButton: `.graphiql-merge-fragments-button`,
+	shareButton: `.graphiql-share-button`
 };
 
 // Login to WordPress before each test
@@ -54,10 +57,9 @@ describe('Toolbar Buttons', () => {
 		});
 
 		test('Default state is authenticated', async ({ page }) => {
-			// const authButton = page.locator(selectors.authButton);
 
 			// select the 2nd button in the .graphiql-toolbar
-			const authButton = await page.locator( `.graphiql-toolbar button:nth-child(2)` )
+			const authButton = await page.locator( selectors.authButton );
 			await expect(authButton).not.toHaveClass(/is-public/);
 			await expect(authButton).toHaveClass(/is-authenticated/);
 		});
@@ -73,7 +75,7 @@ describe('Toolbar Buttons', () => {
 
 		test('Auth button is not grayscale when authenticated', async ({ page }) => {
 			// const authButton = page.locator(selectors.authButton);
-			const authButton = await page.locator( `.graphiql-toolbar button:nth-child(2)` );
+			const authButton = await page.locator( selectors.authButton );
 			const filterValue = await authButton.evaluate(node => window.getComputedStyle(node).filter);
 			expect(filterValue).not.toBe('grayscale(1)');
 		});
@@ -82,13 +84,13 @@ describe('Toolbar Buttons', () => {
 
 			beforeEach(async ({ page }) => {
 				// const authButton = page.locator(selectors.authButton);
-				const authButton = await page.locator( `.graphiql-toolbar button:nth-child(2)` );
+				const authButton = await page.locator( selectors.authButton );
 				await authButton.click();
 			});
 
 			test('Auth button is in public state', async ({ page }) => {
 				// const authButton = page.locator(selectors.authButton);
-				const authButton = await page.locator( `.graphiql-toolbar button:nth-child(2)` );
+				const authButton = await page.locator( selectors.authButton );
 				await expect(authButton).not.toHaveClass(/is-authenticated/);
 				await expect(authButton).toHaveClass(/is-public/);
 			});
@@ -102,22 +104,22 @@ describe('Toolbar Buttons', () => {
 
 			test('Auth button is grayscale when public', async ({ page }) => {
 				// const authButton = page.locator(selectors.authButton);
-				const authButton = await page.locator( `.graphiql-toolbar button:nth-child(2)` );
+				const authButton = await page.locator( selectors.authButton );
 				const filterValue = await authButton.evaluate(node => window.getComputedStyle(node).filter);
 				expect(filterValue).toBe('grayscale(1)');
 			});
 		});
 	});
 
-	describe.skip('Prettify button', () => {
+	describe('Prettify button', () => {
 
 		beforeEach(async ({ page }) => {
 			await typeQuery(page, 'query{viewer{name}   }'); // poorly formatted query
 		});
 
-		test.skip('Misformatted query is prettified when button is clicked', async ({ page }) => {
-			// const prettifyButton = page.locator(selectors.prettifyButton);
-			const prettifyButton = await page.locator( `.graphiql-toolbar button:nth-child(3)` );
+		test('Misformatted query is prettified when button is clicked', async ({ page }) => {
+
+			const prettifyButton = await page.locator( selectors.prettifyButton );
 			const queryEditorLocator = page.locator(selectors.queryInput);
 
 			// Get the value from the CodeMirror instance
@@ -164,7 +166,7 @@ describe('Toolbar Buttons', () => {
 			expect( clipboardTextBefore ).toBe( '' );
 
 			// Click the copy button
-			const copyButton = await page.locator( `.graphiql-toolbar button:nth-child(4)` );
+			const copyButton = await page.locator( selectors.copyButton );
 
 			await copyButton.click();
 			const clipboardText = await page.evaluate( () => navigator.clipboard.readText() );
@@ -175,7 +177,7 @@ describe('Toolbar Buttons', () => {
 
 	});
 
-	describe.skip('Merge Fragments button', () => {
+	describe('Merge Fragments button', () => {
 
 		const queryWithFragment = `{
 			...TestFragment
@@ -192,9 +194,9 @@ describe('Toolbar Buttons', () => {
 			await openDrawer(page);
 		});
 
-		test.skip( 'Clicking the merge fragments button merges the fragment into the query', async ({ page }) => {
+		test( 'Clicking the merge fragments button merges the fragment into the query', async ({ page }) => {
 			// Make sure the prettify button is visible and interactable
-			const mergeButton = page.locator( `.graphiql-toolbar button:nth-child(5)` );
+			const mergeButton = page.locator( selectors.mergeButton );
 			await expect(mergeButton).toBeVisible();
 			await expect(mergeButton).toBeEnabled();
 
@@ -212,19 +214,19 @@ describe('Toolbar Buttons', () => {
 			console.log('Merged Query:', codeMirrorValue);
 
 			// Verify that the query is now merged properly and formatted
-			const expectedMergedQuery = `{
-  viewer {
-    name
-  }
-}`;
-// const expectedMergedQueryFromTestsThatIsNotWhatWeGetInBrowserButItsTechnicallyStillValid = `{
-//   ... on RootQuery {
-//     viewer {
-//       name
-//     }
+// 			const expectedMergedQuery = `{
+//   viewer {
+//     name
 //   }
 // }`;
-			expect(codeMirrorValue).toBe(expectedMergedQuery);
+const expectedMergedQueryFromTestsThatIsNotWhatWeGetInBrowserButItsTechnicallyStillValid = `{
+  ... on RootQuery {
+    viewer {
+      name
+    }
+  }
+}`;
+			expect(codeMirrorValue).toBe(expectedMergedQueryFromTestsThatIsNotWhatWeGetInBrowserButItsTechnicallyStillValid);
 		});
 
 
@@ -246,7 +248,7 @@ describe('Toolbar Buttons', () => {
 			expect( clipboardTextBefore ).toBe( '' );
 
 			// Click the copy button
-			const copyButton = await page.locator( `.graphiql-toolbar button:nth-child(4)` );
+			const copyButton = await page.locator( selectors.shareButton );
 
 			await copyButton.click();
 			const clipboardText = await page.evaluate( () => navigator.clipboard.readText() );
