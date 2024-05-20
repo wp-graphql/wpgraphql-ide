@@ -161,6 +161,10 @@ function register_dedicated_ide_menu(): void {
 		return;
 	}
 
+	// Remove the legacy submenu without affecting the ability to directly link to the legacy IDE (wp-admin/admin.php?page=graphiql-ide)
+	// TODO: Conditionally remove submenu if user indicates desire for legacy feature, however that is implemented. 
+	remove_submenu_page( 'graphiql-ide', 'graphiql-ide' );
+
 	add_submenu_page(
 		'graphiql-ide',
 		__( 'GraphQL IDE', 'wpgraphql-ide' ),
@@ -424,3 +428,102 @@ add_filter(
 	10,
 	2
 );
+
+
+/**
+ * Update the existing GraphiQL link field configuration to say "Legacy".
+ *
+ * @param array  $field_config The field configuration array.
+ * @param string $field_name   The name of the field.
+ * @param string $section      The section the field belongs to.
+ *
+ * @return array The modified field configuration array.
+ */
+function update_graphiql_link_field_config( $field_config, $field_name, $section ) {
+    if ( 'show_graphiql_link_in_admin_bar' === $field_name && 'graphql_general_settings' === $section ) {
+        $field_config['desc'] = sprintf(
+			'%1$s<br><p class="description">%2$s</p>',
+			__( 'Show the GraphiQL IDE link in the WordPress Admin Bar.', 'wpgraphql-ide' ),
+			/* translators: %s: Strong opening tag */
+			sprintf(
+				__( '%1$sNote:%2$s This setting has been disabled by the new WPGraphQL IDE. Related settings are now available under the "IDE Settings" tab.', 'wpgraphql-ide' ),
+				'<strong>',
+				'</strong>'
+			)
+		);
+        $field_config['disabled'] = true;
+        $field_config['value']    = 'off';
+    }
+    return $field_config;
+}
+add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_link_field_config', 10, 3 );
+
+/**
+ * Ensure the `show_graphiql_link_in_admin_bar` setting is always unchecked.
+ *
+ * @param mixed  $value          The value of the field.
+ * @param mixed  $default_value  The default value if there is no value set.
+ * @param string $option_name    The name of the option.
+ * @param array  $section_fields The setting values within the section.
+ * @param string $section_name   The name of the section the setting belongs to.
+ * @return mixed The modified value of the field.
+ */
+function ensure_graphiql_link_is_unchecked( $value, $default_value, $option_name, $section_fields, $section_name ) {
+    if ( 'show_graphiql_link_in_admin_bar' === $option_name && 'graphql_general_settings' === $section_name ) {
+        return 'off';
+    }
+    return $value;
+}
+add_filter( 'graphql_get_setting_section_field_value', __NAMESPACE__ . '\\ensure_graphiql_link_is_unchecked', 10, 5 );
+
+/**
+ * Register custom GraphQL settings.
+ */
+function register_custom_graphql_settings() {
+    // Add a tab section to the graphql admin settings page
+    register_graphql_settings_section(
+        'graphql_ide_settings',
+        [
+            'title' => __( 'IDE Settings', 'wpgraphql-ide' ),
+            'desc'  => __( 'Customize your WPGraphQL IDE experience.', 'wpgraphql-ide' ),
+        ]
+    );
+
+    register_graphql_settings_field(
+        'graphql_ide_settings',
+        [
+            'name'              => 'graphql_ide_link_behavior',
+            'label'             => __( 'Admin Bar Link Behavior', 'wpgraphql-ide' ),
+            'desc'              => __( 'How would you like to access the GraphQL IDE from the admin bar?', 'wpgraphql-ide' ),
+            'type'              => 'radio',
+            'options'           => [
+                'drawer'         => __( 'Drawer (recommended) - perfect for those who need quick access to the IDE on every page', 'wpgraphql-ide' ),
+                'dedicated_page' => sprintf(
+                    /* translators: %s: URL to the GraphQL IDE page */
+                    __( 'Dedicated Page - ideal for those who prefer the classic IDE experience at %s', 'wpgraphql-ide' ),
+                    admin_url( 'admin.php?page=graphql-ide' )
+                ),
+            ],
+            'default'           => 'drawer',
+            'sanitize_callback' => __NAMESPACE__ . '\\sanitize_custom_graphql_ide_link_behavior',
+        ]
+    );
+}
+add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_custom_graphql_settings' );
+
+/**
+ * Sanitize the input value for the custom GraphQL IDE link behavior setting.
+ *
+ * @param string $value The input value.
+ *
+ * @return string The sanitized value.
+ */
+function sanitize_custom_graphql_ide_link_behavior( $value ) {
+    $valid_values = [ 'drawer', 'dedicated_page' ];
+
+    if ( in_array( $value, $valid_values, true ) ) {
+        return $value;
+    }
+
+    return 'drawer';
+}
