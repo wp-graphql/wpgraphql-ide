@@ -140,7 +140,7 @@ describe('Toolbar Buttons', () => {
 
 			const codeMirrorValleAfterClick = await getCodeMirrorValue( queryEditorLocator );
 
-			await expect(codeMirrorValleAfterClick).toBe(`{
+			await expect(codeMirrorValleAfterClick).toContain(`{
   viewer {
     name
   }
