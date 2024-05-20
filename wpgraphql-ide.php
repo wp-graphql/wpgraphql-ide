@@ -114,33 +114,40 @@ function is_legacy_ide_page(): bool {
  * @global WP_Admin_Bar $wp_admin_bar The WordPress Admin Bar instance.
  */
 function register_wpadminbar_menus(): void {
-	if ( user_lacks_capability() ) {
-		return;
-	}
+    if ( user_lacks_capability() ) {
+        return;
+    }
 
-	global $wp_admin_bar;
+    global $wp_admin_bar;
 
-	$app_context = get_app_context();
+    $app_context = get_app_context();
 
-	// Link to the new dedicated IDE page.
-	$wp_admin_bar->add_node(
-		[
-			'id'    => 'wpgraphql-ide',
-			'title' => '<span class="ab-icon"></span>' . __( 'GraphQL IDE', 'wpgraphql-ide' ),
-			'href'  => trailingslashit( admin_url() ) . 'admin.php?page=graphql-ide',
-		]
-	);
+    // Retrieve the settings array
+    $graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
 
-	if ( ! current_screen_is_dedicated_ide_page() ) {
-		// Drawer Button
+    // Get the specific link behavior value, default to 'drawer' if not set
+    $link_behavior = isset( $graphql_ide_settings['graphql_ide_link_behavior'] ) ? $graphql_ide_settings['graphql_ide_link_behavior'] : 'drawer';
+
+    if ( $link_behavior === 'drawer' && !current_screen_is_dedicated_ide_page() ) {
+        // Drawer Button
+        $wp_admin_bar->add_node(
+            [
+                'id'    => 'wpgraphql-ide-button',
+                'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel'] . '</div>',
+                'href'  => '#',
+            ]
+        );
+    } else {
+
+		// Link to the new dedicated IDE page.
 		$wp_admin_bar->add_node(
 			[
-				'id'    => 'wpgraphql-ide-button',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel'] . '</div>',
-				'href'  => '#',
+				'id'    => 'wpgraphql-ide',
+				'title' => '<span class="ab-icon"></span>' . __( 'GraphQL IDE', 'wpgraphql-ide' ),
+				'href'  => admin_url( 'admin.php?page=graphql-ide' ),
 			]
 		);
-	}
+    }
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 
@@ -318,8 +325,8 @@ function get_app_context(): array {
 			'pluginName'               => get_plugin_header( 'Name' ),
 			'externalFragments'        => apply_filters( 'wpgraphqlide_external_fragments', [] ),
 			'avatarUrl'                => $avatar_url,
-			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', __( '🚀 GraphQL IDE', 'wpgraphql-ide' ) ),
-			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', __( '⏳ GraphQL IDE', 'wpgraphql-ide' ) ),			
+			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '🚀' ) ),
+			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '⏳' ) )					
 		]
 	);
 }
@@ -519,7 +526,7 @@ add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_custom_grap
  * @return string The sanitized value.
  */
 function sanitize_custom_graphql_ide_link_behavior( $value ) {
-    $valid_values = [ 'drawer', 'dedicated_page' ];
+    $valid_values = [ 'drawer', 'dedicated_page', 'legacy' ];
 
     if ( in_array( $value, $valid_values, true ) ) {
         return $value;
