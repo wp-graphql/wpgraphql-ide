@@ -35,16 +35,16 @@ define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
  */
 function graphql_logo_svg(): string {
 	return <<<XML
-    <svg xmlns="http://www.w3.org/2000/svg" fill="color(display-p3 .8824 0 .5961)" viewBox="0 0 100 100">
-        <path fill-rule="evenodd" d="m50 6.903 37.323 21.549v43.096L50 93.097 12.677 71.548V28.451L50 6.903ZM16.865 30.87v31.656L44.28 15.041 16.864 30.87ZM50 13.51 18.398 68.246h63.205L50 13.509Zm27.415 58.924h-54.83L50 88.261l27.415-15.828Zm5.72-9.908L55.72 15.041 83.136 30.87v31.656Z" clip-rule="evenodd"/>
-        <circle cx="50" cy="9.321" r="8.82"/>
-        <circle cx="85.229" cy="29.66" r="8.82"/>
-        <circle cx="85.229" cy="70.34" r="8.82"/>
-        <circle cx="50" cy="90.679" r="8.82"/>
-        <circle cx="14.766" cy="70.34" r="8.82"/>
-        <circle cx="14.766" cy="29.66" r="8.82"/>
-    </svg>
-    XML;
+	<svg xmlns="http://www.w3.org/2000/svg" fill="color(display-p3 .8824 0 .5961)" viewBox="0 0 100 100">
+		<path fill-rule="evenodd" d="m50 6.903 37.323 21.549v43.096L50 93.097 12.677 71.548V28.451L50 6.903ZM16.865 30.87v31.656L44.28 15.041 16.864 30.87ZM50 13.51 18.398 68.246h63.205L50 13.509Zm27.415 58.924h-54.83L50 88.261l27.415-15.828Zm5.72-9.908L55.72 15.041 83.136 30.87v31.656Z" clip-rule="evenodd"/>
+		<circle cx="50" cy="9.321" r="8.82"/>
+		<circle cx="85.229" cy="29.66" r="8.82"/>
+		<circle cx="85.229" cy="70.34" r="8.82"/>
+		<circle cx="50" cy="90.679" r="8.82"/>
+		<circle cx="14.766" cy="70.34" r="8.82"/>
+		<circle cx="14.766" cy="29.66" r="8.82"/>
+	</svg>
+	XML;
 }
 
 /**
@@ -128,22 +128,23 @@ function register_wpadminbar_menus(): void {
 	// Get the specific link behavior value, default to 'drawer' if not set
 	$link_behavior = isset( $graphql_ide_settings['graphql_ide_link_behavior'] ) ? $graphql_ide_settings['graphql_ide_link_behavior'] : 'drawer';
 
-	if ( $link_behavior === 'drawer' && ! current_screen_is_dedicated_ide_page() ) {
+	if ( 'drawer' === $link_behavior && ! current_screen_is_dedicated_ide_page() ) {
 		// Drawer Button
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide-button',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel'] . '</div>',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . esc_html( $app_context['drawerButtonLoadingLabel'] ) . '</div>',
 				'href'  => '#',
 			]
 		);
 	} else {
-
 		// Link to the new dedicated IDE page.
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide',
-				'title' => '<span class="ab-icon"></span>' . __( 'GraphQL IDE', 'wpgraphql-ide' ),
+				'title' => '<span class="ab-icon"></span>' . 
+				// translators: Admin Bar link title for the GraphQL IDE
+				__( 'GraphQL IDE', 'wpgraphql-ide' ),
 				'href'  => admin_url( 'admin.php?page=graphql-ide' ),
 			]
 		);
@@ -199,18 +200,18 @@ function enqueue_graphql_ide_menu_icon_css(): void {
 	}
 
 	$custom_css = '
-        #wp-admin-bar-wpgraphql-ide .ab-icon::before,
+		#wp-admin-bar-wpgraphql-ide .ab-icon::before,
 		#wp-admin-bar-wpgraphql-ide .ab-icon::before {
-            background-image: url("data:image/svg+xml;base64,' . base64_encode( graphql_logo_svg() ) . '");
-            background-size: 100%;
-            border-radius: 12px;
-            box-sizing: border-box;
-            content: "";
-            display: inline-block;
-            height: 24px;
-            width: 24px;
-        }
-    ';
+			background-image: url("data:image/svg+xml;base64,' . base64_encode( graphql_logo_svg() ) . '");
+			background-size: 100%;
+			border-radius: 12px;
+			box-sizing: border-box;
+			content: "";
+			display: inline-block;
+			height: 24px;
+			width: 24px;
+		}
+	';
 
 	wp_add_inline_style( 'admin-bar', $custom_css );
 }
@@ -325,8 +326,10 @@ function get_app_context(): array {
 			'pluginName'               => get_plugin_header( 'Name' ),
 			'externalFragments'        => apply_filters( 'wpgraphqlide_external_fragments', [] ),
 			'avatarUrl'                => $avatar_url,
+			// translators: %1$s is a rocket emoji
 			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '🚀' ) ),
-			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '⏳' ) ),                    
+			// translators: %1$s is an hourglass emoji
+			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '⏳' ) ),                   
 		]
 	);
 }
@@ -343,21 +346,21 @@ add_action(
 
 		echo '
 		<style>
-            body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
-                display: block;
-                position: absolute;
-                top: 0;
-                right: 0;
-                z-index: 1;
-                min-width: 40%;
-            }
-            body.graphql_page_graphql-ide #wpbody .graphiql-container {
-                padding-top: ' . count( $notices ) * 45 . 'px;
-            }
-            body.graphql_page_graphql-ide #wpgraphql-ide-root {
-                height: calc(100vh - var(--wp-admin--admin-bar--height) - ' . count( $notices ) * 45 . 'px);
-            }
-        </style>
+			body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
+				display: block;
+				position: absolute;
+				top: 0;
+				right: 0;
+				z-index: 1;
+				min-width: 40%;
+			}
+			body.graphql_page_graphql-ide #wpbody .graphiql-container {
+				padding-top: ' . count( $notices ) * 45 . 'px;
+			}
+			body.graphql_page_graphql-ide #wpgraphql-ide-root {
+				height: calc(100vh - var(--wp-admin--admin-bar--height) - ' . count( $notices ) * 45 . 'px);
+			}
+		</style>
 	';
 	},
 	10,
@@ -378,10 +381,10 @@ add_action(
 
 		echo '
 	<style>
-        body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-' . esc_attr( $notice_slug ) . ' {
-            top: ' . esc_attr( ( $count * 45 ) . 'px' ) . '
-        }
-    </style>
+		body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-' . esc_attr( $notice_slug ) . ' {
+			top: ' . esc_attr( ( $count * 45 ) . 'px' ) . '
+		}
+	</style>
 	';
 	},
 	10,
@@ -440,19 +443,19 @@ add_filter(
 /**
  * Update the existing GraphiQL link field configuration to say "Legacy".
  *
- * @param array  $field_config The field configuration array.
- * @param string $field_name   The name of the field.
- * @param string $section      The section the field belongs to.
+ * @param array<string, mixed> $field_config The field configuration array.
+ * @param string               $field_name   The name of the field.
+ * @param string               $section      The section the field belongs to.
  *
- * @return array The modified field configuration array.
+ * @return array<string, mixed> The modified field configuration array.
  */
-function update_graphiql_link_field_config( $field_config, $field_name, $section ) {
+function update_graphiql_link_field_config( array $field_config, string $field_name, string $section ): array {
 	if ( 'show_graphiql_link_in_admin_bar' === $field_name && 'graphql_general_settings' === $section ) {
 		$field_config['desc'] = sprintf(
 			'%1$s<br><p class="description">%2$s</p>',
 			__( 'Show the GraphiQL IDE link in the WordPress Admin Bar.', 'wpgraphql-ide' ),
-			/* translators: %s: Strong opening tag */
 			sprintf(
+				/* translators: %s: Strong opening tag */
 				__( '%1$sNote:%2$s This setting has been disabled by the new WPGraphQL IDE. Related settings are now available under the "IDE Settings" tab.', 'wpgraphql-ide' ),
 				'<strong>',
 				'</strong>'
@@ -468,14 +471,14 @@ add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_l
 /**
  * Ensure the `show_graphiql_link_in_admin_bar` setting is always unchecked.
  *
- * @param mixed  $value          The value of the field.
- * @param mixed  $default_value  The default value if there is no value set.
- * @param string $option_name    The name of the option.
- * @param array  $section_fields The setting values within the section.
- * @param string $section_name   The name of the section the setting belongs to.
+ * @param mixed                $value          The value of the field.
+ * @param mixed                $default_value  The default value if there is no value set.
+ * @param string               $option_name    The name of the option.
+ * @param array<string, mixed> $section_fields The setting values within the section.
+ * @param string               $section_name   The name of the section the setting belongs to.
  * @return mixed The modified value of the field.
  */
-function ensure_graphiql_link_is_unchecked( $value, $default_value, $option_name, $section_fields, $section_name ) {
+function ensure_graphiql_link_is_unchecked( $value, $default_value, string $option_name, array $section_fields, string $section_name ) {
 	if ( 'show_graphiql_link_in_admin_bar' === $option_name && 'graphql_general_settings' === $section_name ) {
 		return 'off';
 	}
