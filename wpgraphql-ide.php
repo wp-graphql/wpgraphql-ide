@@ -114,30 +114,30 @@ function is_legacy_ide_page(): bool {
  * @global WP_Admin_Bar $wp_admin_bar The WordPress Admin Bar instance.
  */
 function register_wpadminbar_menus(): void {
-    if ( user_lacks_capability() ) {
-        return;
-    }
+	if ( user_lacks_capability() ) {
+		return;
+	}
 
-    global $wp_admin_bar;
+	global $wp_admin_bar;
 
-    $app_context = get_app_context();
+	$app_context = get_app_context();
 
-    // Retrieve the settings array
-    $graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
+	// Retrieve the settings array
+	$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
 
-    // Get the specific link behavior value, default to 'drawer' if not set
-    $link_behavior = isset( $graphql_ide_settings['graphql_ide_link_behavior'] ) ? $graphql_ide_settings['graphql_ide_link_behavior'] : 'drawer';
+	// Get the specific link behavior value, default to 'drawer' if not set
+	$link_behavior = isset( $graphql_ide_settings['graphql_ide_link_behavior'] ) ? $graphql_ide_settings['graphql_ide_link_behavior'] : 'drawer';
 
-    if ( $link_behavior === 'drawer' && !current_screen_is_dedicated_ide_page() ) {
-        // Drawer Button
-        $wp_admin_bar->add_node(
-            [
-                'id'    => 'wpgraphql-ide-button',
-                'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel'] . '</div>',
-                'href'  => '#',
-            ]
-        );
-    } else {
+	if ( $link_behavior === 'drawer' && ! current_screen_is_dedicated_ide_page() ) {
+		// Drawer Button
+		$wp_admin_bar->add_node(
+			[
+				'id'    => 'wpgraphql-ide-button',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel'] . '</div>',
+				'href'  => '#',
+			]
+		);
+	} else {
 
 		// Link to the new dedicated IDE page.
 		$wp_admin_bar->add_node(
@@ -147,7 +147,7 @@ function register_wpadminbar_menus(): void {
 				'href'  => admin_url( 'admin.php?page=graphql-ide' ),
 			]
 		);
-    }
+	}
 }
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 
@@ -326,7 +326,7 @@ function get_app_context(): array {
 			'externalFragments'        => apply_filters( 'wpgraphqlide_external_fragments', [] ),
 			'avatarUrl'                => $avatar_url,
 			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '🚀' ) ),
-			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '⏳' ) )					
+			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '⏳' ) ),                    
 		]
 	);
 }
@@ -447,8 +447,8 @@ add_filter(
  * @return array The modified field configuration array.
  */
 function update_graphiql_link_field_config( $field_config, $field_name, $section ) {
-    if ( 'show_graphiql_link_in_admin_bar' === $field_name && 'graphql_general_settings' === $section ) {
-        $field_config['desc'] = sprintf(
+	if ( 'show_graphiql_link_in_admin_bar' === $field_name && 'graphql_general_settings' === $section ) {
+		$field_config['desc'] = sprintf(
 			'%1$s<br><p class="description">%2$s</p>',
 			__( 'Show the GraphiQL IDE link in the WordPress Admin Bar.', 'wpgraphql-ide' ),
 			/* translators: %s: Strong opening tag */
@@ -458,10 +458,10 @@ function update_graphiql_link_field_config( $field_config, $field_name, $section
 				'</strong>'
 			)
 		);
-        $field_config['disabled'] = true;
-        $field_config['value']    = 'off';
-    }
-    return $field_config;
+		$field_config['disabled'] = true;
+		$field_config['value']    = 'off';
+	}
+	return $field_config;
 }
 add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_link_field_config', 10, 3 );
 
@@ -476,10 +476,10 @@ add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_l
  * @return mixed The modified value of the field.
  */
 function ensure_graphiql_link_is_unchecked( $value, $default_value, $option_name, $section_fields, $section_name ) {
-    if ( 'show_graphiql_link_in_admin_bar' === $option_name && 'graphql_general_settings' === $section_name ) {
-        return 'off';
-    }
-    return $value;
+	if ( 'show_graphiql_link_in_admin_bar' === $option_name && 'graphql_general_settings' === $section_name ) {
+		return 'off';
+	}
+	return $value;
 }
 add_filter( 'graphql_get_setting_section_field_value', __NAMESPACE__ . '\\ensure_graphiql_link_is_unchecked', 10, 5 );
 
@@ -487,34 +487,34 @@ add_filter( 'graphql_get_setting_section_field_value', __NAMESPACE__ . '\\ensure
  * Register custom GraphQL settings.
  */
 function register_custom_graphql_settings() {
-    // Add a tab section to the graphql admin settings page
-    register_graphql_settings_section(
-        'graphql_ide_settings',
-        [
-            'title' => __( 'IDE Settings', 'wpgraphql-ide' ),
-            'desc'  => __( 'Customize your WPGraphQL IDE experience.', 'wpgraphql-ide' ),
-        ]
-    );
+	// Add a tab section to the graphql admin settings page
+	register_graphql_settings_section(
+		'graphql_ide_settings',
+		[
+			'title' => __( 'IDE Settings', 'wpgraphql-ide' ),
+			'desc'  => __( 'Customize your WPGraphQL IDE experience.', 'wpgraphql-ide' ),
+		]
+	);
 
-    register_graphql_settings_field(
-        'graphql_ide_settings',
-        [
-            'name'              => 'graphql_ide_link_behavior',
-            'label'             => __( 'Admin Bar Link Behavior', 'wpgraphql-ide' ),
-            'desc'              => __( 'How would you like to access the GraphQL IDE from the admin bar?', 'wpgraphql-ide' ),
-            'type'              => 'radio',
-            'options'           => [
-                'drawer'         => __( 'Drawer (recommended) - perfect for those who need quick access to the IDE on every page', 'wpgraphql-ide' ),
-                'dedicated_page' => sprintf(
-                    /* translators: %s: URL to the GraphQL IDE page */
-                    __( 'Dedicated Page - ideal for those who prefer the classic IDE experience at %s', 'wpgraphql-ide' ),
-                    admin_url( 'admin.php?page=graphql-ide' )
-                ),
-            ],
-            'default'           => 'drawer',
-            'sanitize_callback' => __NAMESPACE__ . '\\sanitize_custom_graphql_ide_link_behavior',
-        ]
-    );
+	register_graphql_settings_field(
+		'graphql_ide_settings',
+		[
+			'name'              => 'graphql_ide_link_behavior',
+			'label'             => __( 'Admin Bar Link Behavior', 'wpgraphql-ide' ),
+			'desc'              => __( 'How would you like to access the GraphQL IDE from the admin bar?', 'wpgraphql-ide' ),
+			'type'              => 'radio',
+			'options'           => [
+				'drawer'         => __( 'Drawer (recommended) - perfect for those who need quick access to the IDE on every page', 'wpgraphql-ide' ),
+				'dedicated_page' => sprintf(
+					/* translators: %s: URL to the GraphQL IDE page */
+					__( 'Dedicated Page - ideal for those who prefer the classic IDE experience at %s', 'wpgraphql-ide' ),
+					admin_url( 'admin.php?page=graphql-ide' )
+				),
+			],
+			'default'           => 'drawer',
+			'sanitize_callback' => __NAMESPACE__ . '\\sanitize_custom_graphql_ide_link_behavior',
+		]
+	);
 }
 add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_custom_graphql_settings' );
 
@@ -526,11 +526,11 @@ add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_custom_grap
  * @return string The sanitized value.
  */
 function sanitize_custom_graphql_ide_link_behavior( $value ) {
-    $valid_values = [ 'drawer', 'dedicated_page', 'legacy' ];
+	$valid_values = [ 'drawer', 'dedicated_page', 'legacy' ];
 
-    if ( in_array( $value, $valid_values, true ) ) {
-        return $value;
-    }
+	if ( in_array( $value, $valid_values, true ) ) {
+		return $value;
+	}
 
-    return 'drawer';
+	return 'drawer';
 }
