@@ -171,11 +171,6 @@ describe('Toolbar Buttons', () => {
 			await copyButton.click();
 			const clipboardText = await page.evaluate( () => navigator.clipboard.readText() );
 
-			console.log( {
-				clipboardText
-			})
-
-			await expect( clipboardText ).not.toBe( '' );
 			await expect( clipboardText ).toBe( '{ posts { nodes { id } } }' );
 		});
 
@@ -260,8 +255,6 @@ const expectedMergedQueryForLocalhostTestsButWeDontFullyUnderstandWhyItsDifferen
 			// Wait for the clipboard to be updated
 			const clipboardText = await page.evaluate( () => navigator.clipboard.readText() );
 
-
-			await expect(clipboardText).not.toBe('');
 			await expect(clipboardText).toContain( '&wpgraphql_ide' );
 		});
 
