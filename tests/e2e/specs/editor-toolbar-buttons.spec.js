@@ -159,11 +159,11 @@ describe('Toolbar Buttons', () => {
 		test( 'Clicking the copy button copies the query to the clipboard', async ({ page }) => {
 
 			// clear the clipboard
-			await page.evaluate( () => navigator.clipboard.writeText('empty' ) );
+			await page.evaluate( () => navigator.clipboard.writeText('' ) );
 
 			// assert the clipboard is empty
 			const clipboardTextBefore = await page.evaluate( () => navigator.clipboard.readText() );
-			expect( clipboardTextBefore ).toBe( 'empty' );
+			expect( clipboardTextBefore ).toBe( '' );
 
 			// Click the copy button
 			const copyButton = await page.locator( selectors.copyButton );
@@ -171,8 +171,12 @@ describe('Toolbar Buttons', () => {
 			await copyButton.click();
 			const clipboardText = await page.evaluate( () => navigator.clipboard.readText() );
 
-			expect( clipboardText ).not.toBe( 'empty' );
-			expect( clipboardText ).toBe( '{ posts { nodes { id } } }' );
+			console.log( {
+				clipboardText
+			})
+
+			await expect( clipboardText ).not.toBe( '' );
+			await expect( clipboardText ).toBe( '{ posts { nodes { id } } }' );
 		});
 
 
@@ -213,12 +217,6 @@ describe('Toolbar Buttons', () => {
 			// Get the value from the CodeMirror instance
 			const codeMirrorValue = await getCodeMirrorValue(queryEditorLocator);
 
-
-			const queryInLocalStorage = await getQueryFromLocalStorage(page);
-
-			// Log the output for debugging purposes
-			console.log('Merged Query:', codeMirrorValue);
-
 			// Verify that the query is now merged properly and formatted
 			const expectedMergedQueryOnGithub = `{
   viewer {
@@ -247,22 +245,24 @@ const expectedMergedQueryForLocalhostTestsButWeDontFullyUnderstandWhyItsDifferen
 			await typeQuery(page, '{ posts { nodes { id } } }' ); // poorly formatted query
 		});
 
-		test( 'Clicking the share button copies the query to the clipboard', async ({ page }) => {
+		test('Clicking the share button copies the query to the clipboard', async ({ page }) => {
+			// Clear the clipboard
+			await page.evaluate(() => navigator.clipboard.writeText(''));
 
-			// clear the clipboard
-			await page.evaluate( () => navigator.clipboard.writeText('') );
-
-			// assert the clipboard is empty
-			const clipboardTextBefore = await page.evaluate( () => navigator.clipboard.readText() );
-			expect( clipboardTextBefore ).toBe( '' );
+			// Assert the clipboard is empty
+			const clipboardTextBefore = await page.evaluate(() => navigator.clipboard.readText());
+			expect(clipboardTextBefore).toBe('');
 
 			// Click the copy button
-			const copyButton = await page.locator( selectors.shareButton );
+			const shareButton = await page.locator(selectors.shareButton);
+			await shareButton.click();
 
-			await copyButton.click();
+			// Wait for the clipboard to be updated
 			const clipboardText = await page.evaluate( () => navigator.clipboard.readText() );
 
-			expect( clipboardText ).not.toBe( '' );
+
+			await expect(clipboardText).not.toBe('');
+			await expect(clipboardText).toContain( '&wpgraphql_ide' );
 		});
 
 
