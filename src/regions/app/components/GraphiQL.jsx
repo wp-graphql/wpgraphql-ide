@@ -16,23 +16,16 @@ import {
 	ButtonGroup,
 	ChevronDownIcon,
 	ChevronUpIcon,
-	CopyIcon,
 	Dialog,
 	ExecuteButton,
 	GraphiQLProvider,
 	HeaderEditor,
-	KeyboardShortcutIcon,
-	MergeIcon,
 	PlusIcon,
-	PrettifyIcon,
 	QueryEditor,
-	ReloadIcon,
 	ResponseEditor,
-	SettingsIcon,
 	Spinner,
 	Tab,
 	Tabs,
-	ToolbarButton,
 	Tooltip,
 	UnStyledButton,
 	useCopyQuery,
@@ -47,6 +40,9 @@ import {
 	useTheme,
 	VariableEditor,
 } from '@graphiql/react';
+import {ActivityBar} from "../../activity-bar/components/ActivityBar";
+import {EditorToolbar} from "../../document-editor/components/EditorToolbar";
+import {ShortKeysDialog} from "../../activity-bar/components/ShortKeysDialog";
 
 /**
  * The top-level React component for GraphiQL, intended to encompass the entire
@@ -131,8 +127,6 @@ export function GraphiQL({
 
 // Export main windows/panes to be used separately if desired.
 GraphiQL.Logo = GraphiQLLogo;
-GraphiQL.Toolbar = GraphiQLToolbar;
-GraphiQL.Footer = GraphiQLFooter;
 
 
 export function GraphiQLInterface(props) {
@@ -211,33 +205,6 @@ export function GraphiQLInterface(props) {
 	const logo = children.find(child =>
 		isChildComponentType(child, GraphiQL.Logo),
 	) || <GraphiQL.Logo />;
-
-	const toolbar = children.find(child =>
-		isChildComponentType(child, GraphiQL.Toolbar),
-	) || (
-		<>
-			<ToolbarButton onClick={prettify} label="Prettify query (Shift-Ctrl-P)">
-				<PrettifyIcon className="graphiql-toolbar-icon" aria-hidden="true" />
-			</ToolbarButton>
-			<ToolbarButton
-				onClick={merge}
-				label="Merge fragments into query (Shift-Ctrl-M)"
-			>
-				<MergeIcon className="graphiql-toolbar-icon" aria-hidden="true" />
-			</ToolbarButton>
-			<ToolbarButton onClick={copy} label="Copy query (Shift-Ctrl-C)">
-				<CopyIcon className="graphiql-toolbar-icon" aria-hidden="true" />
-			</ToolbarButton>
-			{props.toolbar?.additionalContent && props.toolbar.additionalContent}
-			{props.toolbar?.additionalComponent && (
-				<props.toolbar.additionalComponent />
-			)}
-		</>
-	);
-
-	const footer = children.find(child =>
-		isChildComponentType(child, GraphiQL.Footer),
-	);
 
 	const onClickReference = useCallback(() => {
 		if (pluginResize.hiddenElement === 'first') {
@@ -350,63 +317,13 @@ export function GraphiQLInterface(props) {
 	return (
 		<Tooltip.Provider>
 			<div data-testid="graphiql-container" className="graphiql-container">
-				<div className="graphiql-sidebar">
-					<div className="graphiql-sidebar-section">
-						{pluginContext?.plugins.map((plugin, index) => {
-							const isVisible = plugin === pluginContext.visiblePlugin;
-							const label = `${isVisible ? 'Hide' : 'Show'} ${plugin.title}`;
-							const Icon = plugin.icon;
-							return (
-								<Tooltip key={plugin.title} label={label}>
-									<UnStyledButton
-										type="button"
-										className={isVisible ? 'active' : ''}
-										onClick={handlePluginClick}
-										data-index={index}
-										aria-label={label}
-									>
-										<Icon aria-hidden="true" />
-									</UnStyledButton>
-								</Tooltip>
-							);
-						})}
-					</div>
-					<div className="graphiql-sidebar-section">
-						<Tooltip label="Re-fetch GraphQL schema">
-							<UnStyledButton
-								type="button"
-								disabled={schemaContext.isFetching}
-								onClick={handleRefetchSchema}
-								aria-label="Re-fetch GraphQL schema"
-							>
-								<ReloadIcon
-									className={schemaContext.isFetching ? 'graphiql-spin' : ''}
-									aria-hidden="true"
-								/>
-							</UnStyledButton>
-						</Tooltip>
-						<Tooltip label="Open short keys dialog">
-							<UnStyledButton
-								type="button"
-								data-value="short-keys"
-								onClick={handleShowDialog}
-								aria-label="Open short keys dialog"
-							>
-								<KeyboardShortcutIcon aria-hidden="true" />
-							</UnStyledButton>
-						</Tooltip>
-						<Tooltip label="Open settings dialog">
-							<UnStyledButton
-								type="button"
-								data-value="settings"
-								onClick={handleShowDialog}
-								aria-label="Open settings dialog"
-							>
-								<SettingsIcon aria-hidden="true" />
-							</UnStyledButton>
-						</Tooltip>
-					</div>
-				</div>
+				<ActivityBar
+					handlePluginClick={handlePluginClick}
+					handleRefetchSchema={handleRefetchSchema}
+					handleShowDialog={handleShowDialog}
+					pluginContext={pluginContext}
+					schemaContext={schemaContext}
+				/>
 				<div className="graphiql-main">
 					<div
 						ref={pluginResize.firstRef}
@@ -503,7 +420,7 @@ export function GraphiQLInterface(props) {
 												aria-label="Editor Commands"
 											>
 												<ExecuteButton />
-												{toolbar}
+												<EditorToolbar />
 											</div>
 										</section>
 									</div>
@@ -616,26 +533,16 @@ export function GraphiQLInterface(props) {
 										responseTooltip={props.responseTooltip}
 										keyMap={props.keyMap}
 									/>
-									{footer}
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<Dialog
-					open={showDialog === 'short-keys'}
-					onOpenChange={handleOpenShortKeysDialog}
-				>
-					<div className="graphiql-dialog-header">
-						<Dialog.Title className="graphiql-dialog-title">
-							Short Keys
-						</Dialog.Title>
-						<Dialog.Close />
-					</div>
-					<div className="graphiql-dialog-section">
-						<ShortKeys keyMap={props.keyMap || 'sublime'} />
-					</div>
-				</Dialog>
+				<ShortKeysDialog
+					keyMap={props.keyMap}
+					handleOpenShortKeysDialog={handleOpenSettingsDialog}
+					showDialog={showDialog}
+				/>
 				<Dialog
 					open={showDialog === 'settings'}
 					onOpenChange={handleOpenSettingsDialog}
@@ -742,68 +649,6 @@ export function GraphiQLInterface(props) {
 	);
 }
 
-const modifier =
-	typeof window !== 'undefined' &&
-	window.navigator.platform.toLowerCase().indexOf('mac') === 0
-		? 'Cmd'
-		: 'Ctrl';
-
-const SHORT_KEYS = Object.entries({
-	'Search in editor': [modifier, 'F'],
-	'Search in documentation': [modifier, 'K'],
-	'Execute query': [modifier, 'Enter'],
-	'Prettify editors': ['Ctrl', 'Shift', 'P'],
-	'Merge fragments definitions into operation definition': [
-		'Ctrl',
-		'Shift',
-		'M',
-	],
-	'Copy query': ['Ctrl', 'Shift', 'C'],
-	'Re-fetch schema using introspection': ['Ctrl', 'Shift', 'R'],
-});
-
-function ShortKeys({ keyMap }) {
-	return (
-		<div>
-			<table className="graphiql-table">
-				<thead>
-				<tr>
-					<th>Short Key</th>
-					<th>Function</th>
-				</tr>
-				</thead>
-				<tbody>
-				{SHORT_KEYS.map(([title, keys]) => (
-					<tr key={title}>
-						<td>
-							{keys.map((key, index, array) => (
-								<Fragment key={key}>
-									<code className="graphiql-key">{key}</code>
-									{index !== array.length - 1 && ' + '}
-								</Fragment>
-							))}
-						</td>
-						<td>{title}</td>
-					</tr>
-				))}
-				</tbody>
-			</table>
-			<p>
-				The editors use{' '}
-				<a
-					href="https://codemirror.net/5/doc/manual.html#keymaps"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					CodeMirror Key Maps
-				</a>{' '}
-				that add more short keys. This instance of Graph<em>i</em>QL uses{' '}
-				<code>{keyMap}</code>.
-			</p>
-		</div>
-	);
-}
-
 // Configure the UI by providing this Component as a child of GraphiQL.
 function GraphiQLLogo(props) {
 	return (
@@ -825,21 +670,6 @@ function GraphiQLLogo(props) {
 }
 
 GraphiQLLogo.displayName = 'GraphiQLLogo';
-
-// Configure the UI by providing this Component as a child of GraphiQL.
-function GraphiQLToolbar(props) {
-	// eslint-disable-next-line react/jsx-no-useless-fragment
-	return <>{props.children}</>;
-}
-
-GraphiQLToolbar.displayName = 'GraphiQLToolbar';
-
-// Configure the UI by providing this Component as a child of GraphiQL.
-function GraphiQLFooter(props) {
-	return <div className="graphiql-footer">{props.children}</div>;
-}
-
-GraphiQLFooter.displayName = 'GraphiQLFooter';
 
 // Determines if the React child is of the same type of the provided React component
 function isChildComponentType(
