@@ -3,47 +3,41 @@ import { GraphiQL } from 'graphiql';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
-import { helpPlugin } from './help';
 
-import { PrettifyButton } from './toolbarButtons/PrettifyButton';
-import { CopyQueryButton } from './toolbarButtons/CopyQueryButton';
-import { MergeFragmentsButton } from './toolbarButtons/MergeFragmentsButton';
-import { ShareDocumentButton } from './toolbarButtons/ShareDocumentButton';
-import { ToggleAuthButton } from './toolbarButtons/ToggleAuthButton';
+import { helpPlugin } from '../../../components/help';
+import { EditorToolbar } from '../../document-editor/components/EditorToolbar';
 
 import 'graphiql/graphiql.min.css';
-
-/**
- * Editor component encapsulating the GraphiQL IDE.
- * Manages authentication state and integrates custom toolbar buttons.
- */
-const toolbarButtons = {
-	copy: CopyQueryButton,
-	prettify: PrettifyButton,
-	merge: MergeFragmentsButton,
-	share: ShareDocumentButton,
-};
 
 const explorer = explorerPlugin();
 const help = helpPlugin();
 
-import '../../styles/explorer.css';
+import '../../../../styles/explorer.css';
 
 export function Editor() {
 	const query = useSelect( ( select ) =>
-		select( 'wpgraphql-ide' ).getQuery()
+		select( 'wpgraphql-ide/app' ).getQuery()
 	);
+
+	const { setQuery } = useDispatch( 'wpgraphql-ide/app' );
+
 	const shouldRenderStandalone = useSelect( ( select ) =>
-		select( 'wpgraphql-ide' ).shouldRenderStandalone()
+		select( 'wpgraphql-ide/app' ).shouldRenderStandalone()
 	);
-	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide' );
+	const { setDrawerOpen, setSchema } = useDispatch( 'wpgraphql-ide/app' );
 
-	const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
-		const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
-		return storedState !== null ? storedState === 'true' : true;
-	} );
+	// const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
+	// 	const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
+	// 	return storedState !== null ? storedState === 'true' : true;
+	// } );
 
-	const [ schema, setSchema ] = useState( undefined );
+	const isAuthenticated = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).isAuthenticated()
+	);
+
+	const schema = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).schema()
+	);
 
 	useEffect( () => {
 		// create a ref
@@ -70,6 +64,31 @@ export function Editor() {
 		);
 	}, [ isAuthenticated ] );
 
+	// const handleEditQuery = (editedQuery) => {
+	// 	let update = false;
+
+	// 	if (editedQuery === query) {
+	// 	  return;
+	// 	}
+
+	// 	if (null === editedQuery || "" === editedQuery) {
+	// 	  update = true;
+	// 	} else {
+	// 	  try {
+	// 		parse(editedQuery);
+	// 		update = true;
+	// 	  } catch (error) {
+	// 		return;
+	// 	  }
+	// 	}
+
+	// 	// If the query is valid and should be updated
+	// 	if (update) {
+	// 	  // Update the state with the new query
+	// 	  setQuery(editedQuery);
+	// 	}
+	// };
+
 	const fetcher = useCallback(
 		async ( graphQLParams ) => {
 			let isIntrospectionQuery = false;
@@ -95,8 +114,12 @@ export function Editor() {
 			}
 
 			const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
+
+			const base64Credentials = btoa( `growth:growth` );
+
 			const headers = {
 				'Content-Type': 'application/json',
+				Authorization: `Basic ${ base64Credentials }`,
 			};
 
 			const response = await fetch( graphqlEndpoint, {
@@ -106,7 +129,7 @@ export function Editor() {
 				credentials: isIntrospectionQuery
 					? 'include'
 					: isAuthenticated
-					? 'same-origin'
+					? 'include'
 					: 'omit',
 			} );
 
@@ -115,13 +138,16 @@ export function Editor() {
 		[ isAuthenticated ]
 	);
 
-	const toggleAuthentication = () => setIsAuthenticated( ! isAuthenticated );
+	const buttons = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/document-editor' ).buttons()
+	);
 
 	return (
 		<span id="wpgraphql-ide-app">
 			<GraphiQL
 				query={ query }
 				fetcher={ fetcher }
+				onEditQuery={ setQuery }
 				schema={ schema }
 				onSchemaChange={ ( newSchema ) => {
 					if ( schema !== newSchema ) {
@@ -131,15 +157,9 @@ export function Editor() {
 				plugins={ [ explorer, help ] }
 			>
 				<GraphiQL.Toolbar>
-					<ToggleAuthButton
-						isAuthenticated={ isAuthenticated }
-						toggleAuthentication={ toggleAuthentication }
-					/>
-					<PrettifyButton />
-					<CopyQueryButton />
-					<MergeFragmentsButton />
-					<ShareDocumentButton />
+					<EditorToolbar />
 				</GraphiQL.Toolbar>
+
 				<GraphiQL.Logo>
 					{ ! shouldRenderStandalone && (
 						<button

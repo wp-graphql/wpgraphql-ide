@@ -5,8 +5,8 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, print } from 'graphql';
 import LZString from 'lz-string';
 
-import { EditorDrawer } from './components/EditorDrawer';
-import { Editor } from './components/Editor';
+import { EditorDrawer } from './EditorDrawer';
+import { Editor } from './Editor';
 
 const {
 	isDedicatedIdePage,
@@ -22,7 +22,7 @@ const setInitialState = () => {
 		setQuery,
 		setShouldRenderStandalone,
 		setInitialStateLoaded,
-	} = useDispatch( 'wpgraphql-ide' );
+	} = useDispatch( 'wpgraphql-ide/app' );
 
 	if ( isDedicatedIdePage ) {
 		setShouldRenderStandalone( true );
@@ -111,11 +111,11 @@ export function App() {
 
 export function RenderApp() {
 	const isInitialStateLoaded = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide' ).isInitialStateLoaded();
+		return select( 'wpgraphql-ide/app' ).isInitialStateLoaded();
 	} );
 
 	const shouldRenderStandalone = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide' ).shouldRenderStandalone();
+		return select( 'wpgraphql-ide/app' ).shouldRenderStandalone();
 	} );
 
 	if ( ! isInitialStateLoaded ) {
@@ -138,3 +138,5 @@ export function RenderApp() {
 		</div>
 	);
 }
+
+export default App;

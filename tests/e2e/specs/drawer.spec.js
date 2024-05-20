@@ -10,7 +10,7 @@ import {
 	wpAdminUrl,
 } from '../utils.js';
 
-import { getHashedQueryParams } from '../../../src/components/toolbarButtons/ShareDocumentButton.jsx';
+import { getHashedQueryParams } from '../../../src/registry/editor-toolbar-buttons/share-button.js';
 
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 

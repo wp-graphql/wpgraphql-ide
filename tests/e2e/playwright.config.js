@@ -20,7 +20,6 @@ const config = defineConfig( {
 	globalSetup: require.resolve( './config/global-setup.js' ),
 	webServer: {
 		...baseConfig.webServer,
-		command: 'npm run wp-env -- start',
 	},
 } );
 
