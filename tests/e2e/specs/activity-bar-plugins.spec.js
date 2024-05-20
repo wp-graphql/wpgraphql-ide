@@ -82,7 +82,6 @@ describe('Activity Bar Plugins', () => {
 			await typeQuery( page, 'query { posts { nodes { id } } }' );
 			await page.click( selectors.executeQueryButton );
 			await expect( page.locator( '.graphiql-history-item' ), 'history item shows after query is executed' ).toBeVisible();
-			await expect( page.locator( '.graphiql-history-item' ), 'history item shows after query is executed' ).toBeVisible();
 		});
 
 		test( 'should be hidden when deactivated', async ({ page }) => {

@@ -1,5 +1,5 @@
 {
-	"name": "josephfusco/wpgraphql-ide",
+	"name": "wp-graphql/wpgraphql-ide",
 	"description": "A next-gen query editor for WPGraphQL.",
 	"type": "wordpress-plugin",
 	"license": "GPL-3.0-or-later",
