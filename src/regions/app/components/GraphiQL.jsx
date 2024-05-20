@@ -43,6 +43,9 @@ import {
 import {ActivityBar} from "../../activity-bar/components/ActivityBar";
 import {EditorToolbar} from "../../document-editor/components/EditorToolbar";
 import {ShortKeysDialog} from "../../activity-bar/components/ShortKeysDialog";
+import {SettingsDialog} from "../../activity-bar/components/SettingsDialog";
+import ActivityPanel from "../../activity-panel/components/ActivityPanel";
+import {DocumentSessions} from "../../document-editor/components/DocumentSessions";
 
 /**
  * The top-level React component for GraphiQL, intended to encompass the entire
@@ -136,11 +139,7 @@ export function GraphiQLInterface(props) {
 	const schemaContext = useSchemaContext({ nonNull: true });
 	const storageContext = useStorageContext();
 	const pluginContext = usePluginContext();
-
-	const copy = useCopyQuery({ onCopyQuery: props.onCopyQuery });
-	const merge = useMergeQuery();
-	const prettify = usePrettifyEditors();
-
+	
 	const { theme, setTheme } = useTheme();
 
 	const PluginContent = pluginContext?.visiblePlugin?.content;
@@ -325,325 +324,54 @@ export function GraphiQLInterface(props) {
 					schemaContext={schemaContext}
 				/>
 				<div className="graphiql-main">
-					<div
-						ref={pluginResize.firstRef}
-						style={{
-							// Make sure the container shrinks when containing long
-							// non-breaking texts
-							minWidth: '200px',
-						}}
-					>
-						<div className="graphiql-plugin">
-							{PluginContent ? <PluginContent /> : null}
-						</div>
-					</div>
-					{pluginContext?.visiblePlugin && (
-						<div
-							className="graphiql-horizontal-drag-bar"
-							ref={pluginResize.dragBarRef}
-						/>
-					)}
-					<div ref={pluginResize.secondRef} className="graphiql-sessions">
-						<div className="graphiql-session-header">
-							{props.disableTabs ? null : (
-								<Tabs
-									values={editorContext.tabs}
-									onReorder={handleReorder}
-									aria-label="Select active operation"
-								>
-									{editorContext.tabs.length > 1 && (
-										<>
-											{editorContext.tabs.map((tab, index) => (
-												<Tab
-													key={tab.id}
-													value={tab}
-													isActive={index === editorContext.activeTabIndex}
-												>
-													<Tab.Button
-														aria-controls="graphiql-session"
-														id={`graphiql-session-tab-${index}`}
-														onClick={() => {
-															executionContext.stop();
-															editorContext.changeTab(index);
-														}}
-													>
-														{tab.title}
-													</Tab.Button>
-													<Tab.Close
-														onClick={() => {
-															if (editorContext.activeTabIndex === index) {
-																executionContext.stop();
-															}
-															editorContext.closeTab(index);
-														}}
-													/>
-												</Tab>
-											))}
-											{addTab}
-										</>
-									)}
-								</Tabs>
-							)}
-							<div className="graphiql-session-header-right">
-								{editorContext.tabs.length === 1 && addTab}
-								{logo}
-							</div>
-						</div>
-						<div
-							role="tabpanel"
-							id="graphiql-session"
-							className="graphiql-session"
-							aria-labelledby={`graphiql-session-tab-${editorContext.activeTabIndex}`}
-						>
-							<div ref={editorResize.firstRef}>
-								<div
-									className={`graphiql-editors${
-										editorContext.tabs.length === 1 ? ' full-height' : ''
-									}`}
-								>
-									<div ref={editorToolsResize.firstRef}>
-										<section
-											className="graphiql-query-editor"
-											aria-label="Query Editor"
-										>
-											<QueryEditor
-												editorTheme={props.editorTheme}
-												keyMap={props.keyMap}
-												onClickReference={onClickReference}
-												onCopyQuery={props.onCopyQuery}
-												onEdit={props.onEditQuery}
-												readOnly={props.readOnly}
-											/>
-											<div
-												className="graphiql-toolbar"
-												role="toolbar"
-												aria-label="Editor Commands"
-											>
-												<ExecuteButton />
-												<EditorToolbar />
-											</div>
-										</section>
-									</div>
-
-									<div ref={editorToolsResize.dragBarRef}>
-										<div className="graphiql-editor-tools">
-											<UnStyledButton
-												type="button"
-												className={
-													activeSecondaryEditor === 'variables' &&
-													editorToolsResize.hiddenElement !== 'second'
-														? 'active'
-														: ''
-												}
-												onClick={handleToolsTabClick}
-												data-name="variables"
-											>
-												Variables
-											</UnStyledButton>
-											{isHeadersEditorEnabled && (
-												<UnStyledButton
-													type="button"
-													className={
-														activeSecondaryEditor === 'headers' &&
-														editorToolsResize.hiddenElement !== 'second'
-															? 'active'
-															: ''
-													}
-													onClick={handleToolsTabClick}
-													data-name="headers"
-												>
-													Headers
-												</UnStyledButton>
-											)}
-
-											<Tooltip
-												label={
-													editorToolsResize.hiddenElement === 'second'
-														? 'Show editor tools'
-														: 'Hide editor tools'
-												}
-											>
-												<UnStyledButton
-													type="button"
-													onClick={toggleEditorTools}
-													aria-label={
-														editorToolsResize.hiddenElement === 'second'
-															? 'Show editor tools'
-															: 'Hide editor tools'
-													}
-													className="graphiql-toggle-editor-tools"
-												>
-													{editorToolsResize.hiddenElement === 'second' ? (
-														<ChevronUpIcon
-															className="graphiql-chevron-icon"
-															aria-hidden="true"
-														/>
-													) : (
-														<ChevronDownIcon
-															className="graphiql-chevron-icon"
-															aria-hidden="true"
-														/>
-													)}
-												</UnStyledButton>
-											</Tooltip>
-										</div>
-									</div>
-
-									<div ref={editorToolsResize.secondRef}>
-										<section
-											className="graphiql-editor-tool"
-											aria-label={
-												activeSecondaryEditor === 'variables'
-													? 'Variables'
-													: 'Headers'
-											}
-										>
-											<VariableEditor
-												editorTheme={props.editorTheme}
-												isHidden={activeSecondaryEditor !== 'variables'}
-												keyMap={props.keyMap}
-												onEdit={props.onEditVariables}
-												onClickReference={onClickReference}
-												readOnly={props.readOnly}
-											/>
-											{isHeadersEditorEnabled && (
-												<HeaderEditor
-													editorTheme={props.editorTheme}
-													isHidden={activeSecondaryEditor !== 'headers'}
-													keyMap={props.keyMap}
-													onEdit={props.onEditHeaders}
-													readOnly={props.readOnly}
-												/>
-											)}
-										</section>
-									</div>
-								</div>
-							</div>
-
-							<div
-								className="graphiql-horizontal-drag-bar"
-								ref={editorResize.dragBarRef}
-							/>
-
-							<div ref={editorResize.secondRef}>
-								<div className="graphiql-response">
-									{executionContext.isFetching ? <Spinner /> : null}
-									<ResponseEditor
-										editorTheme={props.editorTheme}
-										responseTooltip={props.responseTooltip}
-										keyMap={props.keyMap}
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
+					<ActivityPanel
+						pluginContext={pluginContext}
+						schemaContext={schemaContext}
+						PluginContent={PluginContent}
+						firstRef={pluginResize.firstRef}
+						dragBarRef={pluginResize.dragBarRef}
+					/>
+			        <DocumentSessions
+						secondRef={pluginResize.secondRef}
+						disableTabs={props.disableTabs}
+						editorContext={editorContext}
+						handleReorder={handleReorder}
+						executionContext={executionContext}
+						onClickReference={onClickReference}
+						editorTheme={props.editorTheme}
+						keyMap={props.keyMap}
+						editorToolsResize={editorToolsResize}
+						addTab={addTab}
+						logo={logo}
+						onCopyQuery={props.onCopyQuery}
+						onEditQuery={props.onEditQuery}
+						readOnly={props.readOnly}
+						activeSecondaryEditor={activeSecondaryEditor}
+						handleToolsTabClick={handleToolsTabClick}
+						toggleEditorTools={toggleEditorTools}
+						onEditVariables={props.onEditVariables}
+						onEditHeaders={props.onEditHeaders}
+						editorResize={editorResize}
+						responseTooltip={props.responseTooltip}
+					/>
 				</div>
 				<ShortKeysDialog
 					keyMap={props.keyMap}
 					handleOpenShortKeysDialog={handleOpenSettingsDialog}
 					showDialog={showDialog}
 				/>
-				<Dialog
-					open={showDialog === 'settings'}
-					onOpenChange={handleOpenSettingsDialog}
-				>
-					<div className="graphiql-dialog-header">
-						<Dialog.Title className="graphiql-dialog-title">
-							Settings
-						</Dialog.Title>
-						<Dialog.Close />
-					</div>
-					{props.showPersistHeadersSettings ? (
-						<div className="graphiql-dialog-section">
-							<div>
-								<div className="graphiql-dialog-section-title">
-									Persist headers
-								</div>
-								<div className="graphiql-dialog-section-caption">
-									Save headers upon reloading.{' '}
-									<span className="graphiql-warning-text">
-                    Only enable if you trust this device.
-                  </span>
-								</div>
-							</div>
-							<ButtonGroup>
-								<Button
-									type="button"
-									id="enable-persist-headers"
-									className={editorContext.shouldPersistHeaders ? 'active' : ''}
-									data-value="true"
-									onClick={handlePersistHeaders}
-								>
-									On
-								</Button>
-								<Button
-									type="button"
-									id="disable-persist-headers"
-									className={editorContext.shouldPersistHeaders ? '' : 'active'}
-									onClick={handlePersistHeaders}
-								>
-									Off
-								</Button>
-							</ButtonGroup>
-						</div>
-					) : null}
-					<div className="graphiql-dialog-section">
-						<div>
-							<div className="graphiql-dialog-section-title">Theme</div>
-							<div className="graphiql-dialog-section-caption">
-								Adjust how the interface looks like.
-							</div>
-						</div>
-						<ButtonGroup>
-							<Button
-								type="button"
-								className={theme === null ? 'active' : ''}
-								onClick={handleChangeTheme}
-							>
-								System
-							</Button>
-							<Button
-								type="button"
-								className={theme === 'light' ? 'active' : ''}
-								data-theme="light"
-								onClick={handleChangeTheme}
-							>
-								Light
-							</Button>
-							<Button
-								type="button"
-								className={theme === 'dark' ? 'active' : ''}
-								data-theme="dark"
-								onClick={handleChangeTheme}
-							>
-								Dark
-							</Button>
-						</ButtonGroup>
-					</div>
-					{storageContext ? (
-						<div className="graphiql-dialog-section">
-							<div>
-								<div className="graphiql-dialog-section-title">
-									Clear storage
-								</div>
-								<div className="graphiql-dialog-section-caption">
-									Remove all locally stored data and start fresh.
-								</div>
-							</div>
-							<Button
-								type="button"
-								state={clearStorageStatus || undefined}
-								disabled={clearStorageStatus === 'success'}
-								onClick={handleClearData}
-							>
-								{{
-									success: 'Cleared data',
-									error: 'Failed',
-								}[clearStorageStatus] || 'Clear data'}
-							</Button>
-						</div>
-					) : null}
-				</Dialog>
+				<SettingsDialog
+					showDialog={showDialog}
+					handleOpenSettingsDialog={handleOpenSettingsDialog}
+					showPersistHeadersSettings={props.showPersistHeadersSettings || false}
+					editorContext={editorContext}
+					handlePersistHeaders={handlePersistHeaders}
+					theme={theme}
+					handleChangeTheme={handleChangeTheme}
+					storageContext={storageContext}
+					clearStorageStatus={clearStorageStatus}
+					handleClearData={handleClearData}
+				/>
 			</div>
 		</Tooltip.Provider>
 	);
