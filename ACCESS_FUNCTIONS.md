@@ -1,10 +1,16 @@
----
-"wpgraphql-ide": major
----
+# Access Functions
 
-Refactored stores, including renaming 'wpgraphql-ide' to 'wpgraphql-ide/app', and adding additional stores such as 'wpgraphql-ide/editor-toolbar.
+Access Functions are functions that abstract several layers of complexity and provide simpler ways
+to accomplish common tasks. They are often used to provide a more readable and maintainable codebase.
 
-Added `registerDocumentEditorToolbarButton` function to public API.
+The concept is modeled around core WordPress functions like register_post_type, register_taxonomy, etc, where
+the function signature is simple and the function itself abstracts the complexity of the underlying APIs.
+
+## Table of Contents
+
+### registerDocumentEditorToolbarButton
+
+Registers a new toolbar button for the document editor.
 
 This function allows registering a new editor toolbar button with the following parameters:
 
