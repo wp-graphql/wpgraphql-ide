@@ -68,7 +68,7 @@ function user_lacks_capability(): bool {
  *
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
-function is_dedicated_ide_page(): bool {
+function current_screen_is_dedicated_ide_page(): bool {
 	return is_ide_page() || is_legacy_ide_page();
 }
 
@@ -131,7 +131,7 @@ function register_wpadminbar_menus(): void {
 		]
 	);
 
-	if ( ! is_dedicated_ide_page() ) {
+	if ( ! current_screen_is_dedicated_ide_page() ) {
 		// Drawer Button
 		$wp_admin_bar->add_node(
 			[
@@ -254,7 +254,7 @@ function enqueue_react_app_with_styles(): void {
 			'graphqlEndpoint'     => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
 			'rootElementId'       => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
 			'context'             => $app_context,
-			'isDedicatedIdePage'  => is_dedicated_ide_page(),
+			'isDedicatedIdePage'  => current_screen_is_dedicated_ide_page(),
 			'dedicatedIdeBaseUrl' => get_dedicated_ide_base_url(),
 		]
 	);
