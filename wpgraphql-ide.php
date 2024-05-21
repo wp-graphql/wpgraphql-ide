@@ -168,8 +168,12 @@ function register_dedicated_ide_menu(): void {
 	}
 
 	// Remove the legacy submenu without affecting the ability to directly link to the legacy IDE (wp-admin/admin.php?page=graphiql-ide)
-	// TODO: Conditionally remove submenu if user indicates desire for legacy feature, however that is implemented. 
-	remove_submenu_page( 'graphiql-ide', 'graphiql-ide' );
+	$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
+	$show_legacy_editor   = isset( $graphql_ide_settings['graphql_ide_show_legacy_editor'] ) ? $graphql_ide_settings['graphql_ide_show_legacy_editor'] : 'off';
+
+	if ( 'off' === $show_legacy_editor ) {
+		remove_submenu_page( 'graphiql-ide', 'graphiql-ide' );
+	}
 
 	add_submenu_page(
 		'graphiql-ide',
@@ -517,6 +521,16 @@ function register_ide_settings() {
 			'sanitize_callback' => __NAMESPACE__ . '\\sanitize_custom_graphql_ide_link_behavior',
 		]
 	);
+
+	register_graphql_settings_field(
+		'graphql_ide_settings',
+		[
+			'name'  => 'graphql_ide_show_legacy_editor',
+			'label' => __( 'Show Legacy Editor', 'wpgraphql-ide' ),
+			'desc'  => __( 'Show the legacy editor', 'wpgraphql-ide' ),
+			'type'  => 'checkbox',
+		]
+	);
 }
 add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_ide_settings' );
 
@@ -536,3 +550,27 @@ function sanitize_custom_graphql_ide_link_behavior( $value ) {
 
 	return 'drawer';
 }
+
+/**
+ * Rename and reorder the submenu items under 'GraphQL'.
+ */
+add_action(
+	'admin_menu',
+	static function () {
+		global $submenu;
+
+		if ( isset( $submenu['graphiql-ide'] ) ) {
+			foreach ( $submenu['graphiql-ide'] as $key => $value ) {
+				if ( $value[0] === 'GraphiQL IDE' ) {
+					$submenu['graphiql-ide'][ $key ][0] = 'Legacy GraphQL IDE';
+					$legacy_item                        = $submenu['graphiql-ide'][ $key ];
+					unset( $submenu['graphiql-ide'][ $key ] );
+					$submenu['graphiql-ide'] = array_values( $submenu['graphiql-ide'] );
+					array_splice( $submenu['graphiql-ide'], 1, 0, [ $legacy_item ] );
+					break;
+				}
+			}
+		}
+	},
+	999 
+);
