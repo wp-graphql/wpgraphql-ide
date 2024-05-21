@@ -472,7 +472,7 @@ add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_l
  * @param string               $section_name   The name of the section the setting belongs to.
  * @return mixed The modified value of the field.
  */
-function ensure_graphiql_link_is_unchecked( $value, $default_value, string $option_name, array $section_fields, string $section_name ) {
+function ensure_graphiql_link_is_unchecked( $value, $default_value, $option_name, $section_fields, $section_name ) {
 	if ( 'show_graphiql_link_in_admin_bar' === $option_name && 'graphql_general_settings' === $section_name ) {
 		return 'off';
 	}
