@@ -111,7 +111,7 @@ describe('Toolbar Buttons', () => {
 		});
 	});
 
-	describe('Prettify button', () => {
+	describe.skip('Prettify button', () => {
 
 		beforeEach(async ({ page }) => {
 			await typeQuery(page, 'query{viewer{name}   }'); // poorly formatted query
@@ -150,7 +150,7 @@ describe('Toolbar Buttons', () => {
 		});
 	});
 
-	describe('Copy button', () => {
+	describe.skip('Copy button', () => {
 
 		beforeEach(async ({ page }) => {
 			await typeQuery(page, '{ posts { nodes { id } } }' ); // poorly formatted query

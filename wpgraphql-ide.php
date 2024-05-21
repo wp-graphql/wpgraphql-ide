@@ -35,16 +35,16 @@ define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
  */
 function graphql_logo_svg(): string {
 	return <<<XML
-    <svg xmlns="http://www.w3.org/2000/svg" fill="color(display-p3 .8824 0 .5961)" viewBox="0 0 100 100">
-        <path fill-rule="evenodd" d="m50 6.903 37.323 21.549v43.096L50 93.097 12.677 71.548V28.451L50 6.903ZM16.865 30.87v31.656L44.28 15.041 16.864 30.87ZM50 13.51 18.398 68.246h63.205L50 13.509Zm27.415 58.924h-54.83L50 88.261l27.415-15.828Zm5.72-9.908L55.72 15.041 83.136 30.87v31.656Z" clip-rule="evenodd"/>
-        <circle cx="50" cy="9.321" r="8.82"/>
-        <circle cx="85.229" cy="29.66" r="8.82"/>
-        <circle cx="85.229" cy="70.34" r="8.82"/>
-        <circle cx="50" cy="90.679" r="8.82"/>
-        <circle cx="14.766" cy="70.34" r="8.82"/>
-        <circle cx="14.766" cy="29.66" r="8.82"/>
-    </svg>
-    XML;
+	<svg xmlns="http://www.w3.org/2000/svg" fill="color(display-p3 .8824 0 .5961)" viewBox="0 0 100 100">
+		<path fill-rule="evenodd" d="m50 6.903 37.323 21.549v43.096L50 93.097 12.677 71.548V28.451L50 6.903ZM16.865 30.87v31.656L44.28 15.041 16.864 30.87ZM50 13.51 18.398 68.246h63.205L50 13.509Zm27.415 58.924h-54.83L50 88.261l27.415-15.828Zm5.72-9.908L55.72 15.041 83.136 30.87v31.656Z" clip-rule="evenodd"/>
+		<circle cx="50" cy="9.321" r="8.82"/>
+		<circle cx="85.229" cy="29.66" r="8.82"/>
+		<circle cx="85.229" cy="70.34" r="8.82"/>
+		<circle cx="50" cy="90.679" r="8.82"/>
+		<circle cx="14.766" cy="70.34" r="8.82"/>
+		<circle cx="14.766" cy="29.66" r="8.82"/>
+	</svg>
+	XML;
 }
 
 /**
@@ -68,7 +68,7 @@ function user_lacks_capability(): bool {
  *
  * @return bool True if the current page is a dedicated WPGraphQL IDE page, false otherwise.
  */
-function is_dedicated_ide_page(): bool {
+function current_screen_is_dedicated_ide_page(): bool {
 	return is_ide_page() || is_legacy_ide_page();
 }
 
@@ -122,22 +122,28 @@ function register_wpadminbar_menus(): void {
 
 	$app_context = get_app_context();
 
-	// Link to the new dedicated IDE page.
-	$wp_admin_bar->add_node(
-		[
-			'id'    => 'wpgraphql-ide',
-			'title' => '<span class="ab-icon"></span>' . __( 'GraphQL IDE', 'wpgraphql-ide' ),
-			'href'  => trailingslashit( admin_url() ) . 'admin.php?page=graphql-ide',
-		]
-	);
+	// Retrieve the settings array
+	$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
 
-	if ( ! is_dedicated_ide_page() ) {
+	// Get the specific link behavior value, default to 'drawer' if not set
+	$link_behavior = isset( $graphql_ide_settings['graphql_ide_link_behavior'] ) ? $graphql_ide_settings['graphql_ide_link_behavior'] : 'drawer';
+
+	if ( 'drawer' === $link_behavior && ! current_screen_is_dedicated_ide_page() ) {
 		// Drawer Button
 		$wp_admin_bar->add_node(
 			[
-				'id'    => 'wpgraphql-ide-button',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . $app_context['drawerButtonLoadingLabel'] . '</div>',
+				'id'    => 'wpgraphql-ide',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"><span class="ab-icon"></span>' . $app_context['drawerButtonLabel'] . '</div>',
 				'href'  => '#',
+			]
+		);
+	} elseif ( 'disabled' !== $link_behavior ) {
+		// Link to the new dedicated IDE page.
+		$wp_admin_bar->add_node(
+			[
+				'id'    => 'wpgraphql-ide',
+				'title' => '<span class="ab-icon"></span>' . $app_context['drawerButtonLabel'],
+				'href'  => admin_url( 'admin.php?page=graphql-ide' ),
 			]
 		);
 	}
@@ -159,6 +165,14 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999
 function register_dedicated_ide_menu(): void {
 	if ( user_lacks_capability() ) {
 		return;
+	}
+
+	// Remove the legacy submenu without affecting the ability to directly link to the legacy IDE (wp-admin/admin.php?page=graphiql-ide)
+	$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
+	$show_legacy_editor   = isset( $graphql_ide_settings['graphql_ide_show_legacy_editor'] ) ? $graphql_ide_settings['graphql_ide_show_legacy_editor'] : 'off';
+
+	if ( 'off' === $show_legacy_editor ) {
+		remove_submenu_page( 'graphiql-ide', 'graphiql-ide' );
 	}
 
 	add_submenu_page(
@@ -188,18 +202,18 @@ function enqueue_graphql_ide_menu_icon_css(): void {
 	}
 
 	$custom_css = '
-        #wp-admin-bar-wpgraphql-ide .ab-icon::before,
+		#wp-admin-bar-wpgraphql-ide .ab-icon::before,
 		#wp-admin-bar-wpgraphql-ide .ab-icon::before {
-            background-image: url("data:image/svg+xml;base64,' . base64_encode( graphql_logo_svg() ) . '");
-            background-size: 100%;
-            border-radius: 12px;
-            box-sizing: border-box;
-            content: "";
-            display: inline-block;
-            height: 24px;
-            width: 24px;
-        }
-    ';
+			background-image: url("data:image/svg+xml;base64,' . base64_encode( graphql_logo_svg() ) . '");
+			background-size: 100%;
+			border-radius: 12px;
+			box-sizing: border-box;
+			content: "";
+			display: inline-block;
+			height: 24px;
+			width: 24px;
+		}
+	';
 
 	wp_add_inline_style( 'admin-bar', $custom_css );
 }
@@ -250,7 +264,7 @@ function enqueue_react_app_with_styles(): void {
 			'graphqlEndpoint'     => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
 			'rootElementId'       => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
 			'context'             => $app_context,
-			'isDedicatedIdePage'  => is_dedicated_ide_page(),
+			'isDedicatedIdePage'  => current_screen_is_dedicated_ide_page(),
 			'dedicatedIdeBaseUrl' => get_dedicated_ide_base_url(),
 		]
 	);
@@ -310,12 +324,11 @@ function get_app_context(): array {
 	return apply_filters(
 		'wpgraphqlide_context',
 		[
-			'pluginVersion'            => get_plugin_header( 'Version' ),
-			'pluginName'               => get_plugin_header( 'Name' ),
-			'externalFragments'        => apply_filters( 'wpgraphqlide_external_fragments', [] ),
-			'avatarUrl'                => $avatar_url,
-			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', '🚀' ),
-			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', '⏳' ),
+			'pluginVersion'     => get_plugin_header( 'Version' ),
+			'pluginName'        => get_plugin_header( 'Name' ),
+			'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] ),
+			'avatarUrl'         => $avatar_url,
+			'drawerButtonLabel' => __( 'GraphQL IDE', 'wpgraphql-ide' ),
 		]
 	);
 }
@@ -332,21 +345,21 @@ add_action(
 
 		echo '
 		<style>
-            body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
-                display: block;
-                position: absolute;
-                top: 0;
-                right: 0;
-                z-index: 1;
-                min-width: 40%;
-            }
-            body.graphql_page_graphql-ide #wpbody .graphiql-container {
-                padding-top: ' . count( $notices ) * 45 . 'px;
-            }
-            body.graphql_page_graphql-ide #wpgraphql-ide-root {
-                height: calc(100vh - var(--wp-admin--admin-bar--height) - ' . count( $notices ) * 45 . 'px);
-            }
-        </style>
+			body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
+				display: block;
+				position: absolute;
+				top: 0;
+				right: 0;
+				z-index: 1;
+				min-width: 40%;
+			}
+			body.graphql_page_graphql-ide #wpbody .graphiql-container {
+				padding-top: ' . count( $notices ) * 45 . 'px;
+			}
+			body.graphql_page_graphql-ide #wpgraphql-ide-root {
+				height: calc(100vh - var(--wp-admin--admin-bar--height) - ' . count( $notices ) * 45 . 'px);
+			}
+		</style>
 	';
 	},
 	10,
@@ -367,10 +380,10 @@ add_action(
 
 		echo '
 	<style>
-        body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-' . esc_attr( $notice_slug ) . ' {
-            top: ' . esc_attr( ( $count * 45 ) . 'px' ) . '
-        }
-    </style>
+		body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-' . esc_attr( $notice_slug ) . ' {
+			top: ' . esc_attr( ( $count * 45 ) . 'px' ) . '
+		}
+	</style>
 	';
 	},
 	10,
@@ -423,4 +436,144 @@ add_filter(
 	},
 	10,
 	2
+);
+
+/**
+ * Update the existing GraphiQL link field configuration to say "Legacy".
+ *
+ * @param array<string, mixed> $field_config The field configuration array.
+ * @param string               $field_name   The name of the field.
+ * @param string               $section      The section the field belongs to.
+ *
+ * @return array<string, mixed> The modified field configuration array.
+ */
+function update_graphiql_link_field_config( array $field_config, string $field_name, string $section ): array {
+	if ( 'show_graphiql_link_in_admin_bar' === $field_name && 'graphql_general_settings' === $section ) {
+		$field_config['desc'] = sprintf(
+			'%1$s<br><p class="description">%2$s</p>',
+			__( 'Show the GraphiQL IDE link in the WordPress Admin Bar.', 'wpgraphql-ide' ),
+			sprintf(
+				/* translators: %s: Strong opening tag */
+				__( '%1$sNote:%2$s This setting has been disabled by the new WPGraphQL IDE. Related settings are now available under the "IDE Settings" tab.', 'wpgraphql-ide' ),
+				'<strong>',
+				'</strong>'
+			)
+		);
+		$field_config['disabled'] = true;
+		$field_config['value']    = 'off';
+	}
+	return $field_config;
+}
+add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_link_field_config', 10, 3 );
+
+/**
+ * Ensure the `show_graphiql_link_in_admin_bar` setting is always unchecked.
+ *
+ * @param mixed                $value          The value of the field.
+ * @param mixed                $default_value  The default value if there is no value set.
+ * @param string               $option_name    The name of the option.
+ * @param array<string, mixed> $section_fields The setting values within the section.
+ * @param string               $section_name   The name of the section the setting belongs to.
+ * @return mixed The modified value of the field.
+ */
+function ensure_graphiql_link_is_unchecked( $value, $default_value, $option_name, $section_fields, $section_name ) {
+	if ( 'show_graphiql_link_in_admin_bar' === $option_name && 'graphql_general_settings' === $section_name ) {
+		return 'off';
+	}
+	return $value;
+}
+add_filter( 'graphql_get_setting_section_field_value', __NAMESPACE__ . '\\ensure_graphiql_link_is_unchecked', 10, 5 );
+
+/**
+ * Register custom GraphQL settings.
+ */
+function register_ide_settings() {
+	// Add a tab section to the graphql admin settings page
+	register_graphql_settings_section(
+		'graphql_ide_settings',
+		[
+			'title' => __( 'IDE Settings', 'wpgraphql-ide' ),
+			'desc'  => __( 'Customize your WPGraphQL IDE experience sitewide. Individual users can override these settings in their user profile.', 'wpgraphql-ide' ),
+		]
+	);
+
+	register_graphql_settings_field(
+		'graphql_ide_settings',
+		[
+			'name'              => 'graphql_ide_link_behavior',
+			'label'             => __( 'Admin Bar Link Behavior', 'wpgraphql-ide' ),
+			'desc'              => __( 'How would you like to access the GraphQL IDE from the admin bar?', 'wpgraphql-ide' ),
+			'type'              => 'radio',
+			'options'           => [
+				'drawer'         => __( 'Drawer (recommended) — open the IDE in a slide up drawer from any page', 'wpgraphql-ide' ),
+				'dedicated_page' => sprintf(
+					wp_kses_post(
+						sprintf(
+							/* translators: %s: URL to the GraphQL IDE page */
+							__( 'Dedicated Page — direct link to <a href="%1$s">%1$s</a>', 'wpgraphql-ide' ),
+							esc_url( admin_url( 'admin.php?page=graphql-ide' ) )
+						)
+					)
+				),
+				'disabled'       => __( 'Disabled — remove the IDE link from the admin bar', 'wpgraphql-ide' ),
+			],
+			'default'           => 'drawer',
+			'sanitize_callback' => __NAMESPACE__ . '\\sanitize_custom_graphql_ide_link_behavior',
+		]
+	);
+
+	register_graphql_settings_field(
+		'graphql_ide_settings',
+		[
+			'name'  => 'graphql_ide_show_legacy_editor',
+			'label' => __( 'Show Legacy Editor', 'wpgraphql-ide' ),
+			'desc'  => __( 'Show the legacy editor', 'wpgraphql-ide' ),
+			'type'  => 'checkbox',
+		]
+	);
+}
+add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_ide_settings' );
+
+/**
+ * Sanitize the input value for the custom GraphQL IDE link behavior setting.
+ *
+ * @param string $value The input value.
+ *
+ * @return string The sanitized value.
+ */
+function sanitize_custom_graphql_ide_link_behavior( $value ) {
+	$valid_values = [ 'drawer', 'dedicated_page', 'disabled' ];
+
+	if ( in_array( $value, $valid_values, true ) ) {
+		return $value;
+	}
+
+	return 'drawer';
+}
+
+/**
+ * Rename and reorder the submenu items under 'GraphQL'.
+ */
+add_action(
+	'admin_menu',
+	static function () {
+		global $submenu;
+
+		if ( isset( $submenu['graphiql-ide'] ) ) {
+			$temp_submenu = $submenu['graphiql-ide'];
+			foreach ( $temp_submenu as $key => $value ) {
+				if ( 'GraphiQL IDE' === $value[0] ) {
+					$temp_submenu[ $key ][0] = 'Legacy GraphQL IDE';
+					$legacy_item             = $temp_submenu[ $key ];
+					unset( $temp_submenu[ $key ] );
+					$temp_submenu = array_values( $temp_submenu );
+					array_splice( $temp_submenu, 1, 0, [ $legacy_item ] );
+					break;
+				}
+			}
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$submenu['graphiql-ide'] = $temp_submenu;
+		}
+	},
+	999
 );

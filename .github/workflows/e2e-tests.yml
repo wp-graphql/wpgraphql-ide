@@ -31,12 +31,6 @@ jobs:
             - name: Build Assets
               run: npm run build
 
-            - name: Start WordPress Environment
-              run: npm run wp-env -- start
-
-            - name: Run E2E tests
+            - name: Start WordPress & Run E2E tests
               run: npm run test:e2e
 
-            - name: Stop WordPress Environment
-              if: always()
-              run: npm run wp-env -- stop

@@ -11,8 +11,6 @@
 - `wpgraphqlide_capability_required`
 - `wpgraphqlide_context`
 - `wpgraphqlide_external_fragments` ([graphiql_external_fragments](https://www.wpgraphql.com/docs/customizing-wpgraphiql#graphiql_external_fragments))
-- `wpgraphqlide_drawer_button_label`
-- `wpgraphqlide_drawer_button_loading_label`
 
 ## JavaScript Actions
 

@@ -11,6 +11,8 @@
 		"build": "wp-scripts build && npm run build:zip",
 		"build:zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
+		"pretest:e2e": "npm run wp-env start",
+		"pretest:e2e:ui": "npm run wp-env start",
 		"test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
 		"test:e2e:ui": "wp-scripts test-playwright --config tests/e2e/playwright.config.js --ui",
 		"test:unit": "jest --config tests/unit/jest.config.js",
