@@ -139,7 +139,7 @@ function register_wpadminbar_menus(): void {
 				'href'  => '#',
 			]
 		);
-	} else {
+	} elseif ( 'disabled' !== $link_behavior ) {
 		// Link to the new dedicated IDE page.
 		$wp_admin_bar->add_node(
 			[
@@ -505,12 +505,17 @@ function register_custom_graphql_settings() {
 			'desc'              => __( 'How would you like to access the GraphQL IDE from the admin bar?', 'wpgraphql-ide' ),
 			'type'              => 'radio',
 			'options'           => [
-				'drawer'         => __( 'Drawer (recommended) - perfect for those who need quick access to the IDE on every page', 'wpgraphql-ide' ),
+				'drawer'         => __( 'Drawer (recommended) — open the IDE in a slide up drawer from any page', 'wpgraphql-ide' ),
 				'dedicated_page' => sprintf(
 					/* translators: %s: URL to the GraphQL IDE page */
-					__( 'Dedicated Page - ideal for those who prefer the classic IDE experience at %s', 'wpgraphql-ide' ),
-					admin_url( 'admin.php?page=graphql-ide' )
+					wp_kses_post(
+						sprintf(
+							__( 'Dedicated Page — direct link to <a href="%1$s">%1$s</a>', 'wpgraphql-ide' ),
+							esc_url( admin_url( 'admin.php?page=graphql-ide' ) )
+						)
+					)
 				),
+				'disabled'       => __( 'Disabled — remove the IDE link from the admin bar', 'wpgraphql-ide' ),
 			],
 			'default'           => 'drawer',
 			'sanitize_callback' => __NAMESPACE__ . '\\sanitize_custom_graphql_ide_link_behavior',
@@ -527,7 +532,7 @@ add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_custom_grap
  * @return string The sanitized value.
  */
 function sanitize_custom_graphql_ide_link_behavior( $value ) {
-	$valid_values = [ 'drawer', 'dedicated_page', 'legacy' ];
+	$valid_values = [ 'drawer', 'dedicated_page', 'disabled' ];
 
 	if ( in_array( $value, $valid_values, true ) ) {
 		return $value;
