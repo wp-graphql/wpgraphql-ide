@@ -133,9 +133,7 @@ function register_wpadminbar_menus(): void {
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"><span class="ab-icon"></span>' . 
-				// translators: Admin Bar link title for the GraphQL IDE
-				__( 'GraphQL IDE', 'wpgraphql-ide' ) . '</div>',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"><span class="ab-icon"></span>' . $app_context['drawerButtonLabel'] . '</div>',
 				'href'  => '#',
 			]
 		);
@@ -144,9 +142,7 @@ function register_wpadminbar_menus(): void {
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide',
-				'title' => '<span class="ab-icon"></span>' . 
-				// translators: Admin Bar link title for the GraphQL IDE
-				__( 'GraphQL IDE', 'wpgraphql-ide' ),
+				'title' => '<span class="ab-icon"></span>' . $app_context['drawerButtonLabel'],
 				'href'  => admin_url( 'admin.php?page=graphql-ide' ),
 			]
 		);
@@ -487,7 +483,7 @@ add_filter( 'graphql_get_setting_section_field_value', __NAMESPACE__ . '\\ensure
 /**
  * Register custom GraphQL settings.
  */
-function register_custom_graphql_settings() {
+function register_ide_settings() {
 	// Add a tab section to the graphql admin settings page
 	register_graphql_settings_section(
 		'graphql_ide_settings',
@@ -507,9 +503,9 @@ function register_custom_graphql_settings() {
 			'options'           => [
 				'drawer'         => __( 'Drawer (recommended) — open the IDE in a slide up drawer from any page', 'wpgraphql-ide' ),
 				'dedicated_page' => sprintf(
-					/* translators: %s: URL to the GraphQL IDE page */
 					wp_kses_post(
 						sprintf(
+							/* translators: %s: URL to the GraphQL IDE page */
 							__( 'Dedicated Page — direct link to <a href="%1$s">%1$s</a>', 'wpgraphql-ide' ),
 							esc_url( admin_url( 'admin.php?page=graphql-ide' ) )
 						)
@@ -522,7 +518,7 @@ function register_custom_graphql_settings() {
 		]
 	);
 }
-add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_custom_graphql_settings' );
+add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_ide_settings' );
 
 /**
  * Sanitize the input value for the custom GraphQL IDE link behavior setting.
