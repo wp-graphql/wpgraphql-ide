@@ -139,7 +139,7 @@ export function GraphiQLInterface(props) {
 	const schemaContext = useSchemaContext({ nonNull: true });
 	const storageContext = useStorageContext();
 	const pluginContext = usePluginContext();
-	
+
 	const { theme, setTheme } = useTheme();
 
 	const PluginContent = pluginContext?.visiblePlugin?.content;
