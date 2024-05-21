@@ -3,7 +3,7 @@ Contributors: jasonbahl, joefusco
 Tags: headless, decoupled, graphql, devtools
 Requires at least: 5.7
 Tested up to: 6.5
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -21,6 +21,16 @@ GraphQL IDE for WPGraphQL
 == Screenshots ==
 
 == Changelog ==
+
+= 2.1.0 =
+
+### Minor Changes
+
+- 6752c37: - Added new settings section to WPGraphQL, IDE Settings
+
+  - Added new setting, Admin Bar Link Behavior
+
+  ![WPGraphQL IDE Settings tab showing the admin bar link behavior and Show legacy editor settings](https://github.com/wp-graphql/wpgraphql-ide/assets/6676674/59236b4c-0019-40a8-ae9b-a1228997f30c)
 
 = 2.0.0 =
 
@@ -55,11 +65,5 @@ GraphQL IDE for WPGraphQL
     - `wpgraphqlide_drawer_button_label`
     - `wpgraphqlide_drawer_button_loading_label`
 - f5130d9: docs: Remove link to community Slack on "Help Page" in favor of link community Discord (recently migrated)
-
-= 1.1.8 =
-
-### Patch Changes
-
-- b005b0e: update tested up to version to WordPress 6.5
 
 [View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
