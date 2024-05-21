@@ -560,17 +560,20 @@ add_action(
 		global $submenu;
 
 		if ( isset( $submenu['graphiql-ide'] ) ) {
-			foreach ( $submenu['graphiql-ide'] as $key => $value ) {
-				if ( $value[0] === 'GraphiQL IDE' ) {
-					$submenu['graphiql-ide'][ $key ][0] = 'Legacy GraphQL IDE';
-					$legacy_item                        = $submenu['graphiql-ide'][ $key ];
-					unset( $submenu['graphiql-ide'][ $key ] );
-					$submenu['graphiql-ide'] = array_values( $submenu['graphiql-ide'] );
-					array_splice( $submenu['graphiql-ide'], 1, 0, [ $legacy_item ] );
+			$temp_submenu = $submenu['graphiql-ide'];
+			foreach ( $temp_submenu as $key => $value ) {
+				if ( 'GraphiQL IDE' === $value[0] ) {
+					$temp_submenu[ $key ][0] = 'Legacy GraphQL IDE';
+					$legacy_item             = $temp_submenu[ $key ];
+					unset( $temp_submenu[ $key ] );
+					$temp_submenu = array_values( $temp_submenu );
+					array_splice( $temp_submenu, 1, 0, [ $legacy_item ] );
 					break;
 				}
 			}
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$submenu['graphiql-ide'] = $temp_submenu;
 		}
 	},
-	999 
+	999
 );
