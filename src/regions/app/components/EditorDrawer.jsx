@@ -19,7 +19,7 @@ export function EditorDrawer( { children, buttonLabel } ) {
 				onOpenChange={ setDrawerOpen }
 			>
 				<VaulDrawer.Trigger className="EditorDrawerButton">
-					{ buttonLabel }
+					<span className="ab-icon"></span>{ buttonLabel }
 				</VaulDrawer.Trigger>
 				<VaulDrawer.Portal>
 					<VaulDrawer.Content>{ children }</VaulDrawer.Content>

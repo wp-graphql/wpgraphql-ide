@@ -132,8 +132,10 @@ function register_wpadminbar_menus(): void {
 		// Drawer Button
 		$wp_admin_bar->add_node(
 			[
-				'id'    => 'wpgraphql-ide-button',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '">' . esc_html( $app_context['drawerButtonLoadingLabel'] ) . '</div>',
+				'id'    => 'wpgraphql-ide',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"><span class="ab-icon"></span>' . 
+				// translators: Admin Bar link title for the GraphQL IDE
+				__( 'GraphQL IDE', 'wpgraphql-ide' ) . '</div>',
 				'href'  => '#',
 			]
 		);
@@ -322,14 +324,11 @@ function get_app_context(): array {
 	return apply_filters(
 		'wpgraphqlide_context',
 		[
-			'pluginVersion'            => get_plugin_header( 'Version' ),
-			'pluginName'               => get_plugin_header( 'Name' ),
-			'externalFragments'        => apply_filters( 'wpgraphqlide_external_fragments', [] ),
-			'avatarUrl'                => $avatar_url,
-			// translators: %1$s is a rocket emoji
-			'drawerButtonLabel'        => apply_filters( 'wpgraphqlide_drawer_button_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '🚀' ) ),
-			// translators: %1$s is an hourglass emoji
-			'drawerButtonLoadingLabel' => apply_filters( 'wpgraphqlide_drawer_button_loading_label', sprintf( esc_html__( '%1$s GraphQL IDE', 'wpgraphql-ide' ), '⏳' ) ),                   
+			'pluginVersion'     => get_plugin_header( 'Version' ),
+			'pluginName'        => get_plugin_header( 'Name' ),
+			'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] ),
+			'avatarUrl'         => $avatar_url,
+			'drawerButtonLabel' => __( 'GraphQL IDE', 'wpgraphql-ide' ),
 		]
 	);
 }
@@ -439,7 +438,6 @@ add_filter(
 	2
 );
 
-
 /**
  * Update the existing GraphiQL link field configuration to say "Legacy".
  *
@@ -495,7 +493,7 @@ function register_custom_graphql_settings() {
 		'graphql_ide_settings',
 		[
 			'title' => __( 'IDE Settings', 'wpgraphql-ide' ),
-			'desc'  => __( 'Customize your WPGraphQL IDE experience.', 'wpgraphql-ide' ),
+			'desc'  => __( 'Customize your WPGraphQL IDE experience sitewide. Individual users can override these settings in their user profile.', 'wpgraphql-ide' ),
 		]
 	);
 
