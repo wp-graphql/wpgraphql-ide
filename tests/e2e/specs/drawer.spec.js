@@ -38,15 +38,17 @@ test( 'should open and close successfully', async ( { page } ) => {
 	).not.toBeVisible();
 } );
 
-test( 'should open on JS-heavy admin page with CPU Throttling', async ( { page } ) => {
+test( 'should open on JS-heavy admin page with CPU Throttling', async ( {
+	page,
+} ) => {
 	await visitAdminFacingPage( page );
 
 	// Start a new CDP Session to control the browser
 	const context = page.context();
 	const session = await context.newCDPSession( page );
-	
+
 	// Set CPU Throttling
-	await session.send( 'Emulation.setCPUThrottlingRate', { rate: 4 }); // Throttles CPU to 1/4th its speed
+	await session.send( 'Emulation.setCPUThrottlingRate', { rate: 4 } ); // Throttles CPU to 1/4th its speed
 
 	// Now simulate heavy JavaScript load
 	await simulateHeavyJSLoad( page );
@@ -57,11 +59,10 @@ test( 'should open on JS-heavy admin page with CPU Throttling', async ( { page }
 	// Open the drawer and ensure it still functions under throttled conditions
 	await openDrawer( page );
 	await expect( page.locator( '.graphiql-container' ) ).toBeVisible();
-	
+
 	// Optionally, reset CPU throttling rate after test
 	await session.send( 'Emulation.setCPUThrottlingRate', { rate: 1 } );
-});
-
+} );
 
 test( 'should execute a GraphQL query successfully', async ( { page } ) => {
 	await page.click( selectors.editorDrawerButton );

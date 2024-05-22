@@ -13,10 +13,11 @@ import { useCopyToClipboard } from '../../../../../src/hooks/useCopyToClipboard'
  * `useCopyToClipboard` hook to copy this URL to the clipboard and provide user feedback
  * via WordPress admin notices.
  *
- * @param {Object} props Component properties.
+ * @param {Object} props               Component properties.
+ * @param          props.ToolbarButton
  * @return {React.Element} A ToolbarButton element for the share document functionality.
  */
-export const ShareDocumentButton = ({ ToolbarButton }) => {
+export const ShareDocumentButton = ( { ToolbarButton } ) => {
 	const { queryEditor } = useEditorContext();
 	const [ copyToClipboard ] = useCopyToClipboard();
 	const { dedicatedIdeBaseUrl } = window.WPGRAPHQL_IDE_DATA;
@@ -49,5 +50,3 @@ export const ShareDocumentButton = ({ ToolbarButton }) => {
 		</ToolbarButton>
 	);
 };
-
-

@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { GraphiQL } from 'graphiql';
+import React, { useEffect, useCallback } from 'react';
+import { GraphiQL } from './GraphiQL';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
 
-import { helpPlugin } from '../../../components/help';
-import { EditorToolbar } from '../../document-editor/components/EditorToolbar';
+import { helpPlugin } from './help';
 
 import 'graphiql/graphiql.min.css';
 
 const explorer = explorerPlugin();
 const help = helpPlugin();
 
-import '../../../../styles/explorer.css';
+import '../../styles/explorer.css';
 
 export function Editor() {
 	const query = useSelect( ( select ) =>
@@ -25,11 +24,6 @@ export function Editor() {
 		select( 'wpgraphql-ide/app' ).shouldRenderStandalone()
 	);
 	const { setDrawerOpen, setSchema } = useDispatch( 'wpgraphql-ide/app' );
-
-	// const [ isAuthenticated, setIsAuthenticated ] = useState( () => {
-	// 	const storedState = localStorage.getItem( 'graphiql:isAuthenticated' );
-	// 	return storedState !== null ? storedState === 'true' : true;
-	// } );
 
 	const isAuthenticated = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/app' ).isAuthenticated()
@@ -156,10 +150,6 @@ export function Editor() {
 				} }
 				plugins={ [ explorer, help ] }
 			>
-				<GraphiQL.Toolbar>
-					<EditorToolbar />
-				</GraphiQL.Toolbar>
-
 				<GraphiQL.Logo>
 					{ ! shouldRenderStandalone && (
 						<button

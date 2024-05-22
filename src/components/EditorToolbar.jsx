@@ -18,17 +18,17 @@ export const EditorToolbar = () => {
 					return null;
 				}
 
-				const baseClassName = `graphiql-${buttonName}-button`;
+				const baseClassName = `graphiql-${ buttonName }-button`;
 
 				// Merge the base className with any classNames provided in props.
-				const mergedClassName = clsx(baseClassName, props?.className);
+				const mergedClassName = clsx( baseClassName, props?.className );
 
 				// If a component is provided, use it, otherwise use the default ToolbarButton
 				const Component = props.component || ToolbarButton;
 				return (
 					<Component
 						{ ...props }
-						className={mergedClassName} // mergedClassName must be below { ...props } in order to render with the correct classNames
+						className={ mergedClassName } // mergedClassName must be below { ...props } in order to render with the correct classNames
 						key={ key }
 					/>
 				);

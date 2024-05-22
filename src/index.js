@@ -11,15 +11,16 @@ import * as accessFunctions from './access-functions';
 
 // Local imports including the hook configuration and the main App component.
 import hooks from './wordpress-hooks';
-import App from './regions/app/components/App';
-import { init as initializeRegions } from './regions';
-import { init as initializeRegistry } from './registry';
+import App from './components/App';
+
+import { registerStores } from './stores';
+import { initializeRegistry } from './registry';
 
 /**
  * Initializes the application's regions by registering stores.
  */
 const init = () => {
-	initializeRegions();
+	registerStores();
 	initializeRegistry();
 	hooks.doAction( 'wpgraphql-ide.init' );
 };

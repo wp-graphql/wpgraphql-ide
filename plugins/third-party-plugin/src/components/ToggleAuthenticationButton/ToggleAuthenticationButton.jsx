@@ -10,9 +10,12 @@ import styles from './ToggleAuthenticationButton.module.css';
  * @param {Object}   props                      Component props.
  * @param {boolean}  props.isAuthenticated      Indicates if the current state is authenticated.
  * @param {Function} props.toggleAuthentication Function to toggle the authentication state.
+ * @param            props.ToolbarButton
  */
 export const ToggleAuthenticationButton = ( { ToolbarButton } ) => {
-	const isAuthenticated = useSelect( ( select ) =>select( 'wpgraphql-ide/app' ).isAuthenticated());
+	const isAuthenticated = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).isAuthenticated()
+	);
 	const { toggleAuthentication } = useDispatch( 'wpgraphql-ide/app' );
 	const avatarUrl = window.WPGRAPHQL_IDE_DATA?.context?.avatarUrl;
 	const title = isAuthenticated

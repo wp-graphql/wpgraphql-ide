@@ -5,7 +5,7 @@ import { prettifyButton } from './editor-toolbar-buttons/prettify-button';
 import { toggleAuthButton } from './editor-toolbar-buttons/toggle-auth-button';
 import { registerDocumentEditorToolbarButton } from '../access-functions';
 
-export const init = () => {
+export const initializeRegistry = () => {
 	registerDocumentEditorToolbarButton( 'toggle-auth', toggleAuthButton, 1 );
 	registerDocumentEditorToolbarButton( 'prettify', prettifyButton );
 	registerDocumentEditorToolbarButton( 'share', shareButton );

@@ -53,25 +53,26 @@ export async function loginToWordPressAdmin( page ) {
 
 /**
  * Returns the value of a CodeMirror editor.
- * @param locator The Playwright locator for the CodeMirror editor.
+ * @param  locator The Playwright locator for the CodeMirror editor.
  * @return {Promise<*>}
  */
 export async function getCodeMirrorValue( locator ) {
-	return await locator.evaluate((queryEditorElement) => {
+	return await locator.evaluate( ( queryEditorElement ) => {
 		// Access the CodeMirror instance and get its value
 		const codeMirrorInstance = queryEditorElement.CodeMirror;
 		return codeMirrorInstance.getValue();
-	});
+	} );
 }
 
 /**
  * Returns the value of a CodeMirror editor.
- * @param locator The Playwright locator for the CodeMirror editor.
- * @param string The value to set in the CodeMirror editor.
+ * @param  locator The Playwright locator for the CodeMirror editor.
+ * @param  string  The value to set in the CodeMirror editor.
+ * @param  value
  * @return {Promise<*>}
  */
 export async function setCodeMirrorValue( locator, value ) {
-	return await locator.evaluate((queryEditorElement, val) => {
+	return await locator.evaluate( ( queryEditorElement, val ) => {
 		// Access the CodeMirror instance and get its value
 		const codeMirrorInstance = queryEditorElement.CodeMirror;
 		codeMirrorInstance.setValue( val );
@@ -214,52 +215,61 @@ async function selectAndClearTextUsingKeyboard( page, selector ) {
 	await page.keyboard.press( 'Backspace' ); // Clear selected text
 }
 
-export async function simulateHeavyJSLoad(page) {
-    await page.evaluate(() => {
-        // Simulate heavy DOM manipulations
-        for (let i = 0; i < 500; i++) {
-            const div = document.createElement('div');
-            div.textContent = `Heavy content ${i}`;
-            div.style.backgroundColor = "#" + Math.floor(Math.random()*16777215).toString(16);
-            document.body.appendChild(div);
-        }
+export async function simulateHeavyJSLoad( page ) {
+	await page.evaluate( () => {
+		// Simulate heavy DOM manipulations
+		for ( let i = 0; i < 500; i++ ) {
+			const div = document.createElement( 'div' );
+			div.textContent = `Heavy content ${ i }`;
+			div.style.backgroundColor =
+				'#' + Math.floor( Math.random() * 16777215 ).toString( 16 );
+			document.body.appendChild( div );
+		}
 
-        // Simulate heavy computations
-        const heavyComputation = Array.from({ length: 50000 }, (_, i) => i ** 2).reduce((a, b) => a + b);
-        console.log('Heavy computation result:', heavyComputation);
+		// Simulate heavy computations
+		const heavyComputation = Array.from(
+			{ length: 50000 },
+			( _, i ) => i ** 2
+		).reduce( ( a, b ) => a + b );
+		console.log( 'Heavy computation result:', heavyComputation );
 
-        // Simulate asynchronous operations
-        new Promise(resolve => setTimeout(resolve, 5000)).then(() => console.log('Delayed operation completed'));
+		// Simulate asynchronous operations
+		new Promise( ( resolve ) => setTimeout( resolve, 5000 ) ).then( () =>
+			console.log( 'Delayed operation completed' )
+		);
 
-        // Simulate frequent DOM updates
-        setInterval(() => {
-            const randomDiv = document.querySelector(`div:nth-child(${Math.floor(Math.random() * 500) + 1})`);
-            if (randomDiv) {
-                randomDiv.style.backgroundColor = "#" + Math.floor(Math.random()*16777215).toString(16);
-            }
-        }, 10);
-    });
+		// Simulate frequent DOM updates
+		setInterval( () => {
+			const randomDiv = document.querySelector(
+				`div:nth-child(${ Math.floor( Math.random() * 500 ) + 1 })`
+			);
+			if ( randomDiv ) {
+				randomDiv.style.backgroundColor =
+					'#' + Math.floor( Math.random() * 16777215 ).toString( 16 );
+			}
+		}, 10 );
+	} );
 }
 
 /**
  * Sets the value of the 'graphiql:query' key in local storage.
- * @param {import('@playwright/test').Page} page The Playwright page object.
- * @param {string} value The value to set for the 'graphiql:query' key in local storage.
- * @returns {Promise<void>}
+ * @param {import('@playwright/test').Page} page  The Playwright page object.
+ * @param {string}                          value The value to set for the 'graphiql:query' key in local storage.
+ * @return {Promise<void>}
  */
-export async function setQueryInLocalStorage(page, value) {
-	await page.evaluate((val) => {
-		localStorage.setItem('graphiql:query', val);
-	}, value);
+export async function setQueryInLocalStorage( page, value ) {
+	await page.evaluate( ( val ) => {
+		localStorage.setItem( 'graphiql:query', val );
+	}, value );
 }
 
 /**
  * Retrieves the value of the 'graphiql:query' key from local storage.
  * @param {import('@playwright/test').Page} page The Playwright page object.
- * @returns {Promise<string>} The value of the 'graphiql:query' key from local storage.
+ * @return {Promise<string>} The value of the 'graphiql:query' key from local storage.
  */
-export async function getQueryFromLocalStorage(page) {
-	return await page.evaluate(() => {
-		return localStorage.getItem('graphiql:query');
-	});
+export async function getQueryFromLocalStorage( page ) {
+	return await page.evaluate( () => {
+		return localStorage.getItem( 'graphiql:query' );
+	} );
 }
