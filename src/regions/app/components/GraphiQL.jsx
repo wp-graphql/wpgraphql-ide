@@ -6,42 +6,24 @@
  */
 
 import React, {
-	Fragment,
 	useCallback,
 	useState,
 } from 'react';
 
 import {
-	Button,
-	ButtonGroup,
-	ChevronDownIcon,
-	ChevronUpIcon,
-	Dialog,
-	ExecuteButton,
 	GraphiQLProvider,
-	HeaderEditor,
 	PlusIcon,
-	QueryEditor,
-	ResponseEditor,
-	Spinner,
-	Tab,
-	Tabs,
 	Tooltip,
 	UnStyledButton,
-	useCopyQuery,
 	useDragResize,
 	useEditorContext,
 	useExecutionContext,
-	useMergeQuery,
 	usePluginContext,
-	usePrettifyEditors,
 	useSchemaContext,
 	useStorageContext,
 	useTheme,
-	VariableEditor,
 } from '@graphiql/react';
 import {ActivityBar} from "../../activity-bar/components/ActivityBar";
-import {EditorToolbar} from "../../document-editor/components/EditorToolbar";
 import {ShortKeysDialog} from "../../activity-bar/components/ShortKeysDialog";
 import {SettingsDialog} from "../../activity-bar/components/SettingsDialog";
 import ActivityPanel from "../../activity-panel/components/ActivityPanel";
@@ -130,7 +112,6 @@ export function GraphiQL({
 
 // Export main windows/panes to be used separately if desired.
 GraphiQL.Logo = GraphiQLLogo;
-
 
 export function GraphiQLInterface(props) {
 	const isHeadersEditorEnabled = props.isHeadersEditorEnabled ?? true;
