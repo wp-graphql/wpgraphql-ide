@@ -4,14 +4,14 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
 
-import { helpPlugin } from '../../../components/help';
+import { helpPlugin } from './help';
 
 import 'graphiql/graphiql.min.css';
 
 const explorer = explorerPlugin();
 const help = helpPlugin();
 
-import '../../../../styles/explorer.css';
+import '../../styles/explorer.css';
 
 export function Editor() {
 	const query = useSelect( ( select ) =>

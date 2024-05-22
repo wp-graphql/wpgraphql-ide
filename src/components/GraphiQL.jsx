@@ -23,11 +23,11 @@ import {
 	useStorageContext,
 	useTheme,
 } from '@graphiql/react';
-import {ActivityBar} from "../../activity-bar/components/ActivityBar";
-import {ShortKeysDialog} from "../../activity-bar/components/ShortKeysDialog";
-import {SettingsDialog} from "../../activity-bar/components/SettingsDialog";
-import ActivityPanel from "../../activity-panel/components/ActivityPanel";
-import {DocumentSessions} from "../../document-editor/components/DocumentSessions";
+import {ActivityBar} from "./ActivityBar";
+import {ShortKeysDialog} from "./ShortKeysDialog";
+import {SettingsDialog} from "./SettingsDialog";
+import ActivityPanel from "./ActivityPanel";
+import {DocumentSessions} from "./DocumentSessions";
 
 /**
  * The top-level React component for GraphiQL, intended to encompass the entire

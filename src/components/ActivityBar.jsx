@@ -1,10 +1,3 @@
-import {
-	KeyboardShortcutIcon,
-	ReloadIcon,
-	SettingsIcon,
-	Tooltip,
-	UnStyledButton
-} from "@graphiql/react";
 import React from 'react';
 import {ActivityBarUtilities} from "./ActivityBarUtilities";
 import {ActivityBarPlugins} from "./ActivityBarPlugins";
