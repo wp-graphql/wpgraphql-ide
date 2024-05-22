@@ -27,8 +27,8 @@ async function globalSetup( config ) {
 	} );
 
 	try {
-        await requestUtils.setupRest();
-	} catch (error) {
+		await requestUtils.setupRest();
+	} catch ( error ) {
 		console.error( '🚧 Consider checking WordPress for PHP errors.' );
 		throw error;
 	}

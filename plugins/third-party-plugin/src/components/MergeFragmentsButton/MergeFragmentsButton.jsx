@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMergeQuery, MergeIcon } from '@graphiql/react';
 
-export const MergeFragmentsButton = ({ ToolbarButton }) => {
+export const MergeFragmentsButton = ( { ToolbarButton } ) => {
 	const merge = useMergeQuery();
 
 	return (

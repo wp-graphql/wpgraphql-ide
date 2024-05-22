@@ -17,13 +17,11 @@ export const toggleAuthButton = () => {
 				<span className={ styles.authBadge } />
 			</span>
 		),
-		className: clsx(
-			{
-				[ styles.authAvatarPublic ]: ! isAuthenticated,
-				'is-authenticated': isAuthenticated,
-				'is-public': ! isAuthenticated,
-			}
-		),
+		className: clsx( {
+			[ styles.authAvatarPublic ]: ! isAuthenticated,
+			'is-authenticated': isAuthenticated,
+			'is-public': ! isAuthenticated,
+		} ),
 		onClick: () => {
 			dispatch( 'wpgraphql-ide/app' ).toggleAuthentication();
 		},
