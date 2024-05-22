@@ -3,7 +3,7 @@ Contributors: jasonbahl, joefusco
 Tags: headless, decoupled, graphql, devtools
 Requires at least: 5.7
 Tested up to: 6.5
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -21,6 +21,12 @@ GraphQL IDE for WPGraphQL
 == Screenshots ==
 
 == Changelog ==
+
+= 2.1.1 =
+
+### Patch Changes
+
+- c450e5a: - Reorganized plugin directories/files.
 
 = 2.1.0 =
 
@@ -55,15 +61,5 @@ GraphQL IDE for WPGraphQL
   ```
 
   ![Screenshot of the GraphiQL IDE highlighting the Toolbar buttons within the Document Editor region.](https://github.com/wp-graphql/wpgraphql-ide/assets/1260765/2395c3c8-1915-4a24-b64e-35ebe16e674f)
-
-= 1.1.9 =
-
-### Patch Changes
-
-- 194821c: - fix: The IDE no longer waits on `DOMContentLoaded` in order to help client side performance with heavier pages.
-  - add: New PHP filters for updating the drawer label:
-    - `wpgraphqlide_drawer_button_label`
-    - `wpgraphqlide_drawer_button_loading_label`
-- f5130d9: docs: Remove link to community Slack on "Help Page" in favor of link community Discord (recently migrated)
 
 [View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
