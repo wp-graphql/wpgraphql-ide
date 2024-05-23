@@ -3,15 +3,13 @@ import { GraphiQL } from './GraphiQL';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
-
-import { helpPlugin } from './help';
+import { helpPanel as helpPlugin } from '../registry/activity-bar-panels/helpPanel';
 
 import 'graphiql/graphiql.min.css';
+import '../../styles/explorer.css';
 
 const explorer = explorerPlugin();
 const help = helpPlugin();
-
-import '../../styles/explorer.css';
 
 export function App() {
 	const query = useSelect( ( select ) =>

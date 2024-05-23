@@ -1,7 +1,7 @@
 import { registerEditorToolbarButtons } from './editor-toolbar-buttons';
-import { registerActivityBarPlugins } from './activity-bar-plugins';
+import { registerActivityBarPanels } from './activity-bar-panels';
 
 export const initializeRegistry = () => {
 	registerEditorToolbarButtons();
-	registerActivityBarPlugins();
+	registerActivityBarPanels();
 };

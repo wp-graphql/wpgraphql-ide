@@ -3,27 +3,24 @@ import React from 'react';
 import { useSelect } from '@wordpress/data';
 import clsx from 'clsx';
 
-export const ActivityBarPlugins = ( { pluginContext, handlePluginClick } ) => {
-	const pluginButtons = useSelect( ( select ) =>
-		select( 'wpgraphql-ide/activity-bar' ).pluginButtons()
+export const ActivityBarPanels = () => {
+	const panels = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/activity-bar' ).panels()
 	);
 
-	console.log( {
-		pluginButtons,
-		plugins: pluginContext?.plugins,
-	} );
-
-	return pluginButtons ? (
+	return panels ? (
 		<div className="graphiql-sidebar-section graphiql-activity-bar-plugins">
-			{ Object.entries( pluginButtons ).map( ( [ key, button ] ) => {
-				const props = button.config();
-				const buttonName = pluginButtons[ key ].name ?? key;
+			{ Object.entries( panels ).map( ( [ key, panel ] ) => {
+				const props = panel.config();
+				const panelName = panels[ key ].name ?? key;
 
-				if ( ! isValidButton( props, buttonName ) ) {
+				if ( ! isValidPanel( props, panelName ) ) {
 					return null;
 				}
 
-				const baseClassName = `graphiql-${ buttonName }-button`;
+				console.log({props, panelName});
+
+				const baseClassName = `graphiql-${ panelName }-button`;
 
 				// Merge the base className with any classNames provided in props.
 				const mergedClassName = clsx( baseClassName, props?.className );
@@ -67,22 +64,22 @@ export const ActivityBarPlugins = ( { pluginContext, handlePluginClick } ) => {
 	// );
 };
 
-const isValidButton = ( config, name ) => {
+const isValidPanel = ( config, name ) => {
 	let hasError = false;
 	if ( undefined === config.label ) {
-		console.warn( `Button "${ name }" needs a "label" defined`, {
+		console.warn( `Panel "${ name }" needs a "label" defined`, {
 			config,
 		} );
 		hasError = true;
 	}
 	if ( undefined === config.children ) {
-		console.warn( `Button "${ name }" needs "children" defined`, {
+		console.warn( `Panel "${ name }" needs "children" defined`, {
 			config,
 		} );
 		hasError = true;
 	}
 	if ( undefined === config.onClick ) {
-		console.warn( `Button "${ name }" needs "onClick" defined`, {
+		console.warn( `Panel "${ name }" needs "onClick" defined`, {
 			config,
 		} );
 		hasError = true;

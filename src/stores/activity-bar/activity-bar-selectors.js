@@ -1,27 +1,28 @@
 /**
- * Selectors for the app state.
+ * Selectors for the activity bar.
+ *
  * @type {Object}
  */
 const selectors = {
-	pluginButtons: ( state ) => {
-		const buttons = Object.entries( state.pluginButtons ).map(
-			( [ name, button ] ) => ( {
+	panels: ( state ) => {
+		const panels = Object.entries( state.panels ).map(
+			( [ name, panel ] ) => ( {
 				name,
-				...button,
+				...panel,
 			} )
 		);
 
-		return buttons.sort( ( a, b ) => a.priority - b.priority );
+		return panels.sort( ( a, b ) => a.priority - b.priority );
 	},
-	utilityButtons: ( state ) => {
-		const buttons = Object.entries( state.utilityButtons ).map(
-			( [ name, button ] ) => ( {
+	utilities: ( state ) => {
+		const utilities = Object.entries( state.utilities ).map(
+			( [ name, utility ] ) => ( {
 				name,
-				...button,
+				...utility,
 			} )
 		);
 
-		return buttons.sort( ( a, b ) => a.priority - b.priority );
+		return utilities.sort( ( a, b ) => a.priority - b.priority );
 	},
 };
 

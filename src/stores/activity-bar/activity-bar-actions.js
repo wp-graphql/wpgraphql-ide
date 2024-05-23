@@ -1,17 +1,17 @@
 /**
- * The initial state of the app.
+ * The actions for the activity bar.
  *
  * @type {Object}
  */
 const actions = {
-	registerPluginButton: ( name, config, priority ) => ( {
-		type: 'REGISTER_PLUGIN_BUTTON',
+	registerPanel: ( name, config, priority ) => ( {
+		type: 'REGISTER_PANEL',
 		name,
 		config,
 		priority,
 	} ),
-	registerUtilityButton: ( name, config, priority ) => ( {
-		type: 'REGISTER_UTILITY_BUTTON',
+	registerUtility: ( name, config, priority ) => ( {
+		type: 'REGISTER_UTILITY',
 		name,
 		config,
 		priority,

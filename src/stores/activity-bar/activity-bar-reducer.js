@@ -1,10 +1,10 @@
 /**
- * The initial state of the app.
+ * The initial state of the activity bar.
  * @type {Object}
  */
 const initialState = {
-	utilityButtons: {},
-	pluginButtons: {},
+	panels: {},
+	utilities: {},
 };
 
 /**
@@ -15,50 +15,50 @@ const initialState = {
  */
 const reducer = ( state = initialState, action ) => {
 	switch ( action.type ) {
-		case 'REGISTER_UTILITY_BUTTON':
+		case 'REGISTER_UTILITY':
 			// Ensure button name is unique
-			if ( action.name in state.utilityButtons ) {
+			if ( action.name in state.utilities ) {
 				console.warn( {
-					message: `The "${ action.name }" button already exists. Name must be unique.`,
-					existingButton: state.utilityButtons[ action.name ],
-					duplicateButton: action.config,
+					message: `The "${ action.name }" utility already exists. Name must be unique.`,
+					existingUtility: state.utilities[ action.name ],
+					duplicateUtility: action.config,
 				} );
 				return state;
 			}
 
-			const utilityButton = {
+			const utility = {
 				config: action.config,
 				priority: action.priority || 10, // default priority to 10 if not provided
 			};
 
 			return {
 				...state,
-				utilityButtons: {
-					...state.utilityButtons,
-					[ action.name ]: utilityButton,
+				utilities: {
+					...state.utilities,
+					[ action.name ]: utility,
 				},
 			};
-		case 'REGISTER_PLUGIN_BUTTON':
-			// Ensure button name is unique
-			if ( action.name in state.pluginButtons ) {
+		case 'REGISTER_PANEL':
+			// Ensure panel name is unique
+			if ( action.name in state.panels ) {
 				console.warn( {
-					message: `The "${ action.name }" button already exists. Name must be unique.`,
-					existingButton: state.pluginButtons[ action.name ],
-					duplicateButton: action.config,
+					message: `The "${ action.name }" panel already exists. Name must be unique.`,
+					existingPanel: state.panels[ action.name ],
+					duplicatePanel: action.config,
 				} );
 				return state;
 			}
 
-			const pluginButton = {
+			const panel = {
 				config: action.config,
 				priority: action.priority || 10, // default priority to 10 if not provided
 			};
 
 			return {
 				...state,
-				pluginButtons: {
-					...state.pluginButtons,
-					[ action.name ]: pluginButton,
+				panels: {
+					...state.panels,
+					[ action.name ]: panel,
 				},
 			};
 		default:

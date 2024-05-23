@@ -80,7 +80,7 @@ export const helpCards = [
 	},
 ];
 
-const HelpPanel = () => {
+export const HelpPanel = () => {
 	return (
 		<div className="wpgraphql-ide-help-panel">
 			<div className="graphiql-doc-explorer-title">Help</div>
@@ -90,5 +90,3 @@ const HelpPanel = () => {
 		</div>
 	);
 };
-
-export default HelpPanel;

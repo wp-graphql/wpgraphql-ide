@@ -34,23 +34,27 @@ export function registerDocumentEditorToolbarButton(
 	}
 }
 
-export function registerActivityBarPluginButton( name, config, priority = 10 ) {
+export function registerActivityBarPanel(
+	name,
+	config,
+	priority = 10
+) {
 	try {
-		dispatch( 'wpgraphql-ide/activity-bar' ).registerPluginButton(
+		dispatch( 'wpgraphql-ide/activity-bar' ).registerPanel(
 			name,
 			config,
 			priority
 		);
 		hooks.doAction(
-			'afterRegisterActivityBarPluginButton',
+			'afterRegisterActivityBarPanel',
 			name,
 			config,
 			priority
 		);
 	} catch ( error ) {
-		console.error( `Failed to register button: ${ name }`, error );
+		console.error( `Failed to register activity bar panel: ${ name }`, error );
 		hooks.doAction(
-			'registerActivityBarPluginButtonError',
+			'registerActivityBarPanelError',
 			name,
 			config,
 			priority,
@@ -59,60 +63,31 @@ export function registerActivityBarPluginButton( name, config, priority = 10 ) {
 	}
 }
 
-export function registerActivityBarUtilityButton(
-	name,
-	config,
-	priority = 10
-) {
-	try {
-		dispatch( 'wpgraphql-ide/activity-bar' ).registerUtilityButton(
-			name,
-			config,
-			priority
-		);
-		hooks.doAction(
-			'afterRegisterActivityBarUtilityButton',
-			name,
-			config,
-			priority
-		);
-	} catch ( error ) {
-		console.error( `Failed to register button: ${ name }`, error );
-		hooks.doAction(
-			'registerActivityBarUtilityButtonError',
-			name,
-			config,
-			priority,
-			error
-		);
-	}
-}
-
-export function registerActivityPanel(
-	name,
-	config,
-	priority = 10
-) {
-	try {
-		dispatch( 'wpgraphql-ide/activity-bar' ).registerActivityPanel(
-			name,
-			config,
-			priority
-		);
-		hooks.doAction(
-			'afterRegisterActivityPanel',
-			name,
-			config,
-			priority
-		);
-	} catch ( error ) {
-		console.error( `Failed to register panel: ${ name }`, error );
-		hooks.doAction(
-			'registerActivityPanelError',
-			name,
-			config,
-			priority,
-			error
-		);
-	}
-}
+// export function registerActivityBarUtility(
+// 	name,
+// 	config,
+// 	priority = 10
+// ) {
+// 	try {
+// 		dispatch( 'wpgraphql-ide/activity-bar' ).registerUtilityButton(
+// 			name,
+// 			config,
+// 			priority
+// 		);
+// 		hooks.doAction(
+// 			'afterRegisterActivityBarUtilityButton',
+// 			name,
+// 			config,
+// 			priority
+// 		);
+// 	} catch ( error ) {
+// 		console.error( `Failed to register button: ${ name }`, error );
+// 		hooks.doAction(
+// 			'registerActivityBarUtilityButtonError',
+// 			name,
+// 			config,
+// 			priority,
+// 			error
+// 		);
+// 	}
+// }
