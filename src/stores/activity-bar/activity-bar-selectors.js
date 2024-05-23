@@ -22,7 +22,7 @@ const selectors = {
 		);
 
 		return buttons.sort( ( a, b ) => a.priority - b.priority );
-	}
+	},
 };
 
 export default selectors;

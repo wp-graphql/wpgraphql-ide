@@ -15,7 +15,7 @@ import {
 import { EditorToolbar } from './EditorToolbar';
 import React from 'react';
 
-export const EditorGroup = (props ) => {
+export const EditorGroup = ( props ) => {
 	const {
 		secondRef, // pluginResize.secondRef
 		disableTabs,

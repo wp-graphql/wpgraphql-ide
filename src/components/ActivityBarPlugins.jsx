@@ -1,10 +1,9 @@
-import {ToolbarButton, Tooltip, UnStyledButton} from '@graphiql/react';
+import { ToolbarButton, Tooltip, UnStyledButton } from '@graphiql/react';
 import React from 'react';
-import {useSelect} from "@wordpress/data";
-import clsx from "clsx";
+import { useSelect } from '@wordpress/data';
+import clsx from 'clsx';
 
 export const ActivityBarPlugins = ( { pluginContext, handlePluginClick } ) => {
-
 	const pluginButtons = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/activity-bar' ).pluginButtons()
 	);
@@ -12,7 +11,7 @@ export const ActivityBarPlugins = ( { pluginContext, handlePluginClick } ) => {
 	console.log( {
 		pluginButtons,
 		plugins: pluginContext?.plugins,
-	})
+	} );
 
 	return pluginButtons ? (
 		<div className="graphiql-sidebar-section graphiql-activity-bar-plugins">
@@ -95,4 +94,3 @@ const isValidButton = ( config, name ) => {
 
 	return true;
 };
-
