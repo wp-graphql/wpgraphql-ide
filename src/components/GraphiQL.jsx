@@ -24,7 +24,7 @@ import { ActivityBar } from './ActivityBar';
 import { ShortKeysDialog } from './ShortKeysDialog';
 import { SettingsDialog } from './SettingsDialog';
 import ActivityPanel from './ActivityPanel';
-import { DocumentSessions } from './DocumentSessions';
+import { EditorGroup } from './EditorGroup';
 
 /**
  * The top-level React component for GraphiQL, intended to encompass the entire
@@ -311,7 +311,7 @@ export function GraphiQLInterface( props ) {
 						firstRef={ pluginResize.firstRef }
 						dragBarRef={ pluginResize.dragBarRef }
 					/>
-					<DocumentSessions
+					<EditorGroup
 						secondRef={ pluginResize.secondRef }
 						disableTabs={ props.disableTabs }
 						editorContext={ editorContext }
