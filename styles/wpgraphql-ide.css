@@ -84,11 +84,11 @@
 
 /* Custom */
 
-#wpgraphql-ide-root .EditorDrawerRoot {
+#wpgraphql-ide-root .AppDrawerRoot {
   display: block;
 }
 
-#wpgraphql-ide-root .EditorDrawerButton {
+#wpgraphql-ide-root .AppDrawerButton {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;

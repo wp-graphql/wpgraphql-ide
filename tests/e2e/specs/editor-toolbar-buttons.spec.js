@@ -12,8 +12,8 @@ import { expect } from '@playwright/test';
 export const selectors = {
 	graphiqlContainer: '.graphiql-container',
 	graphiqlResponse: '.graphiql-response',
-	editorDrawerButton: '.EditorDrawerButton',
-	editorDrawerCloseButton: '.EditorDrawerCloseButton',
+	appDrawerButton: '.AppDrawerButton',
+	appDrawerCloseButton: '.AppDrawerCloseButton',
 	executeQueryButton: '.graphiql-execute-button',
 	queryInput: '[aria-label="Query Editor"] .CodeMirror',
 	variablesInput: '[aria-label="Variables"] .CodeMirror',

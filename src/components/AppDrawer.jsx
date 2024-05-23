@@ -2,7 +2,7 @@ import React from 'react';
 import { Drawer as VaulDrawer } from 'vaul';
 import { useDispatch, useSelect } from '@wordpress/data';
 
-export function EditorDrawer( { children, buttonLabel } ) {
+export function AppDrawer( { children, buttonLabel } ) {
 	const isDrawerOpen = useSelect( ( select ) => {
 		return select( 'wpgraphql-ide/app' ).isDrawerOpen();
 	} );
@@ -10,7 +10,7 @@ export function EditorDrawer( { children, buttonLabel } ) {
 	const { setDrawerOpen } = useDispatch( 'wpgraphql-ide/app' );
 
 	return (
-		<div className="EditorDrawerRoot">
+		<div className="AppDrawerRoot">
 			<VaulDrawer.Root
 				dismissible={ false }
 				closeThreshold={ 1 }
@@ -18,7 +18,7 @@ export function EditorDrawer( { children, buttonLabel } ) {
 				open={ isDrawerOpen }
 				onOpenChange={ setDrawerOpen }
 			>
-				<VaulDrawer.Trigger className="EditorDrawerButton">
+				<VaulDrawer.Trigger className="AppDrawerButton">
 					<span className="ab-icon"></span>
 					{ buttonLabel }
 				</VaulDrawer.Trigger>

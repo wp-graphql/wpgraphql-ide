@@ -11,7 +11,7 @@ import * as accessFunctions from './access-functions';
 
 // Local imports including the hook configuration and the main App component.
 import hooks from './wordpress-hooks';
-import App from './components/App';
+import AppWrapper from './components/AppWrapper';
 
 import { registerStores } from './stores';
 import { initializeRegistry } from './registry';
@@ -43,7 +43,7 @@ window.WPGraphQLIDE = {
  */
 const appMountPoint = document.getElementById( 'wpgraphql-ide-root' );
 if ( appMountPoint ) {
-	createRoot( appMountPoint ).render( <App /> );
+	createRoot( appMountPoint ).render( <AppWrapper /> );
 	window.dispatchEvent( new Event( 'WPGraphQLIDEReady' ) );
 } else {
 	console.error(

@@ -1,142 +1,169 @@
-/* global WPGRAPHQL_IDE_DATA */
-import { useEffect } from '@wordpress/element';
-import { doAction } from '@wordpress/hooks';
+import React, { useEffect, useCallback } from 'react';
+import { GraphiQL } from './GraphiQL';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { parse, print } from 'graphql';
-import LZString from 'lz-string';
+import { parse, visit } from 'graphql';
+import { explorerPlugin } from '@graphiql/plugin-explorer';
 
-import { EditorDrawer } from './EditorDrawer';
-import { Editor } from './Editor';
+import { helpPlugin } from './help';
 
-const {
-	isDedicatedIdePage,
-	context: { drawerButtonLabel },
-} = window.WPGRAPHQL_IDE_DATA;
+import 'graphiql/graphiql.min.css';
 
-const url = new URL( window.location.href );
-const params = url.searchParams;
+const explorer = explorerPlugin();
+const help = helpPlugin();
 
-const setInitialState = () => {
-	const {
-		setDrawerOpen,
-		setQuery,
-		setShouldRenderStandalone,
-		setInitialStateLoaded,
-	} = useDispatch( 'wpgraphql-ide/app' );
+import '../../styles/explorer.css';
 
-	if ( isDedicatedIdePage ) {
-		setShouldRenderStandalone( true );
-	}
-
-	if ( params.has( 'wpgraphql_ide' ) ) {
-		const queryParam = params.get( 'wpgraphql_ide' );
-		const queryParamShareObjectString =
-			LZString.decompressFromEncodedURIComponent( queryParam );
-		const queryParamShareObject = JSON.parse( queryParamShareObjectString );
-
-		const { query } = queryParamShareObject;
-
-		let parsedQuery;
-		let printedQuery = null;
-
-		// convert the query from a string to an AST
-		// console errors if there are any
-		try {
-			parsedQuery = parse( query );
-		} catch ( error ) {
-			console.error(
-				`Error parsing the query "${ query }"`,
-				error.message
-			);
-			parsedQuery = null;
-		}
-
-		// Convert the AST back to a formatted printed document
-		// console errors if there are any
-		if ( null !== parsedQuery ) {
-			try {
-				printedQuery = print( parsedQuery );
-			} catch ( error ) {
-				console.error(
-					`Error printing the query "${ query }"`,
-					error.message
-				);
-				printedQuery = null;
-			}
-		}
-
-		if ( null !== printedQuery ) {
-			setDrawerOpen( true );
-			setQuery( printedQuery );
-			params.delete( 'wpgraphql_ide' );
-			history.pushState( {}, '', url.toString() );
-		}
-	}
-
-	setInitialStateLoaded();
-};
-
-/**
- * The main application component.
- *
- * @return {JSX.Element} The application component.
- */
 export function App() {
-	setInitialState();
+	const query = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).getQuery()
+	);
+
+	const { setQuery } = useDispatch( 'wpgraphql-ide/app' );
+
+	const shouldRenderStandalone = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).shouldRenderStandalone()
+	);
+	const { setDrawerOpen, setSchema } = useDispatch( 'wpgraphql-ide/app' );
+
+	const isAuthenticated = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).isAuthenticated()
+	);
+
+	const schema = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/app' ).schema()
+	);
 
 	useEffect( () => {
-		/**
-		 * Perform actions on component mount.
-		 *
-		 * Triggers a custom action 'wpgraphqlide_rendered' when the App component mounts,
-		 * allowing plugins or themes to hook into this event. The action passes
-		 * the current state of `drawerOpen` to any listeners, providing context
-		 * about the application's UI state.
-		 */
-		doAction( 'wpgraphqlide_rendered' );
-
-		/**
-		 * Cleanup action on component unmount.
-		 *
-		 * Returns a cleanup function that triggers the 'wpgraphqlide_destroyed' action,
-		 * signaling that the App component is about to unmount. This allows for
-		 * any necessary cleanup or teardown operations in response to the App
-		 * component's lifecycle.
-		 */
-		return () => doAction( 'wpgraphqlide_destroyed' );
-	}, [] );
-
-	return <RenderApp />;
-}
-
-export function RenderApp() {
-	const isInitialStateLoaded = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide/app' ).isInitialStateLoaded();
-	} );
-
-	const shouldRenderStandalone = useSelect( ( select ) => {
-		return select( 'wpgraphql-ide/app' ).shouldRenderStandalone();
-	} );
-
-	if ( ! isInitialStateLoaded ) {
-		return null;
-	}
-
-	if ( shouldRenderStandalone ) {
-		return (
-			<div className="AppRoot">
-				<Editor />
-			</div>
+		// create a ref
+		const ref = React.createRef();
+		// find the target element in the DOM
+		const element = document.querySelector(
+			'[aria-label="Re-fetch GraphQL schema"]'
 		);
-	}
+		// if the element exists
+		if ( element ) {
+			// assign the ref to the element
+			element.ref = ref;
+			// listen to click events on the element
+			element.addEventListener( 'click', () => {
+				setSchema( undefined );
+			} );
+		}
+	}, [ schema ] );
+
+	useEffect( () => {
+		localStorage.setItem(
+			'graphiql:isAuthenticated',
+			isAuthenticated.toString()
+		);
+	}, [ isAuthenticated ] );
+
+	// const handleEditQuery = (editedQuery) => {
+	// 	let update = false;
+
+	// 	if (editedQuery === query) {
+	// 	  return;
+	// 	}
+
+	// 	if (null === editedQuery || "" === editedQuery) {
+	// 	  update = true;
+	// 	} else {
+	// 	  try {
+	// 		parse(editedQuery);
+	// 		update = true;
+	// 	  } catch (error) {
+	// 		return;
+	// 	  }
+	// 	}
+
+	// 	// If the query is valid and should be updated
+	// 	if (update) {
+	// 	  // Update the state with the new query
+	// 	  setQuery(editedQuery);
+	// 	}
+	// };
+
+	const fetcher = useCallback(
+		async ( graphQLParams ) => {
+			let isIntrospectionQuery = false;
+
+			try {
+				// Parse the GraphQL query to AST only once and in a try-catch to handle potential syntax errors gracefully
+				const queryAST = parse( graphQLParams.query );
+
+				// Visit each node in the AST efficiently to check for introspection fields
+				visit( queryAST, {
+					Field( node ) {
+						if (
+							node.name.value === '__schema' ||
+							node.name.value === '__typename'
+						) {
+							isIntrospectionQuery = true;
+							return visit.BREAK; // Early exit if introspection query is detected
+						}
+					},
+				} );
+			} catch ( error ) {
+				console.error( 'Error parsing GraphQL query:', error );
+			}
+
+			const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
+
+			const base64Credentials = btoa( `growth:growth` );
+
+			const headers = {
+				'Content-Type': 'application/json',
+				Authorization: `Basic ${ base64Credentials }`,
+			};
+
+			const response = await fetch( graphqlEndpoint, {
+				method: 'POST',
+				headers,
+				body: JSON.stringify( graphQLParams ),
+				credentials: isIntrospectionQuery
+					? 'include'
+					: isAuthenticated
+					? 'include'
+					: 'omit',
+			} );
+
+			return response.json();
+		},
+		[ isAuthenticated ]
+	);
+
+	const buttons = useSelect( ( select ) =>
+		select( 'wpgraphql-ide/document-editor' ).buttons()
+	);
 
 	return (
-		<div className="AppRoot">
-			<EditorDrawer buttonLabel={ drawerButtonLabel }>
-				<Editor />
-			</EditorDrawer>
-		</div>
+		<span id="wpgraphql-ide-app">
+			<GraphiQL
+				query={ query }
+				fetcher={ fetcher }
+				onEditQuery={ setQuery }
+				schema={ schema }
+				onSchemaChange={ ( newSchema ) => {
+					if ( schema !== newSchema ) {
+						setSchema( newSchema );
+					}
+				} }
+				plugins={ [ explorer, help ] }
+			>
+				<GraphiQL.Logo>
+					{ ! shouldRenderStandalone && (
+						<button
+							className="button AppDrawerCloseButton"
+							onClick={ () => setDrawerOpen( false ) }
+						>
+							X{ ' ' }
+							<span className="screen-reader-text">
+								close drawer
+							</span>
+						</button>
+					) }
+				</GraphiQL.Logo>
+			</GraphiQL>
+		</span>
 	);
 }
-
-export default App;
