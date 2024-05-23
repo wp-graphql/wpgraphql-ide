@@ -87,3 +87,32 @@ export function registerActivityBarUtilityButton(
 		);
 	}
 }
+
+export function registerActivityPanel(
+	name,
+	config,
+	priority = 10
+) {
+	try {
+		dispatch( 'wpgraphql-ide/activity-bar' ).registerActivityPanel(
+			name,
+			config,
+			priority
+		);
+		hooks.doAction(
+			'afterRegisterActivityPanel',
+			name,
+			config,
+			priority
+		);
+	} catch ( error ) {
+		console.error( `Failed to register panel: ${ name }`, error );
+		hooks.doAction(
+			'registerActivityPanelError',
+			name,
+			config,
+			priority,
+			error
+		);
+	}
+}
