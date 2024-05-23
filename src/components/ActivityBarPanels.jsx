@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelect } from '@wordpress/data';
 import clsx from 'clsx';
 
-export const ActivityBarPanels = () => {
+export const ActivityBarPanels = ( { pluginContext, handlePluginClick } ) => {
 	const panels = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/activity-bar' ).panels()
 	);
@@ -17,8 +17,6 @@ export const ActivityBarPanels = () => {
 				if ( ! isValidPanel( props, panelName ) ) {
 					return null;
 				}
-
-				console.log({props, panelName});
 
 				const baseClassName = `graphiql-${ panelName }-button`;
 
@@ -72,14 +70,14 @@ const isValidPanel = ( config, name ) => {
 		} );
 		hasError = true;
 	}
-	if ( undefined === config.children ) {
-		console.warn( `Panel "${ name }" needs "children" defined`, {
+	if ( undefined === config.button ) {
+		console.warn( `Panel "${ name }" needs "button" defined`, {
 			config,
 		} );
 		hasError = true;
 	}
-	if ( undefined === config.onClick ) {
-		console.warn( `Panel "${ name }" needs "onClick" defined`, {
+	if ( undefined === config.content ) {
+		console.warn( `Panel "${ name }" needs "content" defined`, {
 			config,
 		} );
 		hasError = true;
