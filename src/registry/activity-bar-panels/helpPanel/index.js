@@ -5,8 +5,8 @@ export const helpPanel = () => {
 	return {
 		title: 'unique-title', // TODO: possibly handle title generation for user
 		label: 'Help!',
-		button: <HelpIcon />,
-		content: <HelpPanel />
+		icon: () => (<HelpIcon />),
+		content: () => <HelpPanel />
 	}
 }
 
