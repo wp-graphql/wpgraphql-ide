@@ -26,7 +26,7 @@ define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 // TEMPORARY TEST
-// require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/third-party-plugin/third-party-plugin.php';
+require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/third-party-plugin/third-party-plugin.php';
 
 /**
  * Generates the SVG logo for GraphQL.
