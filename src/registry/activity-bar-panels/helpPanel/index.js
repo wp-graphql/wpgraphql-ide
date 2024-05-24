@@ -3,9 +3,9 @@ import { HelpPanel } from './HelpPanel';
 
 export const helpPanel = () => {
 	return {
-		title: 'unique-title', // TODO: possibly handle title generation for user
+		title: 'help', // TODO: possibly handle title generation for user
 		label: 'Help!',
-		icon: () => (<HelpIcon />),
+		icon: () => <HelpIcon />,
 		content: () => <HelpPanel />
 	}
 }

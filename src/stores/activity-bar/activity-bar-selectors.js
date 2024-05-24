@@ -4,11 +4,11 @@
  * @type {Object}
  */
 const selectors = {
-	panels: ( state ) => {
-		const panels = Object.entries( state.panels ).map(
-			( [ name, panel ] ) => ( {
+	activityPanels: ( state ) => {
+		const panels = Object.entries( state.activityPanels ).map(
+			( [ name, activityPanel ] ) => ( {
 				name,
-				...panel,
+				...activityPanel,
 			} )
 		);
 

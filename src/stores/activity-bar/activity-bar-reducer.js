@@ -2,8 +2,15 @@
  * The initial state of the activity bar.
  * @type {Object}
  */
+import {helpPanel} from "../../registry/activity-bar-panels/helpPanel";
+import {explorerPlugin} from "@graphiql/plugin-explorer";
+
 const initialState = {
-	panels: {},
+	activityPanels: {
+		// help: helpPanel(),
+		explorer: explorerPlugin(),
+	},
+	visiblePanel: null,
 	utilities: {},
 };
 
@@ -40,27 +47,39 @@ const reducer = ( state = initialState, action ) => {
 			};
 		case 'REGISTER_PANEL':
 			// Ensure panel name is unique
-			if ( action.name in state.panels ) {
+			if ( action.name in state.activityPanels ) {
 				console.warn( {
 					message: `The "${ action.name }" panel already exists. Name must be unique.`,
-					existingPanel: state.panels[ action.name ],
+					existingPanel: state.activityPanels[ action.name ],
 					duplicatePanel: action.config,
 				} );
 				return state;
 			}
 
+			const getConfig = action.config();
+
 			const panel = {
-				config: action.config,
+				title: action.name,
 				priority: action.priority || 10, // default priority to 10 if not provided
+				...getConfig,
 			};
 
 			return {
 				...state,
-				panels: {
-					...state.panels,
+				activityPanels: {
+					...state.activityPanels,
 					[ action.name ]: panel,
 				},
 			};
+		case 'TOGGLE_ACTIVITY_PANEL_VISIBILITY':
+			console.log( {
+				message: `Toggling panel visibility.`,
+				panel: action.panel,
+			})
+			return {
+				...state,
+				visiblePanel: state.visiblePanel === action.panel ? null : action.panel,
+			}
 		default:
 			return state;
 	}

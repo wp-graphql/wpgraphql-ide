@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { GraphiQL } from './GraphiQL';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch, useSelect, dispatch } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
 import { helpPanel as helpPlugin } from '../registry/activity-bar-panels/helpPanel';
@@ -130,9 +130,14 @@ export function App() {
 		[ isAuthenticated ]
 	);
 
-	const buttons = useSelect( ( select ) =>
-		select( 'wpgraphql-ide/document-editor' ).buttons()
-	);
+	const activityPanels = useSelect( ( select ) => {
+		const activityPanels = select( 'wpgraphql-ide/activity-bar' ).activityPanels();
+		console.log( {
+			activityPanels
+		})
+		return activityPanels;
+	})
+
 
 	return (
 		<span id="wpgraphql-ide-app">
@@ -146,7 +151,17 @@ export function App() {
 						setSchema( newSchema );
 					}
 				} }
-				plugins={ [ explorer, help ] }
+				// plugins={ () => {
+				// 	return [ explorer, help ];
+				// 	// return useSelect( ( select ) => select( 'wpgraphql-ide/activity-bar' ).activityPanels() );
+				// } }
+				plugins={ activityPanels }
+				// visiblePlugin={ () => {
+				// 	return useSelect( ( select ) => select( 'wpgraphql-ide/activity-bar' ).visibleActivityPanel() );
+				// } }
+				onTogglePluginVisibility={ ( panel ) => {
+					dispatch( 'wpgraphql-ide/activity-bar' ).toggleActivityPanelVisibility( panel )
+				}}
 			>
 				<GraphiQL.Logo>
 					{ ! shouldRenderStandalone && (
