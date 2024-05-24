@@ -38,15 +38,20 @@ window.WPGraphQLIDE = {
 };
 
 /**
+ * Get our root element id from the localized script.
+ */
+const { rootElementId } = window.WPGRAPHQL_IDE_DATA;
+
+/**
  * Attempts to render the React application to a specified mount point in the DOM.
  * Logs an error to the console if the mount point is missing.
  */
-const appMountPoint = document.getElementById( 'wpgraphql-ide-root' );
+const appMountPoint = document.getElementById( rootElementId );
 if ( appMountPoint ) {
 	createRoot( appMountPoint ).render( <AppWrapper /> );
 	window.dispatchEvent( new Event( 'WPGraphQLIDEReady' ) );
 } else {
 	console.error(
-		'WPGraphQL IDE mount point not found. Please ensure an element with ID "wpgraphql-ide-root" exists.'
+		`WPGraphQL IDE mount point not found. Please ensure an element with ID "${rootElementId}" exists.`
 	);
 }
