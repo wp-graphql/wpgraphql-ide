@@ -2,14 +2,8 @@
  * The initial state of the activity bar.
  * @type {Object}
  */
-import {helpPanel} from "../../registry/activity-bar-panels/helpPanel";
-import {explorerPlugin} from "@graphiql/plugin-explorer";
-
 const initialState = {
-	activityPanels: {
-		// help: helpPanel(),
-		explorer: explorerPlugin(),
-	},
+	activityPanels: {},
 	visiblePanel: null,
 	utilities: {},
 };
@@ -56,6 +50,12 @@ const reducer = ( state = initialState, action ) => {
 				return state;
 			}
 
+			// Ensure config is a function before calling it
+			if ( typeof action.config !== 'function' ) {
+				console.error( `Config for panel "${action.name}" is not a function.` );
+				return state;
+			}
+
 			const getConfig = action.config();
 
 			const panel = {
@@ -75,11 +75,11 @@ const reducer = ( state = initialState, action ) => {
 			console.log( {
 				message: `Toggling panel visibility.`,
 				panel: action.panel,
-			})
+			});
 			return {
 				...state,
 				visiblePanel: state.visiblePanel === action.panel ? null : action.panel,
-			}
+			};
 		default:
 			return state;
 	}

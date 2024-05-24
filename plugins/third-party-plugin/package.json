@@ -41,8 +41,11 @@
     "sort-package-json": "^2.7.0"
   },
   "dependencies": {
+    "@graphiql/plugin-explorer": "^3.0.1",
     "@wordpress/data": "^9.26.0",
     "@wordpress/element": "^5.33.0",
-    "react": "^18.3.1"
+    "graphql": "^15.8.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }
