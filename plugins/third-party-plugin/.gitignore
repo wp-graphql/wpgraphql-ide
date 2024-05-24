@@ -65,4 +65,4 @@ third-party-plugin.php
 /blob-report/
 /playwright/.cache/
 /@wpgraphql/
-.zip
+*.zip
