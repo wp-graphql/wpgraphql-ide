@@ -245,6 +245,7 @@ function enqueue_react_app_with_styles(): void {
 	}
 
 	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/index.asset.php';
+	$render_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/render.asset.php';
 
 	$app_context = get_app_context();
 
@@ -256,24 +257,35 @@ function enqueue_react_app_with_styles(): void {
 		false
 	);
 
+	$localized_data = [
+		'nonce'               => wp_create_nonce( 'wp_rest' ),
+		'graphqlEndpoint'     => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
+		'rootElementId'       => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
+		'context'             => $app_context,
+		'isDedicatedIdePage'  => current_screen_is_dedicated_ide_page(),
+		'dedicatedIdeBaseUrl' => get_dedicated_ide_base_url(),
+	];
+
 	wp_localize_script(
 		'wpgraphql-ide',
 		'WPGRAPHQL_IDE_DATA',
-		[
-			'nonce'               => wp_create_nonce( 'wp_rest' ),
-			'graphqlEndpoint'     => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
-			'rootElementId'       => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-			'context'             => $app_context,
-			'isDedicatedIdePage'  => current_screen_is_dedicated_ide_page(),
-			'dedicatedIdeBaseUrl' => get_dedicated_ide_base_url(),
-		]
+		$localized_data
 	);
 
 	// Extensions looking to extend GraphiQL can hook in here,
 	// after the window object is established, but before the App renders
 	do_action( 'wpgraphqlide_enqueue_script', $app_context );
 
+	wp_enqueue_script(
+		'wpgraphql-ide-render',
+		plugins_url( 'build/render.js', __FILE__ ),
+		$render_asset_file['dependencies'],
+		$render_asset_file['version'],
+		false
+	);
+
 	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $asset_file['version'] );
+	wp_enqueue_style( 'wpgraphql-ide-render', plugins_url( 'build/render.css', __FILE__ ), [], $asset_file['version'] );
 
 	// Avoid running custom styles through a build process for an improved developer experience.
 	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );

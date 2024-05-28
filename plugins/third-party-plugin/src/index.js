@@ -5,17 +5,22 @@ import { explorerPlugin } from '@graphiql/plugin-explorer';
 import { addAction } from '@wordpress/hooks';
 import {QueryComposer} from "./components/QueryComposer";
 
-addAction( 'wpgraphqlide_rendered', 'third-party', () => {
-	if ( ! window.WPGraphQLIDE || ! window.WPGraphQLIDE.GraphQL ) {
+console.log( 'Third Party Plugin loading...' );
+
+window.addEventListener('WPGraphQLIDE_Window_Ready', function(event) {
+	console.log( 'Third Party Plugin Loaded' );
+
+	if ( ! window.WPGraphQLIDE.GraphQL ) {
+		console.log( `GraphQL Library not loaded` );
+		console.log( window?.WPGraphQLIDE );
 		return;
 	}
-	console.log({
-		message: 'Third Party Plugin Loaded',
-		WPGraphQL: window.WPGraphQLIDE || null,
-	})
+
 	const { registerActivityBarPanel } = window.WPGraphQLIDE || {};
 
 	if ( typeof registerActivityBarPanel === 'function' ) {
+
+		console.log( `Registering Mock Explorer Panel`);
 
 		registerActivityBarPanel( 'query-composer', () => {
 			return {
@@ -33,12 +38,15 @@ addAction( 'wpgraphqlide_rendered', 'third-party', () => {
 	} else {
 		console.log( 'CANNOT Registering Mock Explorer Panel' );
 	}
-} );
 
-console.log( {
-	message: 'Third Party Plugin Loaded',
-	WPGraphQL: window.WPGraphQLIDE || null,
-})
+	// Perform your desired actions here
+});
+
+
+
+
+
+
 
 // return;
 //

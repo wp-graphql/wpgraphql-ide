@@ -6,12 +6,11 @@
 
 // External dependencies
 import { createRoot } from '@wordpress/element';
-import * as GraphQL from 'graphql/index.js';
+import GraphQL from './graphql.js';
 import * as accessFunctions from './access-functions';
 
 // Local imports including the hook configuration and the main App component.
 import hooks from './wordpress-hooks';
-import AppWrapper from './components/AppWrapper';
 
 import { registerStores } from './stores';
 import { initializeRegistry } from './registry';
@@ -33,25 +32,20 @@ init();
  */
 window.WPGraphQLIDE = {
 	hooks,
-	GraphQL,
 	...accessFunctions,
+	GraphQL
 };
 
-/**
- * Get our root element id from the localized script.
- */
-const { rootElementId } = window.WPGRAPHQL_IDE_DATA;
+window.dispatchEvent( new Event( 'WPGraphQLIDE_Window_Ready' ) );
+//
+// // Dynamically import the GraphQL library and assign it to `window.WPGraphQLIDE.GraphQL`
+// import('graphql/index.js').then(GraphQL => {
+// 	window.WPGraphQLIDE.GraphQL = GraphQL;
+// 	window.WPGraphQLIDE.GraphQLLoaded = true;
+// 	console.log( `WPGraphQLIDE is ready` );
+// 	window.dispatchEvent( new Event( 'WPGraphQLIDE_Window_Ready' ) );
+// }).catch(error => {
+// 	console.error('Failed to load GraphQL library:', error);
+// });
 
-/**
- * Attempts to render the React application to a specified mount point in the DOM.
- * Logs an error to the console if the mount point is missing.
- */
-const appMountPoint = document.getElementById( rootElementId );
-if ( appMountPoint ) {
-	createRoot( appMountPoint ).render( <AppWrapper /> );
-	window.dispatchEvent( new Event( 'WPGraphQLIDEReady' ) );
-} else {
-	console.error(
-		`WPGraphQL IDE mount point not found. Please ensure an element with ID "${rootElementId}" exists.`
-	);
-}
+

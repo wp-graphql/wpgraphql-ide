@@ -1,20 +1,15 @@
-const defaults = require( '@wordpress/scripts/config/webpack.config' );
-const path = require( 'path' );
+const defaults = require('@wordpress/scripts/config/webpack.config');
+const path = require('path');
 
 const defaultExternals = {
 	react: 'React',
 	'react-dom': 'ReactDOM',
-	'wpgraphql-ide': 'window.WPGraphQLIDE',
-}
+};
 
 // Define a mapping of entries to their respective externals
 const entryExternals = {
-	setup: {
-		...defaultExternals
-	},
 	index: {
 		...defaultExternals,
-		GraphiQL: 'GraphiQL',
 	},
 	// Define externals for other entries as needed
 };
@@ -22,9 +17,9 @@ const entryExternals = {
 module.exports = {
 	...defaults,
 	entry: {
-		index: path.resolve( process.cwd(), 'src', 'index.js' ),
+		index: path.resolve(process.cwd(), 'src', 'index.js'),
 	},
-	externals: ({context, request}, callback) => {
+	externals: ({ context, request }, callback) => {
 		// Determine the current entry from context or other means
 		const currentEntry = determineCurrentEntry(context);
 		// Apply the externals based on the current entry

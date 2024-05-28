@@ -1,5 +1,5 @@
 import { useSelect } from '@wordpress/data';
-import Explorer from './Explorer'
+import { Suspense, lazy } from '@wordpress/element';
 
 export const QueryComposer = () => {
 
@@ -11,13 +11,24 @@ export const QueryComposer = () => {
 		select( 'wpgraphql-ide/app' ).getQuery()
 	);
 
+	const Explorer = lazy(() => import('./Explorer'));
+
+	console.log( {
+		queryComposer: {
+			WPGraphQLIDE: window.WPGraphQLIDE
+		}
+	})
+
 	return (
 		<>
 			Query Composer...
-			<Explorer
-				schema={ schema }
-				query={ query }
-			/>
+			<Suspense fallback={<div>Loading...</div>}>
+				<Explorer
+					schema={ schema }
+					query={ query }
+				/>
+			</Suspense>
+			{/*<pre>{JSON.stringify( window.WPGraphQLIDE, null, 2 )}</pre>*/}
 		</>
 	);
 }
