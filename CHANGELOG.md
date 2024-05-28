@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.1
+
+### Patch Changes
+
+- c450e5a: - Reorganized plugin directories/files.
+
 ## 2.1.0
 
 ### Minor Changes
