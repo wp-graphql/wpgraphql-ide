@@ -1,6 +1,6 @@
 import React from 'react';
 
-const {
+import {
 	getNamedType,
 	GraphQLObjectType,
 	isEnumType,
@@ -17,7 +17,7 @@ const {
 	print,
 	parseType,
 	visit,
-} = window.WPGraphQLIDE.GraphQL;
+} from 'graphql';
 
 function capitalize(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);

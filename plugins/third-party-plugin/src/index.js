@@ -10,9 +10,9 @@ console.log( 'Third Party Plugin loading...' );
 window.addEventListener('WPGraphQLIDE_Window_Ready', function(event) {
 	console.log( 'Third Party Plugin Loaded' );
 
-	if ( ! window.WPGraphQLIDE.GraphQL ) {
-		console.log( `GraphQL Library not loaded` );
-		console.log( window?.WPGraphQLIDE );
+	if ( ! window.WPGraphQLIDE ) {
+		console.log( `WPGraphQLIDE not loaded` );
+		console.log( window.WPGraphQLIDE );
 		return;
 	}
 

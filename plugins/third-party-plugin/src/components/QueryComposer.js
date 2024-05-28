@@ -21,7 +21,6 @@ export const QueryComposer = () => {
 
 	return (
 		<>
-			Query Composer...
 			<Suspense fallback={<div>Loading...</div>}>
 				<Explorer
 					schema={ schema }

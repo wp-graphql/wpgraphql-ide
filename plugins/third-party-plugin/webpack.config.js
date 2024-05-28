@@ -4,6 +4,7 @@ const path = require('path');
 const defaultExternals = {
 	react: 'React',
 	'react-dom': 'ReactDOM',
+	graphql: "graphql",
 };
 
 // Define a mapping of entries to their respective externals

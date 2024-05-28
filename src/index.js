@@ -6,7 +6,6 @@
 
 // External dependencies
 import { createRoot } from '@wordpress/element';
-import GraphQL from './graphql.js';
 import * as accessFunctions from './access-functions';
 
 // Local imports including the hook configuration and the main App component.
@@ -32,8 +31,7 @@ init();
  */
 window.WPGraphQLIDE = {
 	hooks,
-	...accessFunctions,
-	GraphQL
+	...accessFunctions
 };
 
 window.dispatchEvent( new Event( 'WPGraphQLIDE_Window_Ready' ) );

@@ -246,13 +246,22 @@ function enqueue_react_app_with_styles(): void {
 
 	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/index.asset.php';
 	$render_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/render.asset.php';
+	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql.asset.php';
 
 	$app_context = get_app_context();
+
+	wp_register_script(
+		'graphql',
+		plugins_url( 'build/graphql.js', __FILE__ ),
+		$graphql_asset_file['dependencies'],
+		$graphql_asset_file['version'],
+		false
+	);
 
 	wp_enqueue_script(
 		'wpgraphql-ide',
 		plugins_url( 'build/index.js', __FILE__ ),
-		$asset_file['dependencies'],
+		array_merge( $asset_file['dependencies'], [ 'graphql' ] ),
 		$asset_file['version'],
 		false
 	);
@@ -279,7 +288,7 @@ function enqueue_react_app_with_styles(): void {
 	wp_enqueue_script(
 		'wpgraphql-ide-render',
 		plugins_url( 'build/render.js', __FILE__ ),
-		$render_asset_file['dependencies'],
+		array_merge( $asset_file['dependencies'], [ 'wpgraphql-ide', 'graphql' ] ),
 		$render_asset_file['version'],
 		false
 	);
