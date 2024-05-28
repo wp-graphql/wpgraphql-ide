@@ -8,9 +8,11 @@
 	},
 	"scripts": {
 		"check-engines": "wp-scripts check-engines",
-		"build": "wp-scripts build && npm run build:zip",
+		"build": "wp-scripts build && npm run build:third-party-plugin && npm run build:zip",
+		"build:third-party-plugin": "wp-scripts build --webpack-src-dir=plugins/third-party-plugin",
 		"build:zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
+		"start:third-party-plugin": "wp-scripts start --webpack-src-dir=plugins/third-party-plugin",
 		"pretest:e2e": "npm run wp-env start",
 		"pretest:e2e:ui": "npm run wp-env start",
 		"test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.js",
