@@ -1,10 +1,10 @@
-const defaults = require('@wordpress/scripts/config/webpack.config');
-const path = require('path');
+const defaults = require( '@wordpress/scripts/config/webpack.config' );
+const path = require( 'path' );
 
 const defaultExternals = {
 	react: 'React',
 	'react-dom': 'ReactDOM',
-	graphql: "graphql",
+	graphql: 'graphql',
 };
 
 // Define a mapping of entries to their respective externals
@@ -18,21 +18,24 @@ const entryExternals = {
 module.exports = {
 	...defaults,
 	entry: {
-		index: path.resolve(process.cwd(), 'src', 'index.js'),
+		index: path.resolve( process.cwd(), 'src', 'index.js' ),
 	},
-	externals: ({ context, request }, callback) => {
+	externals: ( { context, request }, callback ) => {
 		// Determine the current entry from context or other means
-		const currentEntry = determineCurrentEntry(context);
+		const currentEntry = determineCurrentEntry( context );
 		// Apply the externals based on the current entry
-		if (entryExternals[currentEntry] && entryExternals[currentEntry][request]) {
-			return callback(null, entryExternals[currentEntry][request]);
+		if (
+			entryExternals[ currentEntry ] &&
+			entryExternals[ currentEntry ][ request ]
+		) {
+			return callback( null, entryExternals[ currentEntry ][ request ] );
 		}
 		// Fallback to default behavior if no externals are defined for the current entry
 		callback();
 	},
 };
 
-function determineCurrentEntry(context) {
+function determineCurrentEntry( context ) {
 	// Implement logic to determine the current entry based on context
 	// This might involve checking the context path to infer which entry is being processed
 	// Placeholder implementation:

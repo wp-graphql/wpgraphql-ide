@@ -31,7 +31,7 @@ init();
  */
 window.WPGraphQLIDE = {
 	hooks,
-	...accessFunctions
+	...accessFunctions,
 };
 
 window.dispatchEvent( new Event( 'WPGraphQLIDE_Window_Ready' ) );
@@ -45,5 +45,3 @@ window.dispatchEvent( new Event( 'WPGraphQLIDE_Window_Ready' ) );
 // }).catch(error => {
 // 	console.error('Failed to load GraphQL library:', error);
 // });
-
-

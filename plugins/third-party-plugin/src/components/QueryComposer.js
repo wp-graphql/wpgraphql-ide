@@ -1,8 +1,8 @@
 import { useSelect, useDispatch } from '@wordpress/data';
 import ExplorerWrapper from './ExplorerWrapper';
 import '../style.css';
-import ArrowOpen from "./ArrowOpen";
-import ArrowClosed from "./ArrowClosed";
+import ArrowOpen from './ArrowOpen';
+import ArrowClosed from './ArrowClosed';
 import { checkboxUnchecked, checkboxChecked } from './Checkbox';
 
 const colors = {
@@ -39,8 +39,7 @@ const styles = {
 	},
 };
 
-export const QueryComposer = (props) => {
-
+export const QueryComposer = ( props ) => {
 	const schema = useSelect( ( select ) =>
 		select( 'wpgraphql-ide/app' ).schema()
 	);
@@ -54,21 +53,21 @@ export const QueryComposer = (props) => {
 	return (
 		<>
 			<ExplorerWrapper
-				{...props}
+				{ ...props }
 				schema={ schema }
 				query={ query }
 				explorerIsOpen
-				colors={colors}
-				arrowOpen={ArrowOpen}
-				arrowClosed={ArrowClosed}
-				checkboxUnchecked={checkboxUnchecked}
-				checkboxChecked={checkboxChecked}
-				styles={styles}
+				colors={ colors }
+				arrowOpen={ ArrowOpen }
+				arrowClosed={ ArrowClosed }
+				checkboxUnchecked={ checkboxUnchecked }
+				checkboxChecked={ checkboxChecked }
+				styles={ styles }
 				title={ 'Query Composer' }
 				onEdit={ ( newQuery ) => {
 					setQuery( newQuery );
-				}}
+				} }
 			/>
 		</>
 	);
-}
+};

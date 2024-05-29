@@ -5,26 +5,20 @@ import { parse, visit } from 'graphql';
 import 'graphiql/graphiql.min.css';
 
 export function App() {
-	const {
-		query,
-		shouldRenderStandalone,
-		isAuthenticated,
-		schema,
-	} = useSelect( ( select ) => {
-		const wpgraphqlIDEApp = select( 'wpgraphql-ide/app' );
-		return {
-			query: wpgraphqlIDEApp.getQuery(),
-			shouldRenderStandalone: wpgraphqlIDEApp.shouldRenderStandalone(),
-			isAuthenticated: wpgraphqlIDEApp.isAuthenticated(),
-			schema: wpgraphqlIDEApp.schema(),
-		};
-	});
+	const { query, shouldRenderStandalone, isAuthenticated, schema } =
+		useSelect( ( select ) => {
+			const wpgraphqlIDEApp = select( 'wpgraphql-ide/app' );
+			return {
+				query: wpgraphqlIDEApp.getQuery(),
+				shouldRenderStandalone:
+					wpgraphqlIDEApp.shouldRenderStandalone(),
+				isAuthenticated: wpgraphqlIDEApp.isAuthenticated(),
+				schema: wpgraphqlIDEApp.schema(),
+			};
+		} );
 
-	const {
-		setQuery,
-		setDrawerOpen,
-		setSchema,
-	} = useDispatch( 'wpgraphql-ide/app' );
+	const { setQuery, setDrawerOpen, setSchema } =
+		useDispatch( 'wpgraphql-ide/app' );
 
 	useEffect( () => {
 		// create a ref
@@ -101,13 +95,14 @@ export function App() {
 	);
 
 	const activityPanels = useSelect( ( select ) => {
-		const activityPanels = select( 'wpgraphql-ide/activity-bar' ).activityPanels();
+		const activityPanels = select(
+			'wpgraphql-ide/activity-bar'
+		).activityPanels();
 		console.log( {
-			activityPanels
-		})
+			activityPanels,
+		} );
 		return activityPanels;
-	})
-
+	} );
 
 	return (
 		<span id="wpgraphql-ide-app">

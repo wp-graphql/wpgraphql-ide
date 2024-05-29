@@ -52,7 +52,9 @@ const reducer = ( state = initialState, action ) => {
 
 			// Ensure config is a function before calling it
 			if ( typeof action.config !== 'function' ) {
-				console.error( `Config for panel "${action.name}" is not a function.` );
+				console.error(
+					`Config for panel "${ action.name }" is not a function.`
+				);
 				return state;
 			}
 
@@ -75,10 +77,11 @@ const reducer = ( state = initialState, action ) => {
 			console.log( {
 				message: `Toggling panel visibility.`,
 				panel: action.panel,
-			});
+			} );
 			return {
 				...state,
-				visiblePanel: state.visiblePanel === action.panel ? null : action.panel,
+				visiblePanel:
+					state.visiblePanel === action.panel ? null : action.panel,
 			};
 		default:
 			return state;

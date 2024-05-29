@@ -34,11 +34,7 @@ export function registerDocumentEditorToolbarButton(
 	}
 }
 
-export function registerActivityBarPanel(
-	name,
-	config,
-	priority = 10
-) {
+export function registerActivityBarPanel( name, config, priority = 10 ) {
 	try {
 		dispatch( 'wpgraphql-ide/activity-bar' ).registerPanel(
 			name,
@@ -52,7 +48,10 @@ export function registerActivityBarPanel(
 			priority
 		);
 	} catch ( error ) {
-		console.error( `Failed to register activity bar panel: ${ name }`, error );
+		console.error(
+			`Failed to register activity bar panel: ${ name }`,
+			error
+		);
 		hooks.doAction(
 			'registerActivityBarPanelError',
 			name,

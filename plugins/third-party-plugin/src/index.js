@@ -1,11 +1,10 @@
 /**
  * External dependencies
  */
-import {QueryComposer} from "./components/QueryComposer";
-import {edit as editIcon, Icon} from '@wordpress/icons';
+import { QueryComposer } from './components/QueryComposer';
+import { edit as editIcon, Icon } from '@wordpress/icons';
 
-window.addEventListener('WPGraphQLIDE_Window_Ready', function(event) {
-
+window.addEventListener( 'WPGraphQLIDE_Window_Ready', function ( event ) {
 	if ( ! window.WPGraphQLIDE ) {
 		return;
 	}
@@ -13,21 +12,23 @@ window.addEventListener('WPGraphQLIDE_Window_Ready', function(event) {
 	const { registerActivityBarPanel } = window.WPGraphQLIDE || {};
 
 	if ( typeof registerActivityBarPanel === 'function' ) {
-		registerActivityBarPanel( 'query-composer', () => {
-			return {
-				title: 'Query Composer',
-				icon: () => (
-					<Icon
-						icon={ editIcon }
-						style={ {
-							fill: 'hsla(var(--color-neutral), var(--alpha-tertiary))',
-						} }
-					/>
-				),
-				content: () => <QueryComposer />
-			};
-		}, 4 );
+		registerActivityBarPanel(
+			'query-composer',
+			() => {
+				return {
+					title: 'Query Composer',
+					icon: () => (
+						<Icon
+							icon={ editIcon }
+							style={ {
+								fill: 'hsla(var(--color-neutral), var(--alpha-tertiary))',
+							} }
+						/>
+					),
+					content: () => <QueryComposer />,
+				};
+			},
+			4
+		);
 	}
-});
-
-
+} );

@@ -6,7 +6,6 @@ export const helpPanel = () => {
 		title: 'help', // TODO: possibly handle title generation for user
 		// label: 'Help!',
 		icon: () => <HelpIcon />,
-		content: () => <HelpPanel />
-	}
-}
-
+		content: () => <HelpPanel />,
+	};
+};
