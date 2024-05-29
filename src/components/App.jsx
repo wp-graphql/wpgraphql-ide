@@ -2,34 +2,29 @@ import React, { useEffect, useCallback } from 'react';
 import { GraphiQL } from './GraphiQL';
 import { useDispatch, useSelect, dispatch } from '@wordpress/data';
 import { parse, visit } from 'graphql';
-import { explorerPlugin } from '@graphiql/plugin-explorer';
-import { helpPanel as helpPlugin } from '../registry/activity-bar-panels/helpPanel';
-
 import 'graphiql/graphiql.min.css';
-import '../../styles/explorer.css';
-
-const explorer = explorerPlugin();
-const help = helpPlugin();
 
 export function App() {
-	const query = useSelect( ( select ) =>
-		select( 'wpgraphql-ide/app' ).getQuery()
-	);
+	const {
+		query,
+		shouldRenderStandalone,
+		isAuthenticated,
+		schema,
+	} = useSelect( ( select ) => {
+		const wpgraphqlIDEApp = select( 'wpgraphql-ide/app' );
+		return {
+			query: wpgraphqlIDEApp.getQuery(),
+			shouldRenderStandalone: wpgraphqlIDEApp.shouldRenderStandalone(),
+			isAuthenticated: wpgraphqlIDEApp.isAuthenticated(),
+			schema: wpgraphqlIDEApp.schema(),
+		};
+	});
 
-	const { setQuery } = useDispatch( 'wpgraphql-ide/app' );
-
-	const shouldRenderStandalone = useSelect( ( select ) =>
-		select( 'wpgraphql-ide/app' ).shouldRenderStandalone()
-	);
-	const { setDrawerOpen, setSchema } = useDispatch( 'wpgraphql-ide/app' );
-
-	const isAuthenticated = useSelect( ( select ) =>
-		select( 'wpgraphql-ide/app' ).isAuthenticated()
-	);
-
-	const schema = useSelect( ( select ) =>
-		select( 'wpgraphql-ide/app' ).schema()
-	);
+	const {
+		setQuery,
+		setDrawerOpen,
+		setSchema,
+	} = useDispatch( 'wpgraphql-ide/app' );
 
 	useEffect( () => {
 		// create a ref
@@ -55,31 +50,6 @@ export function App() {
 			isAuthenticated.toString()
 		);
 	}, [ isAuthenticated ] );
-
-	// const handleEditQuery = (editedQuery) => {
-	// 	let update = false;
-
-	// 	if (editedQuery === query) {
-	// 	  return;
-	// 	}
-
-	// 	if (null === editedQuery || "" === editedQuery) {
-	// 	  update = true;
-	// 	} else {
-	// 	  try {
-	// 		parse(editedQuery);
-	// 		update = true;
-	// 	  } catch (error) {
-	// 		return;
-	// 	  }
-	// 	}
-
-	// 	// If the query is valid and should be updated
-	// 	if (update) {
-	// 	  // Update the state with the new query
-	// 	  setQuery(editedQuery);
-	// 	}
-	// };
 
 	const fetcher = useCallback(
 		async ( graphQLParams ) => {
@@ -151,17 +121,7 @@ export function App() {
 						setSchema( newSchema );
 					}
 				} }
-				// plugins={ () => {
-				// 	return [ explorer, help ];
-				// 	// return useSelect( ( select ) => select( 'wpgraphql-ide/activity-bar' ).activityPanels() );
-				// } }
 				plugins={ activityPanels }
-				// visiblePlugin={ () => {
-				// 	return useSelect( ( select ) => select( 'wpgraphql-ide/activity-bar' ).visibleActivityPanel() );
-				// } }
-				onTogglePluginVisibility={ ( panel ) => {
-					dispatch( 'wpgraphql-ide/activity-bar' ).toggleActivityPanelVisibility( panel )
-				}}
 			>
 				<GraphiQL.Logo>
 					{ ! shouldRenderStandalone && (
