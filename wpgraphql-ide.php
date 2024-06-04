@@ -26,7 +26,7 @@ define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 // TEMPORARY TEST
-require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/third-party-plugin/third-party-plugin.php';
+// require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/third-party-plugin/third-party-plugin.php';
 
 /**
  * Generates the SVG logo for GraphQL.
@@ -376,7 +376,7 @@ function enqueue_react_app_with_styles() {
 	];
 
 	wp_localize_script(
-		'wpgraphql-ide-js',
+		'wpgraphql-ide-render-js',
 		'WPGRAPHQL_IDE_DATA',
 		$localized_data
 	);
@@ -390,7 +390,7 @@ function enqueue_react_app_with_styles() {
 		$graphql_asset_file['version'],
 		false
 	);
-//
+
 	// Extensions looking to extend GraphiQL can hook in here,
 	// after the window object is established, but before the App renders
 	do_action( 'wpgraphqlide_enqueue_script', $app_context );
@@ -412,7 +412,6 @@ function enqueue_react_app_with_styles() {
 	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $render_asset_file['version'] );
 
 }
-
 
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );

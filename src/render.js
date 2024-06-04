@@ -1,6 +1,8 @@
 import { createRoot } from '@wordpress/element';
 import AppWrapper from './components/AppWrapper';
 
+console.log( `render.js...` );
+
 window.addEventListener( 'WPGraphQLIDE_Window_Ready', function ( event ) {
 	/**
 	 * Get our root element id from the localized script.

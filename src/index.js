@@ -34,6 +34,8 @@ window.WPGraphQLIDE = {
 	...accessFunctions,
 };
 
+console.log( `WPGraphQLIDE is ready` );
+
 window.dispatchEvent( new Event( 'WPGraphQLIDE_Window_Ready' ) );
 //
 // // Dynamically import the GraphQL library and assign it to `window.WPGraphQLIDE.GraphQL`
