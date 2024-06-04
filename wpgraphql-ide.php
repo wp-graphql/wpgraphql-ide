@@ -405,8 +405,8 @@ function enqueue_react_app_with_styles() {
 		false
 	);
 
-	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $render_asset_file['version'] );
-	wp_enqueue_style( 'wpgraphql-ide-render', plugins_url( 'build/render.css', __FILE__ ), [], $render_asset_file['version'] );
+	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/wpgraphql-ide.css', __FILE__ ), [], $render_asset_file['version'] );
+	wp_enqueue_style( 'wpgraphql-ide-render', plugins_url( 'build/wpgraphql-ide-render.css', __FILE__ ), [], $render_asset_file['version'] );
 
 	// Avoid running custom styles through a build process for an improved developer experience.
 	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $render_asset_file['version'] );
