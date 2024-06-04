@@ -1,0 +1,203 @@
+{
+  "name": "wpgraphql-ide",
+  "version": "2.1.1",
+  "assets": {
+    "graphql-js": {
+      "path": "build/graphql.js",
+      "hash": "dc958cd6",
+      "chunkName": "graphql",
+      "originalFileName": "graphql.js"
+    },
+    "graphql-php": {
+      "path": "build/graphql.asset.php",
+      "hash": "97bf8429",
+      "chunkName": "graphql",
+      "originalFileName": "graphql.php"
+    },
+    "wpgraphql-ide-css": {
+      "path": "build/wpgraphql-ide.css",
+      "hash": "0d4eacd5",
+      "chunkName": "wpgraphql-ide",
+      "originalFileName": "wpgraphql-ide.css"
+    },
+    "wpgraphql-ide-js": {
+      "path": "build/wpgraphql-ide.js",
+      "hash": "56cda257",
+      "chunkName": "wpgraphql-ide",
+      "originalFileName": "wpgraphql-ide.js"
+    },
+    "wpgraphql-ide-php": {
+      "path": "build/wpgraphql-ide.asset.php",
+      "hash": "78a02b24",
+      "chunkName": "wpgraphql-ide",
+      "originalFileName": "wpgraphql-ide.php"
+    },
+    "wpgraphql-ide-render-css": {
+      "path": "build/wpgraphql-ide-render.css",
+      "hash": "0b884f4c",
+      "chunkName": "wpgraphql-ide-render",
+      "originalFileName": "wpgraphql-ide-render.css"
+    },
+    "wpgraphql-ide-render-js": {
+      "path": "build/wpgraphql-ide-render.js",
+      "hash": "c9a3143b",
+      "chunkName": "wpgraphql-ide-render",
+      "originalFileName": "wpgraphql-ide-render.js"
+    },
+    "wpgraphql-ide-render-php": {
+      "path": "build/wpgraphql-ide-render.asset.php",
+      "hash": "475a8d07",
+      "chunkName": "wpgraphql-ide-render",
+      "originalFileName": "wpgraphql-ide-render.php"
+    },
+    "338-js": {
+      "path": "build/338.js",
+      "hash": "8f4a66cb",
+      "chunkName": null,
+      "originalFileName": "338.js"
+    },
+    "669-js": {
+      "path": "build/669.js",
+      "hash": "546a1967",
+      "chunkName": null,
+      "originalFileName": "669.js"
+    },
+    "382-js": {
+      "path": "build/382.js",
+      "hash": "c55a03cf",
+      "chunkName": null,
+      "originalFileName": "382.js"
+    },
+    "61-js": {
+      "path": "build/61.js",
+      "hash": "a1ccf8ec",
+      "chunkName": null,
+      "originalFileName": "61.js"
+    },
+    "983-js": {
+      "path": "build/983.js",
+      "hash": "5beb7779",
+      "chunkName": null,
+      "originalFileName": "983.js"
+    },
+    "148-js": {
+      "path": "build/148.js",
+      "hash": "d90ac49d",
+      "chunkName": null,
+      "originalFileName": "148.js"
+    },
+    "951-js": {
+      "path": "build/951.js",
+      "hash": "3c3e8a07",
+      "chunkName": null,
+      "originalFileName": "951.js"
+    },
+    "910-js": {
+      "path": "build/910.js",
+      "hash": "53d64e89",
+      "chunkName": null,
+      "originalFileName": "910.js"
+    },
+    "113-js": {
+      "path": "build/113.js",
+      "hash": "ee7d6882",
+      "chunkName": null,
+      "originalFileName": "113.js"
+    },
+    "924-js": {
+      "path": "build/924.js",
+      "hash": "e0fa696e",
+      "chunkName": null,
+      "originalFileName": "924.js"
+    },
+    "391-js": {
+      "path": "build/391.js",
+      "hash": "acbff0f0",
+      "chunkName": null,
+      "originalFileName": "391.js"
+    },
+    "277-js": {
+      "path": "build/277.js",
+      "hash": "5b6bf40c",
+      "chunkName": null,
+      "originalFileName": "277.js"
+    },
+    "77-js": {
+      "path": "build/77.js",
+      "hash": "ce22e609",
+      "chunkName": null,
+      "originalFileName": "77.js"
+    },
+    "528-js": {
+      "path": "build/528.js",
+      "hash": "513eea5d",
+      "chunkName": null,
+      "originalFileName": "528.js"
+    },
+    "627-js": {
+      "path": "build/627.js",
+      "hash": "01d840ba",
+      "chunkName": null,
+      "originalFileName": "627.js"
+    },
+    "385-js": {
+      "path": "build/385.js",
+      "hash": "dab78ca8",
+      "chunkName": null,
+      "originalFileName": "385.js"
+    },
+    "420-js": {
+      "path": "build/420.js",
+      "hash": "d1a73220",
+      "chunkName": null,
+      "originalFileName": "420.js"
+    },
+    "260-js": {
+      "path": "build/260.js",
+      "hash": "6557263d",
+      "chunkName": null,
+      "originalFileName": "260.js"
+    },
+    "93-js": {
+      "path": "build/93.js",
+      "hash": "4097c1b5",
+      "chunkName": null,
+      "originalFileName": "93.js"
+    },
+    "253-js": {
+      "path": "build/253.js",
+      "hash": "eb374587",
+      "chunkName": null,
+      "originalFileName": "253.js"
+    },
+    "482-js": {
+      "path": "build/482.js",
+      "hash": "ac2d9c02",
+      "chunkName": null,
+      "originalFileName": "482.js"
+    },
+    "271-js": {
+      "path": "build/271.js",
+      "hash": "3f44923c",
+      "chunkName": null,
+      "originalFileName": "271.js"
+    },
+    "912-js": {
+      "path": "build/912.js",
+      "hash": "73182d91",
+      "chunkName": null,
+      "originalFileName": "912.js"
+    },
+    "681-js": {
+      "path": "build/681.js",
+      "hash": "2f355ec7",
+      "chunkName": null,
+      "originalFileName": "681.js"
+    },
+    "90-js": {
+      "path": "build/90.js",
+      "hash": "510f2676",
+      "originalFileName": "90.js"
+    }
+  }
+}

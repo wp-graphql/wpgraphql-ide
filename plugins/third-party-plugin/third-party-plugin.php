@@ -26,7 +26,7 @@ add_action( 'wpgraphqlide_enqueue_script', function() {
     wp_enqueue_script(
         'third-party-plugin',
         plugins_url( 'build/index.js', __FILE__ ),
-        array_merge( $asset_file['dependencies'], ['wpgraphql-ide'] ),
+        array_merge( $asset_file['dependencies'], ['wpgraphql-ide-js'] ),
         $asset_file['version']
     );
 

@@ -223,7 +223,7 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_ic
 /**
  * Enqueues the React application script and associated styles.
  */
-function enqueue_react_app_with_styles(): void {
+function register_scripts(): void {
 	if ( is_legacy_ide_page() ) {
 		return;
 	}
@@ -244,27 +244,127 @@ function enqueue_react_app_with_styles(): void {
 		}
 	}
 
-	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/index.asset.php';
-	$render_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/render.asset.php';
-	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql.asset.php';
+	$manifest_path = WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/manifest.json';
+
+	if ( ! file_exists( $manifest_path ) ) {
+		return;
+	}
+
+	$manifest = file_get_contents( $manifest_path );
+	$manifest_contents = json_decode( $manifest, true );
+
+	if ( empty( $manifest_contents ) || ! is_array( $manifest_contents ) ) {
+		return;
+	}
+
+	$assets = $manifest_contents['assets'] ?? [];
+
+	$registered = [];
+
+	foreach ( $assets as $key => $asset ) {
+
+		// if the asset['path'] does not end in .php or .css skip it
+		if ( ! preg_match( '/\.(php|css)$/', $asset['path'] ) ) {
+			continue;
+		}
+
+		// $handle should be the key of the asset sluggified
+		$key = sanitize_title( $key );
+
+		// if the asset is a css file, enqueue it
+		if ( 'css' === pathinfo( $asset['path'], PATHINFO_EXTENSION ) ) {
+			wp_enqueue_style(
+				$key,
+				plugins_url( $asset['path'], __FILE__ ),
+				[],
+				$asset['hash']
+			);
+
+		}
+
+
+		// if the asset is a php file, load the asset.php file and get the version and dependencies to enqueue
+		if ( 'php' === pathinfo( $asset['path'], PATHINFO_EXTENSION ) ) {
+			$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/' . $asset['path'];
+
+			$registered[] = $asset['chunkName'] . '-js';
+
+			wp_register_script(
+				$asset['chunkName'] . '-js',
+				plugins_url( '/build/' . $asset['chunkName'] . '.js', __FILE__ ),
+				array_merge( $asset_file['dependencies'] ),
+				$asset['hash'],
+				false
+			);
+
+//			wp_send_json( [
+//				'$key' => $key,
+//				'$path' => untrailingslashit( plugins_url( '/build/' . $asset['chunkName'] . '.js', __FILE__ ) ),
+//				'$dependencies' => $asset_file['dependencies'],
+//				'$version' => $asset_file['version'],
+//			]);
+
+//			wp_send_json( [
+//				'$asset_path' => $asset['path'],
+//				'$asset_file_path' => $asset_file,
+//				'$asset' => $asset,
+//				'$asset_file' => $asset_file,
+////				'$key' => $key,
+//				'path' => plugins_url( $asset['path'], __FILE__ ),
+////				'dependencies' => $asset_file['dependencies'],
+////				'version' => $asset_file['version'],
+//			]);
+
+		}
+
+
+	}
+
+
+//	wp_send_json( [
+//		'manifest' => json_decode( $manifest, true ),
+//	] );
+
+//
+//	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/index.asset.php';
+//	$render_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/render.asset.php';
+//	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql.asset.php';
+//
+
+
+//	wp_register_script(
+//		'graphql',
+//		plugins_url( 'build/graphql.js', __FILE__ ),
+//		$graphql_asset_file['dependencies'],
+//		$graphql_asset_file['version'],
+//		false
+//	);
+//
+//	wp_enqueue_script(
+//		'wpgraphql-ide',
+//		plugins_url( 'build/index.js', __FILE__ ),
+//		array_merge( $asset_file['dependencies'], [ 'graphql' ] ),
+//		$asset_file['version'],
+//		false
+//	);
+//
+
+//
+
+//
+//	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $asset_file['version'] );
+//	wp_enqueue_style( 'wpgraphql-ide-render', plugins_url( 'build/render.css', __FILE__ ), [], $asset_file['version'] );
+//
+//	// Avoid running custom styles through a build process for an improved developer experience.
+//	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
+}
+
+add_action( 'init', __NAMESPACE__ . '\\register_scripts' );
+
+
+function enqueue_react_app_with_styles() {
 
 	$app_context = get_app_context();
-
-	wp_register_script(
-		'graphql',
-		plugins_url( 'build/graphql.js', __FILE__ ),
-		$graphql_asset_file['dependencies'],
-		$graphql_asset_file['version'],
-		false
-	);
-
-	wp_enqueue_script(
-		'wpgraphql-ide',
-		plugins_url( 'build/index.js', __FILE__ ),
-		array_merge( $asset_file['dependencies'], [ 'graphql' ] ),
-		$asset_file['version'],
-		false
-	);
 
 	$localized_data = [
 		'nonce'               => wp_create_nonce( 'wp_rest' ),
@@ -276,29 +376,44 @@ function enqueue_react_app_with_styles(): void {
 	];
 
 	wp_localize_script(
-		'wpgraphql-ide',
+		'wpgraphql-ide-js',
 		'WPGRAPHQL_IDE_DATA',
 		$localized_data
 	);
 
+	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide-render.asset.php';
+
+	wp_enqueue_script(
+		'graphql-js',
+		plugins_url( 'build/render.js', __FILE__ ),
+		array_merge( $graphql_asset_file['dependencies'] ),
+		$graphql_asset_file['version'],
+		false
+	);
+//
 	// Extensions looking to extend GraphiQL can hook in here,
 	// after the window object is established, but before the App renders
 	do_action( 'wpgraphqlide_enqueue_script', $app_context );
 
+	$render_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide-render.asset.php';
+
 	wp_enqueue_script(
-		'wpgraphql-ide-render',
+		'wpgraphql-ide-render-js',
 		plugins_url( 'build/render.js', __FILE__ ),
-		array_merge( $asset_file['dependencies'], [ 'wpgraphql-ide', 'graphql' ] ),
+		array_merge( $render_asset_file['dependencies'], [ 'wpgraphql-ide-js', 'graphql-js' ] ),
 		$render_asset_file['version'],
 		false
 	);
 
-	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $asset_file['version'] );
-	wp_enqueue_style( 'wpgraphql-ide-render', plugins_url( 'build/render.css', __FILE__ ), [], $asset_file['version'] );
+	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $render_asset_file['version'] );
+	wp_enqueue_style( 'wpgraphql-ide-render', plugins_url( 'build/render.css', __FILE__ ), [], $render_asset_file['version'] );
 
 	// Avoid running custom styles through a build process for an improved developer experience.
-	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
+	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $render_asset_file['version'] );
+
 }
+
+
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 
