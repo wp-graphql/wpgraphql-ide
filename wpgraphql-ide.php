@@ -29,7 +29,7 @@ define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
  * Register core IDE plugins.
  */
 require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/query-composer-panel/query-composer-panel.php';
- require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/help-panel/help-panel.php';
+require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/help-panel/help-panel.php';
 
 /**
  * Generates the SVG logo for GraphQL.
@@ -61,7 +61,6 @@ function graphql_logo_svg(): string {
 			</defs>
 		</svg>
 XML;
-
 }
 
 /**
@@ -261,8 +260,8 @@ function enqueue_react_app_with_styles(): void {
 		}
 	}
 
-	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide/wpgraphql-ide.asset.php';
-	$render_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide-render/wpgraphql-ide-render.asset.php';
+	$asset_file         = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide/wpgraphql-ide.asset.php';
+	$render_asset_file  = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide-render/wpgraphql-ide-render.asset.php';
 	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql/graphql.asset.php';
 
 	$app_context = get_app_context();
