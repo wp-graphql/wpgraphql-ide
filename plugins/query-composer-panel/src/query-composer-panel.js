@@ -13,21 +13,16 @@ window.addEventListener( 'WPGraphQLIDE_Window_Ready', function ( event ) {
 
 	if ( typeof registerActivityBarPanel === 'function' ) {
 		registerActivityBarPanel(
-			'query-composer',
-			() => {
-				return {
+			'query-composer', {
 					title: 'Query Composer',
-					icon: () => (
-						<Icon
+					icon: () => <Icon
 							icon={ editIcon }
 							style={ {
 								fill: 'hsla(var(--color-neutral), var(--alpha-tertiary))',
 							} }
-						/>
-					),
+						/>,
 					content: () => <QueryComposer />,
-				};
-			},
+				},
 			4
 		);
 	}

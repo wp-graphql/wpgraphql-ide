@@ -51,20 +51,31 @@ const reducer = ( state = initialState, action ) => {
 			}
 
 			// Ensure config is a function before calling it
-			if ( typeof action.config !== 'function' ) {
-				console.log({action});
+			if ( typeof action.config.content !== 'function' ) {
 				console.error(
-					`Config for panel "${ action.name }" is not a function.`
+					`Config for panel "${ action.name }" requires a content callback.`
 				);
 				return state;
 			}
 
-			const getConfig = action.config();
+			if ( 'icon' in action.config && typeof action.config.icon !== 'function' ) {
+				console.error(
+					`Config for panel "${ action.name }" requires an icon callback.`
+				);
+				return state;
+			}
+
+			if ( ! 'title' in action.config ) {
+				console.error(
+					`Config for panel "${ action.name }" requires a title.`
+				);
+				return state;
+			}
 
 			const panel = {
 				title: action.name,
 				priority: action.priority || 10, // default priority to 10 if not provided
-				...getConfig,
+				...action.config,
 			};
 
 			return {

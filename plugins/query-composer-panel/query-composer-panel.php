@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'QUERY_COMPOSER_PANEL_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
 add_action( 'wpgraphqlide_enqueue_script', function() {
-    $asset_file = include QUERY_COMPOSER_PANEL_PLUGIN_DIR_PATH . 'build/index.asset.php';
+    $asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/query-composer-panel/query-composer-panel.asset.php';
 
 	if ( empty( $asset_file['dependencies'] ) ) {
 		return;
@@ -19,17 +19,10 @@ add_action( 'wpgraphqlide_enqueue_script', function() {
 
     wp_enqueue_script(
         'query-composer-panel',
-        plugins_url( 'build/index.js', __FILE__ ),
+	    WPGRAPHQL_IDE_PLUGIN_URL . 'build/query-composer-panel/query-composer-panel.js',
         array_merge( $asset_file['dependencies'], ['wpgraphql-ide'] ),
         $asset_file['version']
     );
-
-	wp_enqueue_style(
-		'query-composer-panel',
-		plugins_url( 'build/style-index.css', __FILE__ ),
-		[],
-		$asset_file['version'],
-	);
 
 });
 

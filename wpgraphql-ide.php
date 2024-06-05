@@ -29,7 +29,7 @@ define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
  * Register core IDE plugins.
  */
 require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/query-composer-panel/query-composer-panel.php';
-// require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/help-panel/help-panel.php';
+ require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/help-panel/help-panel.php';
 
 /**
  * Generates the SVG logo for GraphQL.
@@ -38,16 +38,30 @@ require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/query-composer-panel/quer
  */
 function graphql_logo_svg(): string {
 	return <<<XML
-	<svg xmlns="http://www.w3.org/2000/svg" fill="color(display-p3 .8824 0 .5961)" viewBox="0 0 100 100">
-		<path fill-rule="evenodd" d="m50 6.903 37.323 21.549v43.096L50 93.097 12.677 71.548V28.451L50 6.903ZM16.865 30.87v31.656L44.28 15.041 16.864 30.87ZM50 13.51 18.398 68.246h63.205L50 13.509Zm27.415 58.924h-54.83L50 88.261l27.415-15.828Zm5.72-9.908L55.72 15.041 83.136 30.87v31.656Z" clip-rule="evenodd"/>
-		<circle cx="50" cy="9.321" r="8.82"/>
-		<circle cx="85.229" cy="29.66" r="8.82"/>
-		<circle cx="85.229" cy="70.34" r="8.82"/>
-		<circle cx="50" cy="90.679" r="8.82"/>
-		<circle cx="14.766" cy="70.34" r="8.82"/>
-		<circle cx="14.766" cy="29.66" r="8.82"/>
-	</svg>
-	XML;
+		<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<circle cx="80" cy="80" r="64" fill="url(#paint0_radial_30_2860)"/>
+			<g filter="url(#filter0_d_30_2860)">
+			<path d="M81.5239 72.2556C84.2608 72.2556 86.4795 70.0369 86.4795 67.3C86.4795 64.5632 84.2608 62.3445 81.5239 62.3445C78.787 62.3445 76.5684 64.5632 76.5684 67.3C76.5684 70.0369 78.787 72.2556 81.5239 72.2556Z" fill="white"/>
+			<path d="M118.588 90.4878C116.007 90.05 113.769 92.0116 113.736 94.5018C113.711 96.5294 112.592 98.4291 110.696 99.1476C107.17 100.49 103.825 97.9046 103.825 94.5555V67.5931C103.825 56.1994 95.3755 46.3915 84.0521 45.1403C71.8903 43.794 61.3928 52.3011 59.5262 63.6741C59.5262 63.6823 59.5179 63.6906 59.5096 63.6906C49.4457 65.8875 42 74.8365 42 85.4703V103.665C42 105.933 43.8377 107.77 46.1049 107.77H55.3718C57.6348 107.77 59.3527 105.92 59.3445 103.657C59.3321 100.213 62.8505 97.5742 66.4805 99.1518C68.2314 99.9157 69.2638 101.716 69.2556 103.624C69.2473 105.912 71.1015 107.766 73.3852 107.766H82.4952C84.7624 107.766 86.6 105.928 86.6 103.661V85.4951C86.6 84.8302 86.472 84.1612 86.1623 83.5748C85.3777 82.0757 83.8538 81.2291 82.2515 81.3159C82.0162 81.3283 81.7725 81.3365 81.5289 81.3365C73.7982 81.3365 67.4964 75.0471 67.4881 67.3164C67.4881 67.3123 67.4881 67.304 67.4881 67.2999L67.55 66.4657C68.058 59.5362 73.4678 53.8455 80.3973 53.3004C88.6483 52.6479 95.5737 59.181 95.5737 67.2958V94.3407C95.5737 100.663 100.666 106.779 106.926 107.638C114.954 108.741 121.863 102.575 121.999 94.7867C122.036 92.7137 120.641 90.8305 118.596 90.4837L118.588 90.4878ZM78.3367 89.7238V99.0981C78.3367 99.3252 78.1508 99.511 77.9237 99.511H77.1432C76.9697 99.511 76.8169 99.3995 76.7591 99.2343C74.9421 94.1053 70.0402 90.4258 64.3 90.4258C58.5598 90.4258 53.658 94.1095 51.8409 99.2343C51.7831 99.3995 51.6303 99.511 51.4527 99.511H50.6722C50.4451 99.511 50.2593 99.3252 50.2593 99.0981V85.4703C50.2593 79.4823 54.0048 74.3409 59.3279 72.3298C59.5592 72.2431 59.8111 72.3835 59.8689 72.623C61.9874 81.2333 69.1276 87.8985 77.9898 89.315C78.188 89.348 78.3367 89.5173 78.3367 89.7197V89.7238Z" fill="white"/>
+			</g>
+			<defs>
+			<filter id="filter0_d_30_2860" x="34" y="37" width="96" height="78.7703" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset/>
+			<feGaussianBlur stdDeviation="4"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.141176 0 0 0 0 0.278431 0 0 0 0.1 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_30_2860"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_30_2860" result="shape"/>
+			</filter>
+			<radialGradient id="paint0_radial_30_2860" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16 16) rotate(45) scale(181.019)">
+			<stop stop-color="#0ECAD4"/>
+			<stop offset="1" stop-color="#7A45E5"/>
+			</radialGradient>
+			</defs>
+		</svg>
+XML;
+
 }
 
 /**
@@ -247,15 +261,15 @@ function enqueue_react_app_with_styles(): void {
 		}
 	}
 
-	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/index.asset.php';
-	$render_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/render.asset.php';
-	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql.asset.php';
+	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide/wpgraphql-ide.asset.php';
+	$render_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide-render/wpgraphql-ide-render.asset.php';
+	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql/graphql.asset.php';
 
 	$app_context = get_app_context();
 
 	wp_register_script(
 		'graphql',
-		plugins_url( 'build/graphql.js', __FILE__ ),
+		plugins_url( 'build/graphql/graphql.js', __FILE__ ),
 		$graphql_asset_file['dependencies'],
 		$graphql_asset_file['version'],
 		false
@@ -263,7 +277,7 @@ function enqueue_react_app_with_styles(): void {
 
 	wp_enqueue_script(
 		'wpgraphql-ide',
-		plugins_url( 'build/index.js', __FILE__ ),
+		plugins_url( 'build/wpgraphql-ide/wpgraphql-ide.js', __FILE__ ),
 		array_merge( $asset_file['dependencies'], [ 'graphql' ] ),
 		$asset_file['version'],
 		false
@@ -290,14 +304,14 @@ function enqueue_react_app_with_styles(): void {
 
 	wp_enqueue_script(
 		'wpgraphql-ide-render',
-		plugins_url( 'build/render.js', __FILE__ ),
+		plugins_url( 'build/wpgraphql-ide-render/wpgraphql-ide-render.js', __FILE__ ),
 		array_merge( $asset_file['dependencies'], [ 'wpgraphql-ide', 'graphql' ] ),
 		$render_asset_file['version'],
 		false
 	);
 
-	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/index.css', __FILE__ ), [], $asset_file['version'] );
-	wp_enqueue_style( 'wpgraphql-ide-render', plugins_url( 'build/render.css', __FILE__ ), [], $asset_file['version'] );
+	wp_enqueue_style( 'wpgraphql-ide-app', plugins_url( 'build/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
+	wp_enqueue_style( 'wpgraphql-ide-render', plugins_url( 'build/wpgraphql-ide-render.css', __FILE__ ), [], $asset_file['version'] );
 
 	// Avoid running custom styles through a build process for an improved developer experience.
 	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
