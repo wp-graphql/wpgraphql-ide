@@ -35,7 +35,8 @@
 		"changeset": "changeset",
 		"version": "changeset version && node bin/versionPlugin.js",
 		"release": "npm run build && changeset publish",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"clean": "rm -rf node_modules && find plugins -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.23.9",
@@ -46,7 +47,7 @@
 		"@types/node": "^20.11.16",
 		"@wordpress/e2e-test-utils-playwright": "^0.19.0",
 		"@wordpress/env": "^9.2.0",
-		"@wordpress/scripts": "^27.3.0",
+		"@wordpress/scripts": "^27.9.0",
 		"babel-jest": "^29.7.0",
 		"chalk": "^5.3.0",
 		"clsx": "^2.0.0",

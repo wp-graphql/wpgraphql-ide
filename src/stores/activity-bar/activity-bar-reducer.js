@@ -52,6 +52,7 @@ const reducer = ( state = initialState, action ) => {
 
 			// Ensure config is a function before calling it
 			if ( typeof action.config !== 'function' ) {
+				console.log({action});
 				console.error(
 					`Config for panel "${ action.name }" is not a function.`
 				);
