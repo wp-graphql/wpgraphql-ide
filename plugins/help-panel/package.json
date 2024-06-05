@@ -1,5 +1,5 @@
 {
-	"name": "query-composer-panel",
+	"name": "help-panel",
 	"private": true,
 	"scripts": {
 		"build": "wp-scripts build",

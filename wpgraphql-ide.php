@@ -26,9 +26,10 @@ define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Register IDE plugins.
+ * Register core IDE plugins.
  */
-require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/query-composer/query-composer.php';
+require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/query-composer-panel/query-composer-panel.php';
+// require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/help-panel/help-panel.php';
 
 /**
  * Generates the SVG logo for GraphQL.
