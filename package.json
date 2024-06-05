@@ -1,11 +1,19 @@
 {
 	"name": "wpgraphql-ide",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"private": true,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/wpgraphql/wpgraphql-ide.git"
 	},
+	"files": [
+		"build",
+		"styles",
+		"wpgraphql-ide.php",
+		"package.json",
+		"README.md",
+		"readme.txt"
+	],
 	"scripts": {
 		"check-engines": "wp-scripts check-engines",
 		"build": "wp-scripts build && npm run build:third-party-plugin && npm run build:zip",

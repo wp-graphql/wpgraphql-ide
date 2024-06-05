@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.2
+
+### Patch Changes
+
+- f6745e9: - fix missing styles in latest release
+
 ## 2.1.1
 
 ### Patch Changes
