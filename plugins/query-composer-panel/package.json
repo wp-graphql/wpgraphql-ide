@@ -1,5 +1,6 @@
 {
-  "name": "third-party-plugin",
+  "name": "query-composer",
+  "private": true,
   "version": "1.0.0",
   "scripts": {
     "check-engines": "wp-scripts check-engines",
