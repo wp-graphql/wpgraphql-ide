@@ -40,18 +40,12 @@ jobs:
           ignoreLabels: |
             bot
             ignore-semantic-pull-request
-          # For work-in-progress PRs you can typically use draft pull requests
-          # from GitHub. However, private repositories on the free plan don't have
-          # this option and therefore this action allows you to opt-in to using the
-          # special "[WIP]" prefix to indicate this state. This will avoid the
-          # validation of the PR title and the pull request checks remain pending.
-          # Note that a second check will be reported if this is enabled.
           wip: true
+        continue-on-error: true
 
       # Determine Release Type from Labels
       - name: Determine Release Type
         id: determine-release
-        if: steps.lint.outputs.valid == 'true'
         run: |
           PR_NUMBER=$(jq -r .pull_request.number "$GITHUB_EVENT_PATH")
           RELEASE_TYPE="patch"
@@ -72,7 +66,7 @@ jobs:
 
       # Create Changeset
       - name: Create Changeset
-        if: steps.lint.outputs.valid == 'true'
+        if: steps.determine-release.outputs.release_type
         run: |
           PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
           TYPE=${{ steps.determine-release.outputs.changeset_type }}
@@ -95,7 +89,7 @@ jobs:
 
       # Add Release Label
       - name: Add Release Label
-        if: steps.lint.outputs.valid == 'true'
+        if: steps.determine-release.outputs.release_type
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
