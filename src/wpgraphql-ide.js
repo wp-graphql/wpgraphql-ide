@@ -5,7 +5,6 @@
  */
 
 // External dependencies
-import { createRoot } from '@wordpress/element';
 import * as accessFunctions from './access-functions';
 
 // Local imports including the hook configuration and the main App component.
@@ -35,13 +34,3 @@ window.WPGraphQLIDE = {
 };
 
 window.dispatchEvent( new Event( 'WPGraphQLIDE_Window_Ready' ) );
-//
-// // Dynamically import the GraphQL library and assign it to `window.WPGraphQLIDE.GraphQL`
-// import('graphql/index.js').then(GraphQL => {
-// 	window.WPGraphQLIDE.GraphQL = GraphQL;
-// 	window.WPGraphQLIDE.GraphQLLoaded = true;
-// 	console.log( `WPGraphQLIDE is ready` );
-// 	window.dispatchEvent( new Event( 'WPGraphQLIDE_Window_Ready' ) );
-// }).catch(error => {
-// 	console.error('Failed to load GraphQL library:', error);
-// });
