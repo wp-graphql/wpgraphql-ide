@@ -11,25 +11,20 @@ beforeEach( async ( { page, context } ) => {
 } );
 
 const selectors = {
-	docsExplorerButton:
-		'.graphiql-sidebar .graphiql-sidebar-section:nth-child(1) button:nth-child(1)',
+	docsExplorerButton: '.graphiql-sidebar .graphiql-sidebar-section:nth-child(1) button:nth-child(1)',
 	docsExplorerPanel: '.graphiql-plugin .graphiql-doc-explorer',
 	docsExplorerSpinner: '.graphiql-doc-explorer-content .graphiql-spinner',
-	historyPanelButton:
-		'.graphiql-sidebar .graphiql-sidebar-section:nth-child(1) button:nth-child(2)',
-	historyPanel: '.graphiql-plugin  .graphiql-history',
-	explorerButton:
-		'.graphiql-sidebar .graphiql-sidebar-section:nth-child(1) button:nth-child(3)',
-	explorerPanel: '.graphiql-plugin  .docExplorerWrap',
-	helpButton:
-		'.graphiql-sidebar .graphiql-sidebar-section:nth-child(1) button:nth-child(4)',
-	helpPanel: '.graphiql-plugin  .wpgraphql-ide-help-panel',
-	refetchButton:
-		'.graphiql-sidebar .graphiql-sidebar-section:nth-child(2) button:nth-child(1)',
+	historyPanelButton: '.graphiql-sidebar .graphiql-sidebar-section:nth-child(1) button:nth-child(2)',
+	historyPanel: '.graphiql-plugin .graphiql-history',
+	explorerButton: '.graphiql-sidebar .graphiql-sidebar-section:nth-child(1) button:nth-child(3)',
+	explorerPanel: '.graphiql-plugin .docExplorerWrap',
+	helpButton: '.graphiql-sidebar .graphiql-sidebar-section:nth-child(1) button:nth-child(4)',
+	helpPanel: '.graphiql-plugin .wpgraphql-ide-help-panel',
+	refetchButton: '.graphiql-sidebar .graphiql-sidebar-section:nth-child(2) button:nth-child(1)',
 	executeQueryButton: '.graphiql-execute-button',
 };
 
-describe( 'Activity Bar Plugins', () => {
+describe( 'Activity Bar Panels', () => {
 	describe( 'Docs Explorer', () => {
 		beforeEach( async ( { page } ) => {
 			// Assert that the Docs Explorer is not visible initially
