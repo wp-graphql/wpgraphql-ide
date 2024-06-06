@@ -69,18 +69,18 @@ jobs:
             fi
           done
           
-          echo "::set-output name=release_type::$RELEASE_TYPE"
-          echo "::set-output name=changeset_type::$RELEASE_TYPE"
+          echo "release_type=$RELEASE_TYPE" >> $GITHUB_ENV
+          echo "changeset_type=$RELEASE_TYPE" >> $GITHUB_ENV
 
       # Debug Step to Check Release Type
       - name: Debug Release Type
-        run: echo "Determined release type: ${{ steps.determine-release.outputs.release_type }}"
+        run: echo "Determined release type: ${{ env.release_type }}"
 
       # Create Changeset
       - name: Create Changeset
         run: |
           PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
-          TYPE=${{ steps.determine-release.outputs.changeset_type }}
+          TYPE=${{ env.changeset_type }}
           WORDS=("mushroom" "pepperoni" "pineapple" "bacon" "cheese" "olives" "peppers" "sausage" "onions" "spinach" "tomato" "ham" "chicken" "beef" "jalapeno" "broccoli" "anchovies" "artichoke" "garlic" "basil")
           COOK_TIMES=("10min" "12min" "15min" "18min" "20min")
           TEMPERATURES=("350F" "375F" "400F" "425F")
@@ -127,5 +127,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              labels: [ "${{ steps.determine-release.outputs.release_type }}" ]
+              labels: [ "${{ env.release_type }}" ]
             })
