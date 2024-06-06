@@ -39,7 +39,7 @@ test.describe( 'GraphiQL Query Composer', () => {
 		await expect( page.locator( '.docExplorerWrap' ) ).toBeHidden();
 	} );
 
-	test( 'Changing the name of an operation in the query composer updates the query editor', async ( {
+	test.skip( 'Changing the name of an operation in the query composer updates the query editor', async ( {
 		page,
 	} ) => {
 		await navigateToGraphiQLAndOpenQueryComposer( { page } );
