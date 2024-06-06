@@ -8,8 +8,8 @@ on:
       - synchronize
 
 jobs:
-  main:
-    name: Validate Pull Request Title and Create Changeset
+  lint:
+    name: Validate Pull Request Title
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,14 +17,12 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      # Validate Pull Request Title
       - name: Validate Pull Request Title
         id: lint
         uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # see: https://github.com/commitizen/conventional-commit-types
           types: |
             build
             chore
@@ -45,11 +43,19 @@ jobs:
           wip: true
         continue-on-error: true
 
-      # Debug Step to Check Title Validation
       - name: Debug Title Validation
         run: echo "Title validation completed with status: ${{ steps.lint.conclusion }}"
 
-      # Determine Release Type from Labels
+  changeset:
+    name: Create Changeset and Add Release Label
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
       - name: Determine Release Type
         id: determine-release
         run: |
@@ -72,11 +78,9 @@ jobs:
           echo "release_type=$RELEASE_TYPE" >> $GITHUB_ENV
           echo "changeset_type=$RELEASE_TYPE" >> $GITHUB_ENV
 
-      # Debug Step to Check Release Type
       - name: Debug Release Type
         run: echo "Determined release type: ${{ env.release_type }}"
 
-      # Create Changeset
       - name: Create Changeset
         run: |
           PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
@@ -100,7 +104,6 @@ jobs:
           echo "" >> .changeset/$FILENAME
           echo "_This changeset was automatically generated._" >> .changeset/$FILENAME
 
-      # Commit and Push Changeset File
       - name: Configure Git
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -117,7 +120,6 @@ jobs:
         run: |
           git push origin HEAD:${{ github.head_ref }}
 
-      # Add Release Label
       - name: Add Release Label
         uses: actions/github-script@v4
         with:
