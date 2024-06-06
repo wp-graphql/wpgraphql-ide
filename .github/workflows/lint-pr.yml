@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
 
       # Validate Pull Request Title
       - name: Validate Pull Request Title
@@ -66,7 +68,6 @@ jobs:
 
       # Create Changeset
       - name: Create Changeset
-        if: steps.determine-release.outputs.release_type
         run: |
           PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
           TYPE=${{ steps.determine-release.outputs.changeset_type }}
@@ -86,10 +87,28 @@ jobs:
           echo "---" >> .changeset/$FILENAME
           echo "" >> .changeset/$FILENAME
           echo "$PR_TITLE" >> .changeset/$FILENAME
+          echo "" >> .changeset/$FILENAME
+          echo "_This changeset was automatically generated._" >> .changeset/$FILENAME
+
+      # Commit and Push Changeset File
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Commit Changeset
+        run: |
+          git add .changeset/$FILENAME
+          git commit -m "chore: add changeset for $PR_TITLE"
+
+      - name: Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin HEAD:${{ github.head_ref }}
 
       # Add Release Label
       - name: Add Release Label
-        if: steps.determine-release.outputs.release_type
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
