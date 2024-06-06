@@ -23,7 +23,7 @@ window.addEventListener( 'WPGraphQLIDE_Window_Ready', function ( event ) {
 						/>,
 					content: () => <QueryComposer />,
 				},
-			4
+			3 // Priority
 		);
 	}
 } );

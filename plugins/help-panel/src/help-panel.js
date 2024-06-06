@@ -11,6 +11,6 @@ window.addEventListener('WPGraphQLIDE_Window_Ready', (event) => {
 			title: 'Help',
 			icon: () => <HelpIcon />,
 			content: () => <HelpPanel />,
-		}, 1);
+		}, 3);
 	}
 });
