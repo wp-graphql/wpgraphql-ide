@@ -1,4 +1,4 @@
-name: "Lint Pull Request"
+name: "Lint Pull Request and Create Changeset"
 
 on:
   pull_request_target:
@@ -9,10 +9,16 @@ on:
 
 jobs:
   main:
-    name: Validate Pull Request Title
+    name: Validate Pull Request Title and Create Changeset
     runs-on: ubuntu-latest
     steps:
-      - uses: amannn/action-semantic-pull-request@v5
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Validate Pull Request Title
+      - name: Validate Pull Request Title
+        id: lint
+        uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -41,3 +47,62 @@ jobs:
           # validation of the PR title and the pull request checks remain pending.
           # Note that a second check will be reported if this is enabled.
           wip: true
+
+      # Determine Release Type from Labels
+      - name: Determine Release Type
+        id: determine-release
+        if: steps.lint.outputs.valid == 'true'
+        run: |
+          PR_NUMBER=$(jq -r .pull_request.number "$GITHUB_EVENT_PATH")
+          RELEASE_TYPE="patch"
+          LABELS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                        "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels" | jq -r '.[].name')
+          
+          for LABEL in $LABELS; do
+            if [ "$LABEL" == "Release Type: Major" ]; then
+              RELEASE_TYPE="major"
+              break
+            elif [ "$LABEL" == "Release Type: Minor" ]; then
+              RELEASE_TYPE="minor"
+            fi
+          done
+          
+          echo "::set-output name=release_type::$RELEASE_TYPE"
+          echo "::set-output name=changeset_type::$RELEASE_TYPE"
+
+      # Create Changeset
+      - name: Create Changeset
+        if: steps.lint.outputs.valid == 'true'
+        run: |
+          PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
+          TYPE=${{ steps.determine-release.outputs.changeset_type }}
+          WORDS=("mushroom" "pepperoni" "pineapple" "bacon" "cheese" "olives" "peppers" "sausage" "onions" "spinach" "tomato" "ham" "chicken" "beef" "jalapeno" "broccoli" "anchovies" "artichoke" "garlic" "basil")
+          COOK_TIMES=("10min" "12min" "15min" "18min" "20min")
+          TEMPERATURES=("350F" "375F" "400F" "425F")
+          RANDOM_WORD1=${WORDS[$RANDOM % ${#WORDS[@]}]}
+          RANDOM_WORD2=${WORDS[$RANDOM % ${#WORDS[@]}]}
+          RANDOM_TIME=${COOK_TIMES[$RANDOM % ${#COOK_TIMES[@]}]}
+          RANDOM_TEMP=${TEMPERATURES[$RANDOM % ${#TEMPERATURES[@]}]}
+          TIMESTAMP=$(date +%s)
+          FILENAME="${RANDOM_WORD1}-${RANDOM_WORD2}-${RANDOM_TIME}-${RANDOM_TEMP}-${TIMESTAMP}.md"
+          
+          mkdir -p .changeset
+          echo "---" > .changeset/$FILENAME
+          echo "$TYPE: $TYPE" >> .changeset/$FILENAME
+          echo "---" >> .changeset/$FILENAME
+          echo "" >> .changeset/$FILENAME
+          echo "$PR_TITLE" >> .changeset/$FILENAME
+
+      # Add Release Label
+      - name: Add Release Label
+        if: steps.lint.outputs.valid == 'true'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [ "${{ steps.determine-release.outputs.release_type }}" ]
+            })
