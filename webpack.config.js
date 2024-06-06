@@ -11,14 +11,13 @@ const pluginsEntry = plugins.reduce((entries, plugin) => {
   return entries;
 }, {});
 
-
 module.exports = {
   ...defaults,
   entry: {
-	'wpgraphql-ide': path.resolve( process.cwd(), 'src', 'index.js' ),
-	'wpgraphql-ide-render': path.resolve( process.cwd(), 'src', 'render.js' ),
+	...pluginsEntry,
+	'wpgraphql-ide': path.resolve( process.cwd(), 'src', 'wpgraphql-ide.js' ),
+	'wpgraphql-ide-render': path.resolve( process.cwd(), 'src', 'wpgraphql-ide-render.js' ),
 	'graphql': path.resolve( process.cwd(), 'src', 'graphql.js' ),
-    ...pluginsEntry,
   },
   externals: {
     react: 'React',
