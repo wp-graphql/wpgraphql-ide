@@ -8,21 +8,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'QUERY_COMPOSER_PANEL_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
-
-add_action( 'wpgraphqlide_enqueue_script', function() {
-    $asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/query-composer-panel/query-composer-panel.asset.php';
+/**
+ * Enqueues the scripts and styles for the Query Composer panel.
+ *
+ * @return void
+ */
+function enqueue_query_composer_panel_assets(): void {
+	$asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/query-composer-panel/query-composer-panel.asset.php';
 
 	if ( empty( $asset_file['dependencies'] ) ) {
 		return;
 	}
 
-    wp_enqueue_script(
-        'query-composer-panel',
-	    WPGRAPHQL_IDE_PLUGIN_URL . 'build/query-composer-panel/query-composer-panel.js',
-        array_merge( $asset_file['dependencies'], ['wpgraphql-ide'] ),
-        $asset_file['version']
-    );
+	wp_enqueue_script(
+		'query-composer-panel',
+		WPGRAPHQL_IDE_PLUGIN_URL . 'build/query-composer-panel/query-composer-panel.js',
+		array_merge( $asset_file['dependencies'], [ 'wpgraphql-ide' ] ),
+		$asset_file['version'],
+		true
+	);
 
-});
-
+	wp_enqueue_style(
+		'query-composer-panel',
+		WPGRAPHQL_IDE_PLUGIN_URL . 'build/style-query-composer-panel.css',
+		[],
+		$asset_file['version']
+	);
+}
+add_action( 'wpgraphqlide_enqueue_script', 'enqueue_query_composer_panel_assets' );
