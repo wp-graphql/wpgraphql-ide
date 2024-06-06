@@ -38,7 +38,8 @@
     "wp-env": "wp-env",
     "changeset": "changeset",
     "version": "changeset version && node bin/versionPlugin.js",
-    "release": "npm run build && changeset publish",
+    "prerelease": "npm run build",
+    "release": "changeset publish",
     "prepare": "husky install",
     "clean": "rimraf node_modules plugins/*/node_modules"
   },
