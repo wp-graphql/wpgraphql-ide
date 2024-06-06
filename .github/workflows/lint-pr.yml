@@ -1,4 +1,4 @@
-name: "Lint Pull Request and Create Changeset"
+name: "Lint Pull Request"
 
 on:
   pull_request_target:
@@ -8,21 +8,15 @@ on:
       - synchronize
 
 jobs:
-  lint:
+  main:
     name: Validate Pull Request Title
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: Validate Pull Request Title
-        id: lint
-        uses: amannn/action-semantic-pull-request@v5
+      - uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # see: https://github.com/commitizen/conventional-commit-types
           types: |
             build
             chore
@@ -40,94 +34,10 @@ jobs:
           ignoreLabels: |
             bot
             ignore-semantic-pull-request
+          # For work-in-progress PRs you can typically use draft pull requests
+          # from GitHub. However, private repositories on the free plan don't have
+          # this option and therefore this action allows you to opt-in to using the
+          # special "[WIP]" prefix to indicate this state. This will avoid the
+          # validation of the PR title and the pull request checks remain pending.
+          # Note that a second check will be reported if this is enabled.
           wip: true
-        continue-on-error: true
-
-      - name: Debug Title Validation
-        run: echo "Title validation completed with status: ${{ steps.lint.conclusion }}"
-
-  changeset:
-    name: Create Changeset and Add Release Label
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: Determine Release Type
-        id: determine-release
-        run: |
-          PR_NUMBER=$(jq -r .pull_request.number "$GITHUB_EVENT_PATH")
-          RELEASE_TYPE="patch"
-          LABELS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                        "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels" | jq -r '.[].name')
-          
-          echo "Labels on PR: $LABELS"
-          
-          for LABEL in $LABELS; do
-            if [ "$LABEL" == "Release Type: Major" ]; then
-              RELEASE_TYPE="major"
-              break
-            elif [ "$LABEL" == "Release Type: Minor" ]; then
-              RELEASE_TYPE="minor"
-            fi
-          done
-          
-          echo "release_type=$RELEASE_TYPE" >> $GITHUB_ENV
-          echo "changeset_type=$RELEASE_TYPE" >> $GITHUB_ENV
-
-      - name: Debug Release Type
-        run: echo "Determined release type: ${{ env.release_type }}"
-
-      - name: Create Changeset
-        run: |
-          PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
-          TYPE=${{ env.changeset_type }}
-          WORDS=("mushroom" "pepperoni" "pineapple" "bacon" "cheese" "olives" "peppers" "sausage" "onions" "spinach" "tomato" "ham" "chicken" "beef" "jalapeno" "broccoli" "anchovies" "artichoke" "garlic" "basil")
-          COOK_TIMES=("10min" "12min" "15min" "18min" "20min")
-          TEMPERATURES=("350F" "375F" "400F" "425F")
-          RANDOM_WORD1=${WORDS[$RANDOM % ${#WORDS[@]}]}
-          RANDOM_WORD2=${WORDS[$RANDOM % ${#WORDS[@]}]}
-          RANDOM_TIME=${COOK_TIMES[$RANDOM % ${#COOK_TIMES[@]}]}
-          RANDOM_TEMP=${TEMPERATURES[$RANDOM % ${#TEMPERATURES[@]}]}
-          TIMESTAMP=$(date +%s)
-          FILENAME="${RANDOM_WORD1}-${RANDOM_WORD2}-${RANDOM_TIME}-${RANDOM_TEMP}-${TIMESTAMP}.md"
-          
-          mkdir -p .changeset
-          echo "---" > .changeset/$FILENAME
-          echo "$TYPE: $TYPE" >> .changeset/$FILENAME
-          echo "---" >> .changeset/$FILENAME
-          echo "" >> .changeset/$FILENAME
-          echo "$PR_TITLE" >> .changeset/$FILENAME
-          echo "" >> .changeset/$FILENAME
-          echo "_This changeset was automatically generated._" >> .changeset/$FILENAME
-
-      - name: Configure Git
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-      - name: Commit Changeset
-        run: |
-          git add .changeset/$FILENAME
-          git commit -m "chore: add changeset for $PR_TITLE"
-
-      - name: Push Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git push origin HEAD:${{ github.head_ref }}
-
-      - name: Add Release Label
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              labels: [ "${{ env.release_type }}" ]
-            })
