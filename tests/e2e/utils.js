@@ -160,7 +160,7 @@ export async function openDrawer( page ) {
 		.locator( '.graphiql-container' )
 		.isVisible();
 	if ( ! isDrawerVisible ) {
-		await page.waitForSelector( '.EditorDrawerButton', {
+		await page.waitForSelector( '.AppDrawerButton', {
 			state: 'visible',
 		} );
 		await clickDrawerButton( page );
@@ -183,7 +183,7 @@ export async function closeDrawer( page ) {
 			await overlay.click();
 		}
 		await expect( page.locator( '.graphiql-container' ) ).toBeHidden();
-		await page.waitForSelector( '.EditorDrawerButton', {
+		await page.waitForSelector( '.AppDrawerButton', {
 			state: 'visible',
 		} );
 		await clickDrawerCloseButton( page );
@@ -194,11 +194,11 @@ export async function closeDrawer( page ) {
 }
 
 export async function clickDrawerButton( page ) {
-	await page.click( '.EditorDrawerButton' );
+	await page.click( '.AppDrawerButton' );
 }
 
 export async function clickDrawerCloseButton( page ) {
-	await page.click( '.EditorDrawerCloseButton' );
+	await page.click( '.AppDrawerCloseButton' );
 }
 
 export async function executeQuery( page ) {

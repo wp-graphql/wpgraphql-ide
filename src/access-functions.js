@@ -33,3 +33,60 @@ export function registerDocumentEditorToolbarButton(
 		);
 	}
 }
+
+export function registerActivityBarPanel( name, config, priority = 10 ) {
+	try {
+		dispatch( 'wpgraphql-ide/activity-bar' ).registerPanel(
+			name,
+			config,
+			priority
+		);
+		hooks.doAction(
+			'afterRegisterActivityBarPanel',
+			name,
+			config,
+			priority
+		);
+	} catch ( error ) {
+		console.error(
+			`Failed to register activity bar panel: ${ name }`,
+			error
+		);
+		hooks.doAction(
+			'registerActivityBarPanelError',
+			name,
+			config,
+			priority,
+			error
+		);
+	}
+}
+
+// export function registerActivityBarUtility(
+// 	name,
+// 	config,
+// 	priority = 10
+// ) {
+// 	try {
+// 		dispatch( 'wpgraphql-ide/activity-bar' ).registerUtilityButton(
+// 			name,
+// 			config,
+// 			priority
+// 		);
+// 		hooks.doAction(
+// 			'afterRegisterActivityBarUtilityButton',
+// 			name,
+// 			config,
+// 			priority
+// 		);
+// 	} catch ( error ) {
+// 		console.error( `Failed to register button: ${ name }`, error );
+// 		hooks.doAction(
+// 			'registerActivityBarUtilityButtonError',
+// 			name,
+// 			config,
+// 			priority,
+// 			error
+// 		);
+// 	}
+// }

@@ -17,8 +17,8 @@ const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 export const selectors = {
 	graphiqlContainer: '.graphiql-container',
 	graphiqlResponse: '.graphiql-response',
-	editorDrawerButton: '.EditorDrawerButton',
-	editorDrawerCloseButton: '.EditorDrawerCloseButton',
+	appDrawerButton: '.AppDrawerButton',
+	appDrawerCloseButton: '.AppDrawerCloseButton',
 	executeQueryButton: '.graphiql-execute-button',
 	queryInput: '[aria-label="Query Editor"] .CodeMirror',
 	variablesInput: '[aria-label="Variables"] .CodeMirror',
@@ -30,9 +30,9 @@ test.beforeEach( async ( { page } ) => {
 } );
 
 test( 'should open and close successfully', async ( { page } ) => {
-	await page.click( selectors.editorDrawerButton );
+	await page.click( selectors.appDrawerButton );
 	await expect( page.locator( selectors.graphiqlContainer ) ).toBeVisible();
-	await page.click( selectors.editorDrawerCloseButton );
+	await page.click( selectors.appDrawerCloseButton );
 	await expect(
 		page.locator( selectors.graphiqlContainer )
 	).not.toBeVisible();
@@ -65,7 +65,7 @@ test( 'should open on JS-heavy admin page with CPU Throttling', async ( {
 } );
 
 test( 'should execute a GraphQL query successfully', async ( { page } ) => {
-	await page.click( selectors.editorDrawerButton );
+	await page.click( selectors.appDrawerButton );
 	await expect( page.locator( selectors.graphiqlContainer ) ).toBeVisible();
 
 	// Type and execute a GraphQL query
@@ -87,7 +87,7 @@ test( 'should execute a GraphQL query successfully', async ( { page } ) => {
 } );
 
 test( 'should show errors for an invalid query', async ( { page } ) => {
-	await page.click( selectors.editorDrawerButton );
+	await page.click( selectors.appDrawerButton );
 	await expect( page.locator( selectors.graphiqlContainer ) ).toBeVisible();
 
 	// Type and execute an invalid GraphQL query

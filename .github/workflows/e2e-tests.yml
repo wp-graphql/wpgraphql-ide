@@ -28,9 +28,5 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Build Assets
-              run: npm run build
-
             - name: Start WordPress & Run E2E tests
               run: npm run test:e2e
-

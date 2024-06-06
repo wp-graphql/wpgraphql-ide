@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityBarUtilities } from './ActivityBarUtilities';
-import { ActivityBarPlugins } from './ActivityBarPlugins';
+import { ActivityBarPanels } from './ActivityBarPanels';
 
 export const ActivityBar = ( {
 	pluginContext,
@@ -11,7 +11,7 @@ export const ActivityBar = ( {
 } ) => {
 	return (
 		<div className="graphiql-sidebar graphiql-activity-bar">
-			<ActivityBarPlugins
+			<ActivityBarPanels
 				pluginContext={ pluginContext }
 				handlePluginClick={ handlePluginClick }
 			/>
