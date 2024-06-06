@@ -20,7 +20,7 @@ jobs:
       - name: Determine Release Type
         id: determine-release
         run: |
-          PR_NUMBER=$(jq -r .pull_request.number "$GITHUB_EVENT_PATH")
+          PR_NUMBER=$(jq -r .number "$GITHUB_EVENT_PATH")
           RELEASE_TYPE="patch"
           LABELS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                         "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels" | jq -r '.[].name')
@@ -44,7 +44,7 @@ jobs:
 
       - name: Create Changeset
         run: |
-          PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
+          PR_TITLE=$(jq -r .title "$GITHUB_EVENT_PATH")
           TYPE=${{ env.changeset_type }}
           WORDS=("mushroom" "pepperoni" "pineapple" "bacon" "cheese" "olives" "peppers" "sausage" "onions" "spinach" "tomato" "ham" "chicken" "beef" "jalapeno" "broccoli" "anchovies" "artichoke" "garlic" "basil")
           COOK_TIMES=("10min" "12min" "15min" "18min" "20min")
