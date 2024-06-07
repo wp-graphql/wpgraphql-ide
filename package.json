@@ -8,16 +8,19 @@
   },
   "files": [
     "build",
-    "styles",
-    "wpgraphql-ide.php",
     "package.json",
+    "plugins/*/*.php",
+    "plugins/*/build",
+    "plugins/*/README.md",
     "README.md",
-    "readme.txt"
+    "readme.txt",
+    "styles",
+    "wpgraphql-ide.php"
   ],
   "scripts": {
     "build": "npm run build:main && npm run build:zip",
     "build:main": "wp-scripts build",
-    "build:zip": "node bin/zip-build.js",
+    "build:zip": "wp-scripts plugin-zip",
     "start": "concurrently --kill-others-on-fail -n 'Main,Plugins' -c 'blue,green' \"wp-scripts start\" \"node bin/start-plugins.js\"",
     "test:unit": "jest --config tests/unit/jest.config.js",
     "pretest:e2e": "npm run build && npm run wp-env start",

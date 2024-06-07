@@ -15,23 +15,36 @@ const mainAppEntry = {
   'graphql': path.resolve(process.cwd(), 'src', 'graphql.js'),
 };
 
-const pluginsEntry = plugins.reduce((entries, plugin) => {
+// Reduce plugins to an entry object and an output object
+const { pluginsEntry, pluginsOutput } = plugins.reduce((result, plugin) => {
   const pluginName = path.basename(plugin);
-  entries[pluginName] = path.resolve(plugin, 'src', `${pluginName}.js`);
-  return entries;
-}, {});
+  result.pluginsEntry[pluginName] = path.resolve(plugin, 'src', `${pluginName}.js`);
+  result.pluginsOutput[pluginName] = path.resolve(plugin, 'build');
+  return result;
+}, { pluginsEntry: {}, pluginsOutput: {} });
 
-console.log(pluginsEntry);
+// Generate Webpack configurations for each plugin
+const pluginConfigs = Object.entries(pluginsEntry).map(([name, entry]) => ({
+  ...defaults,
+  entry: {
+    [name]: entry,
+  },
+  externals: {
+    react: 'React',
+    'react-dom': 'ReactDOM',
+    graphql: 'graphql',
+  },
+  output: {
+    path: pluginsOutput[name],
+    filename: `${name}.js`,
+  },
+}));
 
 // Export an array of Webpack configurations, one for the main app and one for each plugin
 module.exports = [
-  // Configuration for the main app
   {
     ...defaults,
-    entry: {
-      ...pluginsEntry,
-      ...mainAppEntry
-    },
+    entry: mainAppEntry,
     externals: {
       react: 'React',
       'react-dom': 'ReactDOM',
@@ -39,19 +52,9 @@ module.exports = [
     },
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: '[name]/[name].js',
-
-      // devtoolNamespace: 'wpgraphql-ide',
-      // filename: './build/[name].js',
-      // path: path.join( __dirname, '..', '..' ),
-      // devtoolModuleFilenameTemplate: ( info ) => {
-      //   console.log({ info });
-      //   if ( info.resourcePath.includes( '/@wpgraphql-ide/' ) ) {
-      //     const resourcePath = info.resourcePath.split( '/@wpgraphql-ide/' )[ 1 ];
-      //     return `../../packages/${ resourcePath }`;
-      //   }
-      //   return `webpack://${ info.namespace }/${ info.resourcePath }`;
-      // },
+      filename: '[name].js',
     },
   },
+  // Configurations for each plugin
+  ...pluginConfigs,
 ];
