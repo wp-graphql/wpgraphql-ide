@@ -39,7 +39,7 @@ module.exports = [
     },
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: '[name].js',
+      filename: '[name]/[name].js',
 
       // devtoolNamespace: 'wpgraphql-ide',
       // filename: './build/[name].js',
