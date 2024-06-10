@@ -589,6 +589,23 @@ function sanitize_custom_graphql_ide_link_behavior( $value ) {
 }
 
 /**
+ * Add settings link to the plugin actions
+ *
+ * @param array<string> $links The existing action links.
+ * @return array<string> The modified action links.
+ */
+function add_settings_link( array $links ): array {
+	$settings_link = sprintf(
+		'<a href="%s">%s</a>',
+		esc_url( admin_url( 'admin.php?page=graphql-settings#graphql_ide_settings' ) ),
+		esc_html__( 'Settings', 'wpgraphql-ide' )
+	);
+	array_unshift( $links, $settings_link );
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ . '\\add_settings_link' );
+
+/**
  * Rename and reorder the submenu items under 'GraphQL'.
  */
 add_action(
