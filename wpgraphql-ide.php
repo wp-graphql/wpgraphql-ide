@@ -339,7 +339,7 @@ function get_plugin_header( string $key = '' ): ?string {
 /**
  * Retrieves app context.
  *
- * @return array The possibly filtered app context array.
+ * @return array<string, mixed> The possibly filtered app context array.
  */
 function get_app_context(): array {
 	$current_user = wp_get_current_user();
@@ -362,7 +362,7 @@ function get_app_context(): array {
 /**
  * Adds styles to hide generic admin notices on the GraphQL IDE page.
  *
- * @param array $notices The array of notices to render.
+ * @param array<int, mixed> $notices The array of notices to render.
  */
 function graphql_admin_notices_render_notices( array $notices ) {
 	echo '
@@ -389,10 +389,10 @@ add_action( 'graphql_admin_notices_render_notices', __NAMESPACE__ . '\\graphql_a
 /**
  * Adds styles to apply top margin to notices added via register_graphql_admin_notice.
  *
- * @param string $notice_slug The slug of the notice.
- * @param array  $notice The notice data.
- * @param bool   $is_dismissable Whether the notice is dismissable.
- * @param int    $count The count of notices.
+ * @param string               $notice_slug The slug of the notice.
+ * @param array<string, mixed> $notice The notice data.
+ * @param bool                 $is_dismissable Whether the notice is dismissable.
+ * @param int                  $count The count of notices.
  */
 function graphql_admin_notices_render_notice( string $notice_slug, array $notice, bool $is_dismissable, int $count ) {
 	echo '
@@ -408,9 +408,9 @@ add_action( 'graphql_admin_notices_render_notice', __NAMESPACE__ . '\\graphql_ad
 /**
  * Filters to allow GraphQL admin notices to be displayed on the dedicated IDE page.
  *
- * @param bool   $is_plugin_scoped_page True if the current page is within scope of the plugin's pages.
- * @param string $current_page_id The ID of the current admin page.
- * @param array  $allowed_pages The list of allowed pages.
+ * @param bool               $is_plugin_scoped_page True if the current page is within scope of the plugin's pages.
+ * @param string             $current_page_id The ID of the current admin page.
+ * @param array<int, string> $allowed_pages The list of allowed pages.
  * @return bool Whether the admin notice is allowed on the current page.
  */
 function graphql_admin_notices_is_allowed_admin_page( bool $is_plugin_scoped_page, string $current_page_id, array $allowed_pages ): bool {
@@ -442,10 +442,10 @@ add_filter( 'script_loader_tag', __NAMESPACE__ . '\\add_defer_attribute_to_scrip
 /**
  * Update the existing GraphiQL link field configuration to say "Legacy".
  *
- * @param array  $field_config The field configuration array.
- * @param string $field_name The name of the field.
- * @param string $section The section the field belongs to.
- * @return array The modified field configuration array.
+ * @param array<string, mixed> $field_config The field configuration array.
+ * @param string               $field_name The name of the field.
+ * @param string               $section The section the field belongs to.
+ * @return array<string, mixed> The modified field configuration array.
  */
 function update_graphiql_link_field_config( array $field_config, string $field_name, string $section ): array {
 	if ( 'show_graphiql_link_in_admin_bar' === $field_name && 'graphql_general_settings' === $section ) {
@@ -469,11 +469,11 @@ add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_l
 /**
  * Ensure the `show_graphiql_link_in_admin_bar` setting is always unchecked.
  *
- * @param mixed  $value The value of the field.
- * @param mixed  $default_value The default value if there is no value set.
- * @param string $option_name The name of the option.
- * @param array  $section_fields The setting values within the section.
- * @param string $section_name The name of the section the setting belongs to.
+ * @param mixed                $value The value of the field.
+ * @param mixed                $default_value The default value if there is no value set.
+ * @param string               $option_name The name of the option.
+ * @param array<string, mixed> $section_fields The setting values within the section.
+ * @param string               $section_name The name of the section the setting belongs to.
  * @return mixed The modified value of the field.
  */
 function ensure_graphiql_link_is_unchecked( $value, $default_value, $option_name, $section_fields, $section_name ) {
@@ -553,8 +553,8 @@ function sanitize_custom_graphql_ide_link_behavior( string $value ): string {
 /**
  * Adds a settings link to the plugin actions.
  *
- * @param array $links The existing action links.
- * @return array The modified action links.
+ * @param array<int, string> $links The existing action links.
+ * @return array<int, string> The modified action links.
  */
 function add_settings_link( array $links ): array {
 	$settings_link = sprintf(
