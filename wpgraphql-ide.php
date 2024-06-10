@@ -28,8 +28,8 @@ define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 /**
  * Register core IDE plugins.
  */
-require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/query-composer-panel/query-composer-panel.php';
-require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . '/plugins/help-panel/help-panel.php';
+require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/query-composer-panel/query-composer-panel.php';
+require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/help-panel/help-panel.php';
 
 /**
  * Generates the SVG logo for GraphQL.
@@ -260,15 +260,15 @@ function enqueue_react_app_with_styles(): void {
 		}
 	}
 
-	$asset_file         = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide/wpgraphql-ide.asset.php';
-	$render_asset_file  = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide-render/wpgraphql-ide-render.asset.php';
-	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql/graphql.asset.php';
+	$asset_file         = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide.asset.php';
+	$render_asset_file  = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide-render.asset.php';
+	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql.asset.php';
 
 	$app_context = get_app_context();
 
 	wp_register_script(
 		'graphql',
-		plugins_url( 'build/graphql/graphql.js', __FILE__ ),
+		plugins_url( 'build/graphql.js', __FILE__ ),
 		$graphql_asset_file['dependencies'],
 		$graphql_asset_file['version'],
 		false
@@ -276,7 +276,7 @@ function enqueue_react_app_with_styles(): void {
 
 	wp_enqueue_script(
 		'wpgraphql-ide',
-		plugins_url( 'build/wpgraphql-ide/wpgraphql-ide.js', __FILE__ ),
+		plugins_url( 'build/wpgraphql-ide.js', __FILE__ ),
 		array_merge( $asset_file['dependencies'], [ 'graphql' ] ),
 		$asset_file['version'],
 		false
@@ -303,7 +303,7 @@ function enqueue_react_app_with_styles(): void {
 
 	wp_enqueue_script(
 		'wpgraphql-ide-render',
-		plugins_url( 'build/wpgraphql-ide-render/wpgraphql-ide-render.js', __FILE__ ),
+		plugins_url( 'build/wpgraphql-ide-render.js', __FILE__ ),
 		array_merge( $asset_file['dependencies'], [ 'wpgraphql-ide', 'graphql' ] ),
 		$render_asset_file['version'],
 		false
