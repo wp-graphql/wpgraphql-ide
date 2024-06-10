@@ -35,7 +35,7 @@
     "check-engines": "wp-scripts check-engines",
     "clean": "rimraf node_modules plugins/*/node_modules plugins/*/build build",
     "changeset": "changeset",
-    "version": "changeset version && node bin/versionPlugin.js",
+    "version": "changeset version && node bin/version-plugin.js",
     "prerelease": "npm run build",
     "release": "changeset publish",
     "prepare": "husky install",
