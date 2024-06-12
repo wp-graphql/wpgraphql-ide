@@ -34,7 +34,7 @@ require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/help-panel/help-panel.php'
 /**
  * Retrieves the custom capabilities and their associated roles for the plugin.
  *
- * @return array The array of custom capabilities and roles.
+ * @return array<string,mixed> The array of custom capabilities and roles.
  */
 function get_custom_capabilities() {
 	return [
@@ -45,11 +45,11 @@ function get_custom_capabilities() {
 /**
  * Generate a hash for the capabilities array.
  *
- * @param array $capabilities Array of capabilities and roles.
+ * @param array<string,mixed> $capabilities Array of capabilities and roles.
  * @return string MD5 hash of the capabilities array.
  */
 function generate_capabilities_hash( $capabilities ) {
-    return md5( wp_json_encode( $capabilities ) );
+	return md5( wp_json_encode( $capabilities ) );
 }
 
 /**
@@ -59,25 +59,25 @@ function generate_capabilities_hash( $capabilities ) {
  * @return bool True if the hash has changed, false otherwise.
  */
 function has_capabilities_hash_changed( $current_hash ) {
-    $stored_hash = get_option( 'wpgraphql_ide_capabilities' );
-    return $current_hash !== $stored_hash;
+	$stored_hash = get_option( 'wpgraphql_ide_capabilities' );
+	return $current_hash !== $stored_hash;
 }
 
 /**
  * Update the capabilities for the specified roles.
  *
- * @param array $capabilities Array of capabilities and roles.
+ * @param array<string,mixed> $capabilities Array of capabilities and roles.
  */
 function update_roles_capabilities( $capabilities ) {
-    foreach ( $capabilities as $capability => $roles ) {
-        foreach ( $roles as $role_name ) {
-            $role = get_role( $role_name );
+	foreach ( $capabilities as $capability => $roles ) {
+		foreach ( $roles as $role_name ) {
+			$role = get_role( $role_name );
 
-            if ( $role && ! $role->has_cap( $capability ) ) {
-                $role->add_cap( $capability );
-            }
-        }
-    }
+			if ( $role && ! $role->has_cap( $capability ) ) {
+				$role->add_cap( $capability );
+			}
+		}
+	}
 }
 
 /**
@@ -86,22 +86,22 @@ function update_roles_capabilities( $capabilities ) {
  * @param string $current_hash Current hash of the capabilities array.
  */
 function save_capabilities_hash( $current_hash ) {
-    update_option( 'wpgraphql_ide_capabilities', $current_hash );
+	update_option( 'wpgraphql_ide_capabilities', $current_hash );
 }
 
 /**
  * Adds custom capabilities to specified roles.
  */
 function add_custom_capabilities() {
-    $capabilities = get_custom_capabilities();
-    $current_hash = generate_capabilities_hash( $capabilities );
+	$capabilities = get_custom_capabilities();
+	$current_hash = generate_capabilities_hash( $capabilities );
 
-    if ( ! has_capabilities_hash_changed( $current_hash ) ) {
-        return;
-    }
+	if ( ! has_capabilities_hash_changed( $current_hash ) ) {
+		return;
+	}
 
-    update_roles_capabilities( $capabilities );
-    save_capabilities_hash( $current_hash );
+	update_roles_capabilities( $capabilities );
+	save_capabilities_hash( $current_hash );
 }
 add_action( 'init', __NAMESPACE__ . '\\add_custom_capabilities' );
 
