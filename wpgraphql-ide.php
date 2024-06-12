@@ -32,6 +32,35 @@ require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/query-composer-panel/query
 require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/help-panel/help-panel.php';
 
 /**
+ * Retrieves the custom capabilities and their associated roles for the plugin.
+ *
+ * @return array The array of custom capabilities and roles.
+ */
+function get_custom_capabilities() {
+    return [
+        'manage_graphql_ide' => [ 'administrator', 'editor' ],
+    ];
+}
+
+/**
+ * Adds custom capabilities to specified roles.
+ */
+function add_custom_capabilities() {
+    $capabilities = get_custom_capabilities();
+
+    foreach ( $capabilities as $capability => $roles ) {
+        foreach ( $roles as $role_name ) {
+            $role = get_role( $role_name );
+
+            if ( $role ) {
+                $role->add_cap( $capability );
+            }
+        }
+    }
+}
+add_action( 'init', __NAMESPACE__ . '\\add_custom_capabilities' );
+
+/**
  * Generates the SVG logo for GraphQL.
  *
  * @return string The SVG logo markup.
@@ -64,14 +93,14 @@ XML;
 }
 
 /**
- * Checks if the current user lacks the capability required to load scripts and styles for the GraphQL IDE.
+ * Checks if the current user has the capability required to load scripts and styles for the GraphQL IDE.
  *
- * @return bool Whether the user lacks the required capability.
+ * @return bool Whether the user has the required capability.
  */
-function user_lacks_capability(): bool {
-	$capability_required = apply_filters( 'wpgraphqlide_capability_required', 'manage_options' );
+function user_has_graphql_ide_capability(): bool {
+    $capability_required = apply_filters( 'wpgraphqlide_capability_required', 'manage_graphql_ide' );
 
-	return ! current_user_can( $capability_required );
+    return current_user_can( $capability_required );
 }
 
 /**
@@ -125,7 +154,7 @@ function is_legacy_ide_page(): bool {
  * @global WP_Admin_Bar $wp_admin_bar The WordPress Admin Bar instance.
  */
 function register_wpadminbar_menus(): void {
-	if ( user_lacks_capability() ) {
+	if ( ! user_has_graphql_ide_capability() ) {
 		return;
 	}
 
@@ -168,7 +197,7 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999
  * @link https://developer.wordpress.org/reference/functions/add_submenu_page/
  */
 function register_dedicated_ide_menu(): void {
-	if ( user_lacks_capability() ) {
+	if ( ! user_has_graphql_ide_capability() ) {
 		return;
 	}
 
@@ -184,7 +213,7 @@ function register_dedicated_ide_menu(): void {
 		'graphiql-ide',
 		__( 'GraphQL IDE', 'wpgraphql-ide' ),
 		__( 'GraphQL IDE', 'wpgraphql-ide' ),
-		'manage_options',
+		'manage_graphql_ide',
 		'graphql-ide',
 		__NAMESPACE__ . '\\render_dedicated_ide_page'
 	);
@@ -202,7 +231,7 @@ function render_dedicated_ide_page(): void {
  * Enqueues custom CSS to set the "GraphQL IDE" menu item icon in the WordPress Admin Bar.
  */
 function enqueue_graphql_ide_menu_icon_css(): void {
-	if ( user_lacks_capability() ) {
+	if ( ! user_has_graphql_ide_capability() ) {
 		return;
 	}
 
@@ -237,7 +266,7 @@ function enqueue_react_app_with_styles(): void {
 		return;
 	}
 
-	if ( user_lacks_capability() ) {
+	if ( ! user_has_graphql_ide_capability() ) {
 		return;
 	}
 
