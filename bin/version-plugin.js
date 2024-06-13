@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 
+/**
+ * Versions a WordPress plugin.
+ *
+ * Ported over from FaustJS
+ * @link https://github.com/wpengine/faustjs/blob/canary/scripts/versionPlugin.js
+ */
 const fs = require( 'fs/promises' );
 const path = require( 'node:path' );
 
