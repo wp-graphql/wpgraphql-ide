@@ -20,16 +20,69 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPGRAPHQL_IDE_VERSION', '2.0.0' );
+define( 'WPGRAPHQL_IDE_VERSION', '2.1.2' );
 define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
 define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Register core IDE plugins.
+ * Check if WPGraphQL is available and handle the case where it is not.
+ *
+ * @return void
  */
-require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/query-composer-panel/query-composer-panel.php';
-require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/help-panel/help-panel.php';
+function check_wpgraphql_availability() {
+	if ( ! class_exists( 'WPGraphQL' ) ) {
+		add_action( 'admin_notices', __NAMESPACE__ . '\\show_admin_notice' );
+	} else {
+		initialize_plugin();
+	}
+}
+add_action( 'init', __NAMESPACE__ . '\\check_wpgraphql_availability' );
+
+/**
+ * Initialize the plugin.
+ *
+ * @return void
+ */
+function initialize_plugin() {
+	add_action( 'admin_menu', __NAMESPACE__ . '\\register_dedicated_ide_menu' );
+	add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
+	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_icon_css' );
+	add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_icon_css' );
+	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
+	add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
+
+	add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_ide_settings' );
+	add_action( 'init', __NAMESPACE__ . '\\add_custom_capabilities' );
+	add_action( 'graphql_admin_notices_render_notices', __NAMESPACE__ . '\\graphql_admin_notices_render_notices', 10, 1 );
+	add_action( 'graphql_admin_notices_render_notice', __NAMESPACE__ . '\\graphql_admin_notices_render_notice', 10, 4 );
+
+	add_filter( 'graphql_admin_notices_is_allowed_admin_page', __NAMESPACE__ . '\\graphql_admin_notices_is_allowed_admin_page', 10, 3 );
+	add_filter( 'script_loader_tag', __NAMESPACE__ . '\\add_defer_attribute_to_script', 10, 2 );
+	add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_link_field_config', 10, 3 );
+	add_filter( 'graphql_get_setting_section_field_value', __NAMESPACE__ . '\\ensure_graphiql_link_is_unchecked', 10, 5 );
+	add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ . '\\add_settings_link' );
+
+	// Core plugins/modules.
+	require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/query-composer-panel/query-composer-panel.php';
+	require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/help-panel/help-panel.php';
+}
+
+/**
+ * Show admin notice if WPGraphQL is not available.
+ *
+ * @return void
+ */
+function show_admin_notice() {
+	?>
+	<div class="notice notice-error">
+		<h3><?php esc_html_e( 'WPGraphQL IDE cannot load', 'wpgraphql-ide' ); ?></h3>
+		<ol>
+			<li><?php esc_html_e( 'WPGraphQL must be installed and active', 'wpgraphql-ide' ); ?></li>
+		</ol>
+	</div>
+	<?php
+}
 
 /**
  * Retrieves the custom capabilities and their associated roles for the plugin.
@@ -103,7 +156,6 @@ function add_custom_capabilities() {
 	update_roles_capabilities( $capabilities );
 	save_capabilities_hash( $current_hash );
 }
-add_action( 'init', __NAMESPACE__ . '\\add_custom_capabilities' );
 
 /**
  * Checks if the current user has the capability required to load scripts and styles for the GraphQL IDE.
@@ -201,7 +253,6 @@ function register_wpadminbar_menus(): void {
 		);
 	}
 }
-add_action( 'admin_bar_menu', __NAMESPACE__ . '\\register_wpadminbar_menus', 999 );
 
 /**
  * Registers a submenu page for the dedicated GraphQL IDE.
@@ -231,7 +282,6 @@ function register_dedicated_ide_menu(): void {
 		__NAMESPACE__ . '\\render_dedicated_ide_page'
 	);
 }
-add_action( 'admin_menu', __NAMESPACE__ . '\\register_dedicated_ide_menu' );
 
 /**
  * Renders the container for the dedicated IDE page for the React app to be mounted to.
@@ -264,8 +314,6 @@ function enqueue_graphql_ide_menu_icon_css(): void {
 
 	wp_add_inline_style( 'admin-bar', $custom_css );
 }
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_icon_css' );
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_graphql_ide_menu_icon_css' );
 
 /**
  * Enqueues the React application script and associated styles.
@@ -346,8 +394,6 @@ function enqueue_react_app_with_styles(): void {
 	// Avoid running custom styles through a build process for an improved developer experience.
 	wp_enqueue_style( 'wpgraphql-ide', plugins_url( 'styles/wpgraphql-ide.css', __FILE__ ), [], $asset_file['version'] );
 }
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 
 /**
  * Retrieves the base URL for the dedicated WPGraphQL IDE page.
@@ -426,7 +472,6 @@ function graphql_admin_notices_render_notices( array $notices ) {
     </style>
     ';
 }
-add_action( 'graphql_admin_notices_render_notices', __NAMESPACE__ . '\\graphql_admin_notices_render_notices', 10, 1 );
 
 /**
  * Adds styles to apply top margin to notices added via register_graphql_admin_notice.
@@ -445,7 +490,6 @@ function graphql_admin_notices_render_notice( string $notice_slug, array $notice
     </style>
     ';
 }
-add_action( 'graphql_admin_notices_render_notice', __NAMESPACE__ . '\\graphql_admin_notices_render_notice', 10, 4 );
 
 /**
  * Filters to allow GraphQL admin notices to be displayed on the dedicated IDE page.
@@ -463,7 +507,6 @@ function graphql_admin_notices_is_allowed_admin_page( bool $is_plugin_scoped_pag
 
 	return $is_plugin_scoped_page;
 }
-add_filter( 'graphql_admin_notices_is_allowed_admin_page', __NAMESPACE__ . '\\graphql_admin_notices_is_allowed_admin_page', 10, 3 );
 
 /**
  * Modifies the script tag for specific scripts to add the 'defer' attribute.
@@ -479,7 +522,6 @@ function add_defer_attribute_to_script( string $tag, string $handle ): string {
 
 	return $tag;
 }
-add_filter( 'script_loader_tag', __NAMESPACE__ . '\\add_defer_attribute_to_script', 10, 2 );
 
 /**
  * Update the existing GraphiQL link field configuration to say "Legacy".
@@ -506,7 +548,6 @@ function update_graphiql_link_field_config( array $field_config, string $field_n
 	}
 	return $field_config;
 }
-add_filter( 'graphql_setting_field_config', __NAMESPACE__ . '\\update_graphiql_link_field_config', 10, 3 );
 
 /**
  * Ensure the `show_graphiql_link_in_admin_bar` setting is always unchecked.
@@ -524,7 +565,6 @@ function ensure_graphiql_link_is_unchecked( $value, $default_value, $option_name
 	}
 	return $value;
 }
-add_filter( 'graphql_get_setting_section_field_value', __NAMESPACE__ . '\\ensure_graphiql_link_is_unchecked', 10, 5 );
 
 /**
  * Registers custom GraphQL settings.
@@ -574,7 +614,6 @@ function register_ide_settings(): void {
 		]
 	);
 }
-add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_ide_settings' );
 
 /**
  * Sanitize the input value for the custom GraphQL IDE link behavior setting.
@@ -607,7 +646,6 @@ function add_settings_link( array $links ): array {
 	array_unshift( $links, $settings_link );
 	return $links;
 }
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ . '\\add_settings_link' );
 
 /**
  * Rename and reorder the submenu items under 'GraphQL'.
@@ -631,7 +669,6 @@ function rename_reorder_submenu_items(): void {
 		$submenu['graphiql-ide'] = $temp_submenu;
 	}
 }
-add_action( 'admin_menu', __NAMESPACE__ . '\\rename_reorder_submenu_items', 999 );
 
 /**
  * Generates the SVG logo for GraphQL.
