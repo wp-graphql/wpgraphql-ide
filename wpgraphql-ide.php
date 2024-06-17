@@ -102,7 +102,7 @@ function get_custom_capabilities() {
  * @return string MD5 hash of the capabilities array.
  */
 function generate_capabilities_hash( $capabilities ) {
-	return md5( wp_json_encode( $capabilities ) );
+	return md5( (string) wp_json_encode( $capabilities ) );
 }
 
 /**
@@ -121,7 +121,7 @@ function has_capabilities_hash_changed( $current_hash ) {
  *
  * @param array<string,mixed> $capabilities Array of capabilities and roles.
  */
-function update_roles_capabilities( $capabilities ) {
+function update_roles_capabilities( $capabilities ): void {
 	foreach ( $capabilities as $capability => $roles ) {
 		foreach ( $roles as $role_name ) {
 			$role = get_role( $role_name );
@@ -138,14 +138,14 @@ function update_roles_capabilities( $capabilities ) {
  *
  * @param string $current_hash Current hash of the capabilities array.
  */
-function save_capabilities_hash( $current_hash ) {
+function save_capabilities_hash( $current_hash ): void {
 	update_option( 'wpgraphql_ide_capabilities', $current_hash );
 }
 
 /**
  * Adds custom capabilities to specified roles.
  */
-function add_custom_capabilities() {
+function add_custom_capabilities(): void {
 	$capabilities = get_custom_capabilities();
 	$current_hash = generate_capabilities_hash( $capabilities );
 
@@ -188,7 +188,7 @@ function is_ide_page(): bool {
 	}
 
 	$screen = get_current_screen();
-	if ( ! $screen ) {
+	if ( ! ( $screen instanceof \WP_Screen ) ) {
 		return false;
 	}
 
@@ -206,7 +206,7 @@ function is_legacy_ide_page(): bool {
 	}
 
 	$screen = get_current_screen();
-	if ( ! $screen ) {
+	if ( ! ( $screen instanceof \WP_Screen ) ) {
 		return false;
 	}
 
@@ -334,7 +334,8 @@ function enqueue_react_app_with_styles(): void {
 	// Don't enqueue new styles/scripts on the legacy IDE page
 	if ( function_exists( 'get_current_screen' ) ) {
 		$screen = get_current_screen();
-		if ( 'toplevel_page_graphiql-ide' === $screen->id ) {
+		
+		if ( $screen instanceof \WP_Screen && 'toplevel_page_graphiql-ide' === $screen->id ) {
 			return;
 		}
 	}
@@ -421,7 +422,13 @@ function get_plugin_header( string $key = '' ): ?string {
 
 	$plugin_data = get_plugin_data( __FILE__ );
 
-	return $plugin_data[ $key ] ?? null;
+	if ( ! is_array( $plugin_data ) ) {
+		return null;
+	}
+
+	$plugin_header = $plugin_data[ $key ] ?? null;
+
+	return is_string( $plugin_header ) ? $plugin_header : null;
 }
 
 /**
@@ -452,7 +459,7 @@ function get_app_context(): array {
  *
  * @param array<int, mixed> $notices The array of notices to render.
  */
-function graphql_admin_notices_render_notices( array $notices ) {
+function graphql_admin_notices_render_notices( array $notices ): void {
 	echo '
     <style>
         body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
@@ -481,7 +488,7 @@ function graphql_admin_notices_render_notices( array $notices ) {
  * @param bool                 $is_dismissable Whether the notice is dismissable.
  * @param int                  $count The count of notices.
  */
-function graphql_admin_notices_render_notice( string $notice_slug, array $notice, bool $is_dismissable, int $count ) {
+function graphql_admin_notices_render_notice( string $notice_slug, array $notice, bool $is_dismissable, int $count ): void {
 	echo '
     <style>
         body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-' . esc_attr( $notice_slug ) . ' {
@@ -571,48 +578,53 @@ function ensure_graphiql_link_is_unchecked( $value, $default_value, $option_name
  */
 function register_ide_settings(): void {
 	// Add a tab section to the GraphQL admin settings page.
-	register_graphql_settings_section(
-		'graphql_ide_settings',
-		[
-			'title' => __( 'IDE Settings', 'wpgraphql-ide' ),
-			'desc'  => __( 'Customize your WPGraphQL IDE experience sitewide. Individual users can override these settings in their user profile.', 'wpgraphql-ide' ),
-		]
-	);
+	if ( function_exists( 'register_graphql_settings_section' ) ) {
+		register_graphql_settings_section(
+			'graphql_ide_settings',
+			[
+				'title' => __( 'IDE Settings', 'wpgraphql-ide' ),
+				'desc'  => __( 'Customize your WPGraphQL IDE experience sitewide. Individual users can override these settings in their user profile.', 'wpgraphql-ide' ),
+			]
+		);
+	}
 
-	register_graphql_settings_field(
-		'graphql_ide_settings',
-		[
-			'name'              => 'graphql_ide_link_behavior',
-			'label'             => __( 'Admin Bar Link Behavior', 'wpgraphql-ide' ),
-			'desc'              => __( 'How would you like to access the GraphQL IDE from the admin bar?', 'wpgraphql-ide' ),
-			'type'              => 'radio',
-			'options'           => [
-				'drawer'         => __( 'Drawer (recommended) — open the IDE in a slide up drawer from any page', 'wpgraphql-ide' ),
-				'dedicated_page' => sprintf(
-					wp_kses_post(
-						sprintf(
-							/* translators: %s: URL to the GraphQL IDE page */
-							__( 'Dedicated Page — direct link to <a href="%1$s">%1$s</a>', 'wpgraphql-ide' ),
-							esc_url( admin_url( 'admin.php?page=graphql-ide' ) )
+	if ( function_exists( 'register_graphql_settings_field' ) ) {
+
+		register_graphql_settings_field(
+			'graphql_ide_settings',
+			[
+				'name'              => 'graphql_ide_link_behavior',
+				'label'             => __( 'Admin Bar Link Behavior', 'wpgraphql-ide' ),
+				'desc'              => __( 'How would you like to access the GraphQL IDE from the admin bar?', 'wpgraphql-ide' ),
+				'type'              => 'radio',
+				'options'           => [
+					'drawer'         => __( 'Drawer (recommended) — open the IDE in a slide up drawer from any page', 'wpgraphql-ide' ),
+					'dedicated_page' => sprintf(
+						wp_kses_post(
+							sprintf(
+								/* translators: %s: URL to the GraphQL IDE page */
+								__( 'Dedicated Page — direct link to <a href="%1$s">%1$s</a>', 'wpgraphql-ide' ),
+								esc_url( admin_url( 'admin.php?page=graphql-ide' ) )
+							)
 						)
-					)
-				),
-				'disabled'       => __( 'Disabled — remove the IDE link from the admin bar', 'wpgraphql-ide' ),
-			],
-			'default'           => 'drawer',
-			'sanitize_callback' => __NAMESPACE__ . '\\sanitize_custom_graphql_ide_link_behavior',
-		]
-	);
+					),
+					'disabled'       => __( 'Disabled — remove the IDE link from the admin bar', 'wpgraphql-ide' ),
+				],
+				'default'           => 'drawer',
+				'sanitize_callback' => __NAMESPACE__ . '\\sanitize_custom_graphql_ide_link_behavior',
+			]
+		);
 
-	register_graphql_settings_field(
-		'graphql_ide_settings',
-		[
-			'name'  => 'graphql_ide_show_legacy_editor',
-			'label' => __( 'Show Legacy Editor', 'wpgraphql-ide' ),
-			'desc'  => __( 'Show the legacy editor', 'wpgraphql-ide' ),
-			'type'  => 'checkbox',
-		]
-	);
+		register_graphql_settings_field(
+			'graphql_ide_settings',
+			[
+				'name'  => 'graphql_ide_show_legacy_editor',
+				'label' => __( 'Show Legacy Editor', 'wpgraphql-ide' ),
+				'desc'  => __( 'Show the legacy editor', 'wpgraphql-ide' ),
+				'type'  => 'checkbox',
+			]
+		);
+	}
 }
 
 /**
