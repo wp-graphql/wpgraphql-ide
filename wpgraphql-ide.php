@@ -589,7 +589,6 @@ function register_ide_settings(): void {
 	}
 
 	if ( function_exists( 'register_graphql_settings_field' ) ) {
-
 		register_graphql_settings_field(
 			'graphql_ide_settings',
 			[
