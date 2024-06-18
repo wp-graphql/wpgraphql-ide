@@ -34,7 +34,9 @@ function check_wpgraphql_availability() {
 	if ( ! class_exists( 'WPGraphQL' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\\show_admin_notice' );
 	} else {
-		initialize_plugin();
+		add_custom_capabilities();
+
+		do_action( 'wpgraphql_ide_init' );
 	}
 }
 add_action( 'init', __NAMESPACE__ . '\\check_wpgraphql_availability' );
@@ -53,7 +55,6 @@ function initialize_plugin() {
 	add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_react_app_with_styles' );
 
 	add_action( 'graphql_register_settings', __NAMESPACE__ . '\\register_ide_settings' );
-	add_action( 'init', __NAMESPACE__ . '\\add_custom_capabilities' );
 	add_action( 'graphql_admin_notices_render_notices', __NAMESPACE__ . '\\graphql_admin_notices_render_notices', 10, 1 );
 	add_action( 'graphql_admin_notices_render_notice', __NAMESPACE__ . '\\graphql_admin_notices_render_notice', 10, 4 );
 
@@ -67,6 +68,7 @@ function initialize_plugin() {
 	require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/query-composer-panel/query-composer-panel.php';
 	require_once WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'plugins/help-panel/help-panel.php';
 }
+add_action( 'wpgraphql_ide_init', __NAMESPACE__ . '\\initialize_plugin' );
 
 /**
  * Show admin notice if WPGraphQL is not available.
