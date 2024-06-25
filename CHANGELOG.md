@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.4
+
+### Patch Changes
+
+- 8f6f131: Update license to GPL-3
+
 ## 2.1.3
 
 ### Patch Changes
