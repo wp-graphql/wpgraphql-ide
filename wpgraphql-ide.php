@@ -10,6 +10,7 @@
  * Version:           2.1.2
  * Requires PHP:      7.4
  * Tested up to:      6.5
+ * Requires Plugins:  wp-graphql
  *
  * @package WPGraphQLIDE
  */
