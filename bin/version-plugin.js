@@ -43,7 +43,7 @@ async function versionPlugin() {
 async function bumpPluginHeader( pluginFile, version ) {
 	return bumpVersion(
 		pluginFile,
-		/^\s*\*\s*Version:\s*([0-9.]+)$/gm,
+		/^\s*\*\s*Version:\s*([0-9.]+)\s*$/gm,
 		version
 	);
 }
@@ -60,7 +60,7 @@ async function bumpStableTag( readmeTxt, version ) {
 }
 
 /**
- * Updates the version constant found in the WPGraphQLContentBlocks.php file.
+ * Updates the version constant found in the wpgraphql-ide.php file.
  *
  * @param {string} pluginFile Full path to a file containing PHP constants.
  * @param {string} version    The new version number.
@@ -68,7 +68,7 @@ async function bumpStableTag( readmeTxt, version ) {
 async function bumpVersionConstant( pluginFile, version ) {
 	return bumpVersion(
 		pluginFile,
-		/^\s*define\(\s*'WPGRAPHQL_IDE_VERSION',\s*'([0-9.]+)'\s*\);/,
+		/^\s*define\(\s*'WPGRAPHQL_IDE_VERSION',\s*'([0-9.]+)'\s*\);/gm,
 		version
 	);
 }
@@ -115,7 +115,7 @@ async function bumpVersion( file, regex, version ) {
  *
  * @param {string} pluginPath Full path to the directory containing the plugin's
  *                            package.json file.
- * @return The version number string found in the plugin's package.json.
+ * @return {string|undefined} The version number string found in the plugin's package.json.
  */
 async function getNewVersion( pluginPath ) {
 	const packageJsonFile = path.join( pluginPath, 'package.json' );

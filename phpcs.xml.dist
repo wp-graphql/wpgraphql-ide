@@ -91,6 +91,14 @@
 		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter" />
 	</rule>
 
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="manage_graphql_ide" />
+			</property>
+		</properties>
+	</rule>
+
 	<!-- Tests for inline documentation of code -->
 	<rule ref="WordPress-Docs">
 		<!-- Conflicts with FQCN -->
