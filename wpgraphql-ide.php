@@ -5,7 +5,8 @@
  * Author:            WPGraphQL, Joseph Fusco
  * Author URI:        https://github.com/josephfusco
  * GitHub Plugin URI: https://github.com/wp-graphql/wpgraphql-ide
- * License:           GPLv3 or later
+ * License:           GPL-3
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       wpgraphql-ide
  * Version:           2.1.2
  * Requires PHP:      7.4
