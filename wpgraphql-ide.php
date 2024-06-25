@@ -7,7 +7,7 @@
  * GitHub Plugin URI: https://github.com/wp-graphql/wpgraphql-ide
  * License:           GPLv3 or later
  * Text Domain:       wpgraphql-ide
- * Version:           2.1.2
+ * Version:           2.1.3
  * Requires PHP:      7.4
  * Tested up to:      6.5
  * Requires Plugins:  wp-graphql
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPGRAPHQL_IDE_VERSION', '2.1.2' );
+define( 'WPGRAPHQL_IDE_VERSION', '2.1.3' );
 define( 'WPGRAPHQL_IDE_ROOT_ELEMENT_ID', 'wpgraphql-ide-root' );
 define( 'WPGRAPHQL_IDE_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPGRAPHQL_IDE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
