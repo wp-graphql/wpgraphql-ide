@@ -270,7 +270,7 @@ function register_wpadminbar_menus(): void {
 }
 
 /**
- * Registers a submenu page for the dedicated GraphQL IDE.
+ * Registers a submenu page for the dedicated GraphQL IDE and reorder the items.
  *
  * @see add_submenu_page() For more information on adding submenu pages.
  * @link https://developer.wordpress.org/reference/functions/add_submenu_page/
@@ -296,6 +296,65 @@ function register_dedicated_ide_menu(): void {
 		'graphql-ide',
 		__NAMESPACE__ . '\\render_dedicated_ide_page'
 	);
+
+	// Reorder the submenu items.
+	add_action( 'admin_menu', __NAMESPACE__ . '\\reorder_graphql_submenu_items', 100 );
+}
+
+/**
+ * Reorder the submenu items under the GraphQL menu.
+ */
+function reorder_graphql_submenu_items(): void {
+	global $submenu;
+
+	if ( isset( $submenu['graphiql-ide'] ) ) {
+		$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
+		$show_legacy_editor   = isset( $graphql_ide_settings['graphql_ide_show_legacy_editor'] ) ? $graphql_ide_settings['graphql_ide_show_legacy_editor'] : 'off';
+
+		// Extract existing submenu items.
+		$graphql_ide  = null;
+		$graphiql_ide = null;
+		$extensions   = null;
+		$settings     = null;
+
+		foreach ( $submenu['graphiql-ide'] as $item ) {
+			switch ( $item[0] ) {
+				case 'GraphQL IDE':
+					$graphql_ide = $item;
+					break;
+				case 'GraphiQL IDE': // Legacy menu item.
+					$graphiql_ide = $item;
+					break;
+				case 'Extensions':
+					$extensions = $item;
+					break;
+				case 'Settings':
+					$settings = $item;
+					break;
+			}
+		}
+
+		// Create the reordered submenu array.
+		$ordered_submenu = [];
+
+		if ( $graphql_ide ) {
+			$ordered_submenu[] = $graphql_ide;
+		}
+		if ( 'on' === $show_legacy_editor && $graphiql_ide ) {
+			$graphiql_ide[0]   = 'Legacy GraphQL IDE';
+			$ordered_submenu[] = $graphiql_ide;
+		}
+		if ( $extensions ) {
+			$ordered_submenu[] = $extensions;
+		}
+		if ( $settings ) {
+			$ordered_submenu[] = $settings;
+		}
+
+		// Merge the reordered submenu back into the global $submenu.
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$submenu['graphiql-ide'] = $ordered_submenu;
+	}
 }
 
 /**
