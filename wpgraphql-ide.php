@@ -270,7 +270,7 @@ function register_wpadminbar_menus(): void {
 }
 
 /**
- * Registers a submenu page for the dedicated GraphQL IDE.
+ * Registers a submenu page for the dedicated GraphQL IDE and reorder the items.
  *
  * @see add_submenu_page() For more information on adding submenu pages.
  * @link https://developer.wordpress.org/reference/functions/add_submenu_page/
@@ -297,6 +297,7 @@ function register_dedicated_ide_menu(): void {
 		__NAMESPACE__ . '\\render_dedicated_ide_page'
 	);
 
+	// Reorder the submenu items.
 	add_action( 'admin_menu', __NAMESPACE__ . '\\reorder_graphql_submenu_items', 100 );
 }
 
@@ -306,48 +307,51 @@ function register_dedicated_ide_menu(): void {
 function reorder_graphql_submenu_items(): void {
 	global $submenu;
 
-	$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
-	$show_legacy_editor   = isset( $graphql_ide_settings['graphql_ide_show_legacy_editor'] ) ? $graphql_ide_settings['graphql_ide_show_legacy_editor'] : 'off';
-
 	if ( isset( $submenu['graphiql-ide'] ) ) {
+		$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
+		$show_legacy_editor   = isset( $graphql_ide_settings['graphql_ide_show_legacy_editor'] ) ? $graphql_ide_settings['graphql_ide_show_legacy_editor'] : 'off';
+
+		// Extract existing submenu items.
+		$graphql_ide  = null;
+		$graphiql_ide = null;
+		$extensions   = null;
+		$settings     = null;
+
+		foreach ( $submenu['graphiql-ide'] as $key => $item ) {
+			switch ( $item[0] ) {
+				case 'GraphQL IDE':
+					$graphql_ide = $item;
+					break;
+				case 'GraphiQL IDE':
+					$graphiql_ide = $item;
+					break;
+				case 'Extensions':
+					$extensions = $item;
+					break;
+				case 'Settings':
+					$settings = $item;
+					break;
+			}
+		}
+
+		// Create the reordered submenu array.
 		$ordered_submenu = [];
 
-		// Always add GraphQL IDE first.
-		foreach ( $submenu['graphiql-ide'] as $item ) {
-			if ( 'GraphQL IDE' === $item[0] ) {
-				$ordered_submenu[] = $item;
-				break;
-			}
+		if ( $graphql_ide ) {
+			$ordered_submenu[] = $graphql_ide;
+		}
+		if ( 'on' === $show_legacy_editor && $graphiql_ide ) {
+			$graphiql_ide[0]   = 'Legacy GraphQL IDE';
+			$ordered_submenu[] = $graphiql_ide;
+		}
+		if ( $extensions ) {
+			$ordered_submenu[] = $extensions;
+		}
+		if ( $settings ) {
+			$ordered_submenu[] = $settings;
 		}
 
-		// Conditionally add GraphiQL IDE second.
-		if ( 'on' === $show_legacy_editor ) {
-			foreach ( $submenu['graphiql-ide'] as $item ) {
-				if ( 'GraphiQL IDE' === $item[0] ) {
-					$item[0]           = 'Legacy GraphQL IDE';
-					$ordered_submenu[] = $item;
-					break;
-				}
-			}
-		}
-
-		// Add Extensions next.
-		foreach ( $submenu['graphiql-ide'] as $item ) {
-			if ( 'Extensions' === $item[0] ) {
-				$ordered_submenu[] = $item;
-				break;
-			}
-		}
-
-		// Add Settings last.
-		foreach ( $submenu['graphiql-ide'] as $item ) {
-			if ( 'Settings' === $item[0] ) {
-				$ordered_submenu[] = $item;
-				break;
-			}
-		}
-
-		// Apply the reordered submenu.
+		// Merge the reordered submenu back into the global $submenu.
 		$submenu['graphiql-ide'] = $ordered_submenu;
 	}
 }
