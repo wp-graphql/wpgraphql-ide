@@ -296,6 +296,60 @@ function register_dedicated_ide_menu(): void {
 		'graphql-ide',
 		__NAMESPACE__ . '\\render_dedicated_ide_page'
 	);
+
+	add_action( 'admin_menu', __NAMESPACE__ . '\\reorder_graphql_submenu_items', 100 );
+}
+
+/**
+ * Reorder the submenu items under the GraphQL menu.
+ */
+function reorder_graphql_submenu_items(): void {
+	global $submenu;
+
+	$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
+	$show_legacy_editor   = isset( $graphql_ide_settings['graphql_ide_show_legacy_editor'] ) ? $graphql_ide_settings['graphql_ide_show_legacy_editor'] : 'off';
+
+	if ( isset( $submenu['graphiql-ide'] ) ) {
+		$ordered_submenu = [];
+
+		// Always add GraphQL IDE first.
+		foreach ( $submenu['graphiql-ide'] as $item ) {
+			if ( 'GraphQL IDE' === $item[0] ) {
+				$ordered_submenu[] = $item;
+				break;
+			}
+		}
+
+		// Conditionally add GraphiQL IDE second.
+		if ( 'on' === $show_legacy_editor ) {
+			foreach ( $submenu['graphiql-ide'] as $item ) {
+				if ( 'GraphiQL IDE' === $item[0] ) {
+					$item[0]           = 'Legacy GraphQL IDE';
+					$ordered_submenu[] = $item;
+					break;
+				}
+			}
+		}
+
+		// Add Extensions next.
+		foreach ( $submenu['graphiql-ide'] as $item ) {
+			if ( 'Extensions' === $item[0] ) {
+				$ordered_submenu[] = $item;
+				break;
+			}
+		}
+
+		// Add Settings last.
+		foreach ( $submenu['graphiql-ide'] as $item ) {
+			if ( 'Settings' === $item[0] ) {
+				$ordered_submenu[] = $item;
+				break;
+			}
+		}
+
+		// Apply the reordered submenu.
+		$submenu['graphiql-ide'] = $ordered_submenu;
+	}
 }
 
 /**
