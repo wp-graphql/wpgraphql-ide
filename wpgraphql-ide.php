@@ -89,6 +89,32 @@ function show_admin_notice() {
 }
 
 /**
+ * Assign custom capability to administrator role on plugin activation.
+ */
+function wpgraphql_ide_activate(): void {
+	$administrator = get_role( 'administrator' );
+	if ( $administrator ) {
+		$administrator->add_cap( 'manage_graphql_ide' );
+	}
+}
+register_activation_hook( __FILE__, __NAMESPACE__ . '\\wpgraphql_ide_activate' );
+
+/**
+ * Adds custom capabilities to specified roles.
+ */
+function add_custom_capabilities(): void {
+	$capabilities = get_custom_capabilities();
+	$current_hash = generate_capabilities_hash( $capabilities );
+
+	if ( ! has_capabilities_hash_changed( $current_hash ) ) {
+		return;
+	}
+
+	update_roles_capabilities( $capabilities );
+	save_capabilities_hash( $current_hash );
+}
+
+/**
  * Retrieves the custom capabilities and their associated roles for the plugin.
  *
  * @return array<string,mixed> The array of custom capabilities and roles.
@@ -144,21 +170,6 @@ function update_roles_capabilities( $capabilities ): void {
  */
 function save_capabilities_hash( $current_hash ): void {
 	update_option( 'wpgraphql_ide_capabilities', $current_hash );
-}
-
-/**
- * Adds custom capabilities to specified roles.
- */
-function add_custom_capabilities(): void {
-	$capabilities = get_custom_capabilities();
-	$current_hash = generate_capabilities_hash( $capabilities );
-
-	if ( ! has_capabilities_hash_changed( $current_hash ) ) {
-		return;
-	}
-
-	update_roles_capabilities( $capabilities );
-	save_capabilities_hash( $current_hash );
 }
 
 /**
