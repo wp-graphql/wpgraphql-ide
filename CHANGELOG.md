@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.5
+
+### Patch Changes
+
+- cb6eda0: Reorder sidebar menu to always have the IDE first.
+- 1f50c93: Fixes issue where custom capability was not being assigned to the administrator role. This now happens on plugin activation.
+
 ## 2.1.4
 
 ### Patch Changes
