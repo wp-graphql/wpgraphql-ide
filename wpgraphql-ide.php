@@ -317,12 +317,12 @@ function reorder_graphql_submenu_items(): void {
 		$extensions   = null;
 		$settings     = null;
 
-		foreach ( $submenu['graphiql-ide'] as $key => $item ) {
+		foreach ( $submenu['graphiql-ide'] as $item ) {
 			switch ( $item[0] ) {
 				case 'GraphQL IDE':
 					$graphql_ide = $item;
 					break;
-				case 'GraphiQL IDE':
+				case 'GraphiQL IDE': // Legacy menu item.
 					$graphiql_ide = $item;
 					break;
 				case 'Extensions':
@@ -352,6 +352,7 @@ function reorder_graphql_submenu_items(): void {
 		}
 
 		// Merge the reordered submenu back into the global $submenu.
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$submenu['graphiql-ide'] = $ordered_submenu;
 	}
 }
