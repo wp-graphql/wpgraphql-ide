@@ -91,7 +91,7 @@ function show_admin_notice() {
 /**
  * Assign custom capability to administrator role on plugin activation.
  */
-function wpgraphql_ide_activate() {
+function wpgraphql_ide_activate(): void {
 	$administrator = get_role( 'administrator' );
 	if ( $administrator ) {
 		$administrator->add_cap( 'manage_graphql_ide' );
