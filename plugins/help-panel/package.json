@@ -1,6 +1,7 @@
 {
-	"name": "help-panel",
+	"name": "@wpgraphql-ide/help-panel",
 	"private": true,
+	"main": "build/help-panel.js",
 	"scripts": {
 		"build": "wp-scripts build",
 		"start": "wp-scripts start",
@@ -11,17 +12,9 @@
 		"lint:js:src": "wp-scripts lint-js ./src"
 	},
 	"devDependencies": {
-		"@babel/preset-env": "^7.23.9",
-		"@babel/preset-react": "^7.23.3",
-		"@types/node": "^20.11.16",
-		"@wordpress/scripts": "^27.9.0",
-		"babel-jest": "^29.7.0",
-		"clsx": "^2.0.0"
+		"@wordpress/scripts": "^27.9.0"
 	},
 	"dependencies": {
-		"@wordpress/data": "^9.26.0",
-		"@wordpress/element": "^5.33.0",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1"
+		"@wordpress/icons": "^10.0.0"
 	}
 }
