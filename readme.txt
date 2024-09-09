@@ -18,6 +18,15 @@ GraphQL IDE for WPGraphQL
 
 == Frequently Asked Questions ==
 
+= Where can I find the non-compressed JavaScript and CSS source code? =
+
+The non-compressed source code for the JavaScript and CSS files is available in the following directories:
+
+- **Scripts**: [src/ directory](https://github.com/wp-graphql/wpgraphql-ide/tree/main/src)
+- **Styles**: [styles/ directory](https://github.com/wp-graphql/wpgraphql-ide/tree/main/styles)
+
+You can view or download the source code directly from the GitHub repository.
+
 == Screenshots ==
 
 == Changelog ==
