@@ -534,8 +534,7 @@ function get_app_context(): array {
  * @param array<int, mixed> $notices The array of notices to render.
  */
 function graphql_admin_notices_render_notices( array $notices ): void {
-	echo '
-    <style>
+	$custom_css = '
         body.graphql_page_graphql-ide #wpbody .wpgraphql-admin-notice {
             display: block;
             position: absolute;
@@ -550,8 +549,16 @@ function graphql_admin_notices_render_notices( array $notices ): void {
         body.graphql_page_graphql-ide #wpgraphql-ide-root {
             height: calc(100vh - var(--wp-admin--admin-bar--height) - ' . count( $notices ) * 45 . 'px);
         }
-    </style>
     ';
+
+	/**
+	 * Register and enqueue the custom CSS is needed in order to properly add inline styles.
+	 * This is needed because of the way graphql_admin_notices_render_notices is called, outside of the normal enqueue process.
+	 */
+	// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	wp_register_style( 'wpgraphql-ide-admin-notices', false );
+	wp_enqueue_style( 'wpgraphql-ide-admin-notices' );
+	wp_add_inline_style( 'wpgraphql-ide-admin-notices', $custom_css );
 }
 
 /**
@@ -563,13 +570,20 @@ function graphql_admin_notices_render_notices( array $notices ): void {
  * @param int                  $count The count of notices.
  */
 function graphql_admin_notices_render_notice( string $notice_slug, array $notice, bool $is_dismissable, int $count ): void {
-	echo '
-    <style>
+	$custom_css = '
         body.graphql_page_graphql-ide #wpbody #wpgraphql-admin-notice-' . esc_attr( $notice_slug ) . ' {
             top: ' . esc_attr( ( $count * 45 ) . 'px' ) . ';
         }
-    </style>
     ';
+
+	/**
+	 * Register and enqueue the custom CSS is needed in order to properly add inline styles.
+	 * This is needed because of the way graphql_admin_notices_render_notices is called, outside of the normal enqueue process.
+	 */
+	// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	wp_register_style( 'wpgraphql-ide-admin-notice', false );
+	wp_enqueue_style( 'wpgraphql-ide-admin-notice' );
+	wp_add_inline_style( 'wpgraphql-ide-admin-notice', $custom_css );
 }
 
 /**
