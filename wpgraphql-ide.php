@@ -253,7 +253,7 @@ function register_wpadminbar_menus(): void {
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"><span class="ab-icon"></span>' . $app_context['drawerButtonLabel'] . '</div>',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"><span class="ab-icon"></span>' . esc_html( $app_context['drawerButtonLabel'] ) . '</div>',
 				'href'  => '#',
 			]
 		);
@@ -262,8 +262,8 @@ function register_wpadminbar_menus(): void {
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide',
-				'title' => '<span class="ab-icon"></span>' . $app_context['drawerButtonLabel'],
-				'href'  => admin_url( 'admin.php?page=graphql-ide' ),
+				'title' => '<span class="ab-icon"></span>' . esc_html( $app_context['drawerButtonLabel'] ),
+				'href'  => esc_url( admin_url( 'admin.php?page=graphql-ide' ) ),
 			]
 		);
 	}
@@ -290,8 +290,8 @@ function register_dedicated_ide_menu(): void {
 
 	add_submenu_page(
 		'graphiql-ide',
-		__( 'GraphQL IDE', 'wpgraphql-ide' ),
-		__( 'GraphQL IDE', 'wpgraphql-ide' ),
+		esc_html__( 'GraphQL IDE', 'wpgraphql-ide' ),
+		esc_html__( 'GraphQL IDE', 'wpgraphql-ide' ),
 		'manage_graphql_ide',
 		'graphql-ide',
 		__NAMESPACE__ . '\\render_dedicated_ide_page'
