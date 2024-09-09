@@ -775,7 +775,7 @@ function rename_reorder_submenu_items(): void {
  * @return string The SVG logo markup.
  */
 function graphql_logo_svg(): string {
-	$svg = '<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">';
+	$svg  = '<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">';
 	$svg .= '<circle cx="80" cy="80" r="64" fill="url(#paint0_radial_30_2860)"/>';
 	$svg .= '<g filter="url(#filter0_d_30_2860)">';
 	$svg .= '<path d="M81.5239 72.2556C84.2608 72.2556 86.4795 70.0369 86.4795 67.3C86.4795 64.5632 84.2608 62.3445 81.5239 62.3445C78.787 62.3445 76.5684 64.5632 76.5684 67.3C76.5684 70.0369 78.787 72.2556 81.5239 72.2556Z" fill="white"/>';
