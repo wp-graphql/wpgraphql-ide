@@ -88,22 +88,22 @@ export function AppWrapper() {
 		/**
 		 * Perform actions on component mount.
 		 *
-		 * Triggers a custom action 'wpgraphqlide_rendered' when the App component mounts,
+		 * Triggers a custom action 'wpgraphql-ide.rendered' when the App component mounts,
 		 * allowing plugins or themes to hook into this event. The action passes
 		 * the current state of `drawerOpen` to any listeners, providing context
 		 * about the application's UI state.
 		 */
-		doAction( 'wpgraphqlide_rendered' );
+		doAction( 'wpgraphql-ide.rendered' );
 
 		/**
 		 * Cleanup action on component unmount.
 		 *
-		 * Returns a cleanup function that triggers the 'wpgraphqlide_destroyed' action,
+		 * Returns a cleanup function that triggers the 'wpgraphql-ide.destroyed' action,
 		 * signaling that the App component is about to unmount. This allows for
 		 * any necessary cleanup or teardown operations in response to the App
 		 * component's lifecycle.
 		 */
-		return () => doAction( 'wpgraphqlide_destroyed' );
+		return () => doAction( 'wpgraphql-ide.destroyed' );
 	}, [] );
 
 	return <RenderAppWrapper />;

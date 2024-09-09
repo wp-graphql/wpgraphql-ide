@@ -14,8 +14,13 @@
 
 ## JavaScript Actions
 
-- `wpgraphqlide_destroyed`
-- `wpgraphqlide_rendered` ([graphiql_rendered](https://www.wpgraphql.com/docs/customizing-wpgraphiql#graphiql_rendered))
+- `wpgraphql-ide.init`
+- `wpgraphql-ide.rendered` ([graphiql_rendered](https://www.wpgraphql.com/docs/customizing-wpgraphiql#graphiql_rendered))
+- `wpgraphql-ide.destroyed`
+- `wpgraphql-ide.afterRegisterToolbarButton`
+- `wpgraphql-ide.registerToolbarButtonError`
+- `wpgraphql-ide.afterRegisterActivityBarPanel`
+- `wpgraphql-ide.registerActivityBarPanelError`
 
 ## JavaScript Filters
 
