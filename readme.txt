@@ -27,6 +27,14 @@ The non-compressed source code for the JavaScript and CSS files is available in 
 
 You can view or download the source code directly from the GitHub repository.
 
+= What are some of the major dependencies used in the plugin? =
+
+The WPGraphQL IDE plugin includes several important dependencies. You can learn more about these libraries at the following links:
+
+- **GraphQL.js**: [https://github.com/graphql/graphql-js](https://github.com/graphql/graphql-js)
+- **GraphiQL**: [https://github.com/graphql/graphiql](https://github.com/graphql/graphiql)
+- **Vaul**: [https://github.com/emilkowalski/vaul](https://github.com/emilkowalski/vaul)
+
 == Screenshots ==
 
 == Changelog ==
