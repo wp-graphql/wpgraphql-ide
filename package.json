@@ -42,6 +42,7 @@
     "wp-env": "wp-env"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@playwright/test": "^1.41.2",
@@ -63,7 +64,6 @@
     "sort-package-json": "^2.7.0"
   },
   "dependencies": {
-    "@changesets/cli": "^2.27.1",
     "@graphiql/react": "^0.22.2",
     "@graphiql/toolkit": "^0.9.1",
     "@wordpress/components": "^27.0.0",

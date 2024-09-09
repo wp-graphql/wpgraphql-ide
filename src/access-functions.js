@@ -21,11 +21,11 @@ export function registerDocumentEditorToolbarButton(
 			config,
 			priority
 		);
-		hooks.doAction( 'afterRegisterToolbarButton', name, config, priority );
+		hooks.doAction( 'wpgraphql-ide.afterRegisterToolbarButton', name, config, priority );
 	} catch ( error ) {
 		console.error( `Failed to register button: ${ name }`, error );
 		hooks.doAction(
-			'registerToolbarButtonError',
+			'wpgraphql-ide.registerToolbarButtonError',
 			name,
 			config,
 			priority,
@@ -42,7 +42,7 @@ export function registerActivityBarPanel( name, config, priority = 10 ) {
 			priority
 		);
 		hooks.doAction(
-			'afterRegisterActivityBarPanel',
+			'wpgraphql-ide.afterRegisterActivityBarPanel',
 			name,
 			config,
 			priority
@@ -53,7 +53,7 @@ export function registerActivityBarPanel( name, config, priority = 10 ) {
 			error
 		);
 		hooks.doAction(
-			'registerActivityBarPanelError',
+			'wpgraphql-ide.registerActivityBarPanelError',
 			name,
 			config,
 			priority,
@@ -74,7 +74,7 @@ export function registerActivityBarPanel( name, config, priority = 10 ) {
 // 			priority
 // 		);
 // 		hooks.doAction(
-// 			'afterRegisterActivityBarUtilityButton',
+// 			'wpgraphql-ide.afterRegisterActivityBarUtilityButton',
 // 			name,
 // 			config,
 // 			priority
@@ -82,7 +82,7 @@ export function registerActivityBarPanel( name, config, priority = 10 ) {
 // 	} catch ( error ) {
 // 		console.error( `Failed to register button: ${ name }`, error );
 // 		hooks.doAction(
-// 			'registerActivityBarUtilityButtonError',
+// 			'wpgraphql-ide.registerActivityBarUtilityButtonError',
 // 			name,
 // 			config,
 // 			priority,
