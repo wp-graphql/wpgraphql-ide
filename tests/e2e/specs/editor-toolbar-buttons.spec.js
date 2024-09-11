@@ -53,7 +53,7 @@ describe( 'Toolbar Buttons', () => {
 
 	describe( 'Auth button', () => {
 		beforeEach( async ( { page } ) => {
-			await typeQuery( page, 'query { viewer { name } }' );
+			await typeQuery( page, 'query { viewer { __typename, name } }' );
 		} );
 
 		test( 'Default state is authenticated', async ( { page } ) => {

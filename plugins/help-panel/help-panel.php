@@ -39,4 +39,4 @@ function enqueue_assets(): void {
 	);
 
 }
-add_action( 'wpgraphqlide_enqueue_script', __NAMESPACE__ . '\enqueue_assets' );
+add_action( 'wpgraphql_ide_enqueue_script', __NAMESPACE__ . '\enqueue_assets' );
