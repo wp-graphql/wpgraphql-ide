@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.0.0
+
+### Major Changes
+
+- eda911d: Updated the plugin's custom filter and action names to be consistent across the plugin
+
+### Patch Changes
+
+- eda911d: Fixed bug where credentials were being sent in the headers unnecessarily under certain conditions
+
 ## 3.0.0
 
 ### Major Changes
