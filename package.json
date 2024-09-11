@@ -1,6 +1,6 @@
 {
   "name": "wpgraphql-ide",
-  "version": "2.1.5",
+  "version": "3.0.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -59,7 +59,7 @@
     "docker-compose": "^0.24.6",
     "dotenv": "^16.4.4",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
+    "lint-staged": "^15.2.10",
     "rimraf": "^5.0.0",
     "sort-package-json": "^2.7.0"
   },
