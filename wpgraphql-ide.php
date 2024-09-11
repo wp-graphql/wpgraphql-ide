@@ -178,7 +178,7 @@ function save_capabilities_hash( $current_hash ): void {
  * @return bool Whether the user has the required capability.
  */
 function user_has_graphql_ide_capability(): bool {
-	$capability_required = apply_filters( 'wpgraphqlide_capability_required', 'manage_graphql_ide' );
+	$capability_required = apply_filters( 'wpgraphql_ide_capability_required', 'manage_graphql_ide' );
 
 	return current_user_can( $capability_required );
 }
@@ -453,7 +453,7 @@ function enqueue_react_app_with_styles(): void {
 
 	// Extensions looking to extend GraphiQL can hook in here,
 	// after the window object is established, but before the App renders
-	do_action( 'wpgraphqlide_enqueue_script', $app_context );
+	do_action( 'wpgraphql_ide_enqueue_script', $app_context );
 
 	wp_enqueue_script(
 		'wpgraphql-ide-render',
@@ -517,11 +517,11 @@ function get_app_context(): array {
 	$avatar_url = $current_user->exists() ? get_avatar_url( $current_user->ID ) : '';
 
 	return apply_filters(
-		'wpgraphqlide_context',
+		'wpgraphql_ide_context',
 		[
 			'pluginVersion'     => get_plugin_header( 'Version' ),
 			'pluginName'        => get_plugin_header( 'Name' ),
-			'externalFragments' => apply_filters( 'wpgraphqlide_external_fragments', [] ),
+			'externalFragments' => apply_filters( 'wpgraphql_ide_external_fragments', [] ),
 			'avatarUrl'         => $avatar_url,
 			'drawerButtonLabel' => __( 'GraphQL IDE', 'wpgraphql-ide' ),
 		]
