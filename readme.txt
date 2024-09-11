@@ -3,7 +3,7 @@ Contributors: jasonbahl, joefusco
 Tags: headless, decoupled, graphql, devtools
 Requires at least: 5.7
 Tested up to: 6.5
-Stable tag: 3.0.0
+Stable tag: 4.0.0
 Requires PHP: 7.4
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -39,6 +39,16 @@ The WPGraphQL IDE plugin includes several important dependencies. You can learn 
 
 == Changelog ==
 
+= 4.0.0 =
+
+### Major Changes
+
+- eda911d: Updated the plugin's custom filter and action names to be consistent across the plugin
+
+### Patch Changes
+
+- eda911d: Fixed bug where credentials were being sent in the headers unnecessarily under certain conditions
+
 = 3.0.0 =
 
 ### Major Changes
@@ -51,11 +61,5 @@ The WPGraphQL IDE plugin includes several important dependencies. You can learn 
 
 - cb6eda0: Reorder sidebar menu to always have the IDE first.
 - 1f50c93: Fixes issue where custom capability was not being assigned to the administrator role. This now happens on plugin activation.
-
-= 2.1.4 =
-
-### Patch Changes
-
-- 8f6f131: Update license to GPL-3
 
 [View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
