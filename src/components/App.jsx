@@ -58,7 +58,7 @@ export function App() {
 					Field( node ) {
 						if (
 							node.name.value === '__schema' ||
-							node.name.value === '__type'
+							node.name.value === '__typename'
 						) {
 							isIntrospectionQuery = true;
 							return visit.BREAK; // Early exit if introspection query is detected
@@ -71,22 +71,22 @@ export function App() {
 
 			const { graphqlEndpoint } = window.WPGRAPHQL_IDE_DATA;
 
+			const base64Credentials = btoa( `growth:growth` );
+
 			const headers = {
 				'Content-Type': 'application/json',
+				Authorization: `Basic ${ base64Credentials }`,
 			};
 
-			const credentials = isIntrospectionQuery
-				? 'include'
-				: isAuthenticated
-					? 'include'
-					: 'omit';
-
-			console.log({credentials});
 			const response = await fetch( graphqlEndpoint, {
 				method: 'POST',
 				headers,
 				body: JSON.stringify( graphQLParams ),
-				credentials,
+				credentials: isIntrospectionQuery
+					? 'include'
+					: isAuthenticated
+					? 'include'
+					: 'omit',
 			} );
 
 			return response.json();
