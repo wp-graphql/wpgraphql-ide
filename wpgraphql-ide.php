@@ -387,7 +387,7 @@ function enqueue_graphql_ide_menu_icon_css(): void {
         }
     ';
 
-	wp_add_inline_style( 'admin-bar', esc_html( $custom_css ) );
+	wp_add_inline_style( 'admin-bar', wp_kses_post( $custom_css ) );
 }
 
 /**
@@ -455,7 +455,7 @@ function enqueue_react_app_with_styles(): void {
 
 	// Extensions looking to extend GraphiQL can hook in here,
 	// after the window object is established, but before the App renders
-	do_action( 'wpgraphql_ide_enqueue_script', $app_context );
+	do_action( 'wpgraphql_ide_enqueue_script', $safe_app_context );
 
 	wp_enqueue_script(
 		'wpgraphql-ide-render',
@@ -517,15 +517,13 @@ function get_external_fragments(): array {
 	$external_fragments = apply_filters( 'wpgraphql_ide_external_fragments', [] );
 
 	// Loop through each fragment, sanitize, and ensure it's a valid GraphQL fragment.
-	$sanitized_fragments = array_filter(
+	return array_filter(
 		array_map( 'sanitize_text_field', $external_fragments ),
-		function( $fragment ) {
+		static function ( string $fragment ): bool {
 			// Check if the fragment starts with "fragment" and contains "on" (basic GraphQL fragment validation).
-			return preg_match( '/^fragment\s+\w+\s+on\s+\w+\s*{/', trim( $fragment ) );
+			return preg_match( '/^fragment\s+\w+\s+on\s+\w+\s*{/', trim( $fragment ) ) === 1;
 		}
 	);
-
-	return $sanitized_fragments;
 }
 
 /**
@@ -537,20 +535,18 @@ function get_app_context(): array {
 	$current_user = wp_get_current_user();
 
 	// Get the avatar URL for the current user. Returns an empty string if no user is logged in.
-	$avatar_url = $current_user->exists() ? get_avatar_url( $current_user->ID ) : '';
+	$avatar_url = $current_user->exists() ? ( get_avatar_url( $current_user->ID ) ?: '' ) : '';
 
-	$app_context = apply_filters(
+	return apply_filters(
 		'wpgraphql_ide_context',
 		[
 			'pluginVersion'     => get_plugin_header( 'Version' ),
 			'pluginName'        => get_plugin_header( 'Name' ),
 			'externalFragments' => get_external_fragments(),
-			'avatarUrl'         => $avatar_url,
+			'avatarUrl'         => esc_url( $avatar_url ),
 			'drawerButtonLabel' => esc_html__( 'GraphQL IDE', 'wpgraphql-ide' ),
 		]
 	);
-
-	return $app_context;
 }
 
 /**
@@ -583,7 +579,7 @@ function graphql_admin_notices_render_notices( array $notices ): void {
 	// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 	wp_register_style( 'wpgraphql-ide-admin-notices', false );
 	wp_enqueue_style( 'wpgraphql-ide-admin-notices' );
-	wp_add_inline_style( 'wpgraphql-ide-admin-notices', esc_html( $custom_css ) );
+	wp_add_inline_style( 'wpgraphql-ide-admin-notices', wp_kses_post( $custom_css ) );
 }
 
 /**
