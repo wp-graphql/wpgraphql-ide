@@ -386,7 +386,7 @@ function enqueue_graphql_ide_menu_icon_css(): void {
         }
     ';
 
-	wp_add_inline_style( 'admin-bar', $custom_css );
+	wp_add_inline_style( 'admin-bar', esc_html( $custom_css ) );
 }
 
 /**
@@ -558,7 +558,7 @@ function graphql_admin_notices_render_notices( array $notices ): void {
 	// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 	wp_register_style( 'wpgraphql-ide-admin-notices', false );
 	wp_enqueue_style( 'wpgraphql-ide-admin-notices' );
-	wp_add_inline_style( 'wpgraphql-ide-admin-notices', $custom_css );
+	wp_add_inline_style( 'wpgraphql-ide-admin-notices', esc_html( $custom_css ) );
 }
 
 /**
