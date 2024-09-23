@@ -3,7 +3,7 @@ Contributors: jasonbahl, joefusco
 Tags: headless, decoupled, graphql, devtools
 Requires at least: 5.7
 Tested up to: 6.5
-Stable tag: 4.0.0
+Stable tag: 4.0.1
 Requires PHP: 7.4
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -39,6 +39,20 @@ The WPGraphQL IDE plugin includes several important dependencies. You can learn 
 
 == Changelog ==
 
+= 4.0.1 =
+
+### Patch Changes
+
+- 477a555: ### Added
+
+  - Introduced `wp_localize_escaped_data()` function for recursively escaping data before localizing it in WordPress. This ensures safe output of strings, URLs, integers, and nested arrays when passing data to JavaScript, using native WordPress functions like `wp_kses_post()` and `esc_url()`.
+
+  ### Improved
+
+  - Enhanced security by ensuring all localized data is properly sanitized before being passed to `wp_localize_script()`, preventing potential XSS vulnerabilities and ensuring safe use of dynamic data in JavaScript.
+
+- 4da3973: - chore: Bump the npm_and_yarn group across 1 directory with 7 updates
+
 = 4.0.0 =
 
 ### Major Changes
@@ -54,12 +68,5 @@ The WPGraphQL IDE plugin includes several important dependencies. You can learn 
 ### Major Changes
 
 - 7a07c0c: Change JavaScript hook names to have consistent prefix, and update codebase to meet WordPress.org standards.
-
-= 2.1.5 =
-
-### Patch Changes
-
-- cb6eda0: Reorder sidebar menu to always have the IDE first.
-- 1f50c93: Fixes issue where custom capability was not being assigned to the administrator role. This now happens on plugin activation.
 
 [View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
