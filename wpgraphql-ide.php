@@ -240,7 +240,8 @@ function register_wpadminbar_menus(): void {
 
 	global $wp_admin_bar;
 
-	$app_context = get_app_context();
+	// get_app_context() returns escaped data.
+	$safe_app_context = get_app_context();
 
 	// Retrieve the settings array
 	$graphql_ide_settings = get_option( 'graphql_ide_settings', [] );
@@ -253,7 +254,7 @@ function register_wpadminbar_menus(): void {
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide',
-				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"><span class="ab-icon"></span>' . esc_html( $app_context['drawerButtonLabel'] ) . '</div>',
+				'title' => '<div id="' . esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ) . '"><span class="ab-icon"></span>' . esc_html( $safe_app_context['drawerButtonLabel'] ) . '</div>',
 				'href'  => '#',
 			]
 		);
@@ -262,7 +263,7 @@ function register_wpadminbar_menus(): void {
 		$wp_admin_bar->add_node(
 			[
 				'id'    => 'wpgraphql-ide',
-				'title' => '<span class="ab-icon"></span>' . esc_html( $app_context['drawerButtonLabel'] ),
+				'title' => '<span class="ab-icon"></span>' . esc_html( $safe_app_context['drawerButtonLabel'] ),
 				'href'  => esc_url( admin_url( 'admin.php?page=graphql-ide' ) ),
 			]
 		);
@@ -341,7 +342,7 @@ function reorder_graphql_submenu_items(): void {
 			$ordered_submenu[] = $graphql_ide;
 		}
 		if ( 'on' === $show_legacy_editor && $graphiql_ide ) {
-			$graphiql_ide[0]   = 'Legacy GraphQL IDE';
+			$graphiql_ide[0]   = esc_html__( 'Legacy GraphQL IDE', 'wpgraphql-ide' );
 			$ordered_submenu[] = $graphiql_ide;
 		}
 		if ( $extensions ) {
@@ -418,7 +419,8 @@ function enqueue_react_app_with_styles(): void {
 	$render_asset_file  = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/wpgraphql-ide-render.asset.php';
 	$graphql_asset_file = include WPGRAPHQL_IDE_PLUGIN_DIR_PATH . 'build/graphql.asset.php';
 
-	$app_context = get_app_context();
+	// get_app_context() returns escaped data.
+	$safe_app_context = get_app_context();
 
 	wp_register_script(
 		'graphql',
@@ -438,11 +440,11 @@ function enqueue_react_app_with_styles(): void {
 
 	$localized_data = [
 		'nonce'               => wp_create_nonce( 'wp_rest' ),
-		'graphqlEndpoint'     => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
-		'rootElementId'       => WPGRAPHQL_IDE_ROOT_ELEMENT_ID,
-		'context'             => $app_context,
+		'graphqlEndpoint'     => esc_url( trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route ),
+		'rootElementId'       => esc_attr( WPGRAPHQL_IDE_ROOT_ELEMENT_ID ),
+		'context'             => $safe_app_context,
 		'isDedicatedIdePage'  => current_screen_is_dedicated_ide_page(),
-		'dedicatedIdeBaseUrl' => get_dedicated_ide_base_url(),
+		'dedicatedIdeBaseUrl' => esc_url( get_dedicated_ide_base_url() ),
 	];
 
 	wp_localize_script(
@@ -506,6 +508,27 @@ function get_plugin_header( string $key = '' ): ?string {
 }
 
 /**
+ * Retrieves and sanitizes external fragments.
+ *
+ * @return array<string> The sanitized array of external fragments.
+ */
+function get_external_fragments(): array {
+	// Retrieve external fragments using the filter.
+	$external_fragments = apply_filters( 'wpgraphql_ide_external_fragments', [] );
+
+	// Loop through each fragment, sanitize, and ensure it's a valid GraphQL fragment.
+	$sanitized_fragments = array_filter(
+		array_map( 'sanitize_text_field', $external_fragments ),
+		function( $fragment ) {
+			// Check if the fragment starts with "fragment" and contains "on" (basic GraphQL fragment validation).
+			return preg_match( '/^fragment\s+\w+\s+on\s+\w+\s*{/', trim( $fragment ) );
+		}
+	);
+
+	return $sanitized_fragments;
+}
+
+/**
  * Retrieves app context.
  *
  * @return array<string, mixed> The possibly filtered app context array.
@@ -516,16 +539,18 @@ function get_app_context(): array {
 	// Get the avatar URL for the current user. Returns an empty string if no user is logged in.
 	$avatar_url = $current_user->exists() ? get_avatar_url( $current_user->ID ) : '';
 
-	return apply_filters(
+	$app_context = apply_filters(
 		'wpgraphql_ide_context',
 		[
 			'pluginVersion'     => get_plugin_header( 'Version' ),
 			'pluginName'        => get_plugin_header( 'Name' ),
-			'externalFragments' => apply_filters( 'wpgraphql_ide_external_fragments', [] ),
+			'externalFragments' => get_external_fragments(),
 			'avatarUrl'         => $avatar_url,
-			'drawerButtonLabel' => __( 'GraphQL IDE', 'wpgraphql-ide' ),
+			'drawerButtonLabel' => esc_html__( 'GraphQL IDE', 'wpgraphql-ide' ),
 		]
 	);
+
+	return $app_context;
 }
 
 /**
