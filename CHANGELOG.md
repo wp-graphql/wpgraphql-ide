@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.2
+
+### Patch Changes
+
+- a2b5fbd: - chore: Bump supported WordPress version
+
 ## 4.0.1
 
 ### Patch Changes
