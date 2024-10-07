@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- a2b5fbd: Bump supported WordPress version
+- a2b5fbd: - chore: Bump supported WordPress version
 
 ## 4.0.1
 
