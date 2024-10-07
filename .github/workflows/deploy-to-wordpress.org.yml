@@ -8,6 +8,7 @@ jobs:
   tag:
     name: New tag
     runs-on: ubuntu-latest
+    environment: actions # Environment Secrets are scoped inside of the "actions" environment.
     steps:
     - uses: actions/checkout@master
     - name: WordPress Plugin Deploy
