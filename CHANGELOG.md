@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.3
+
+### Patch Changes
+
+- fd9d099: chore: set workflow environment
+
 ## 4.0.2
 
 ### Patch Changes
