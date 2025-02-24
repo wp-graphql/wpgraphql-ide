@@ -66,4 +66,4 @@ wpgraphql-ide.zip
 /playwright/.cache/
 /@wpgraphql/
 
-**/package-lock.json
+**/package-lock.json.pnpm-debug.log

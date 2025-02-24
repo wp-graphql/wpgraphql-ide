@@ -4,6 +4,8 @@ End-To-End (E2E) tests for WPGraphQL IDE.
 
 ## Running the tests
 
+To run the e2e tests:
+
 ```sh
-npm run test:e2e
+pnpm run test:e2e
 ```

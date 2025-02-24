@@ -5,11 +5,11 @@
 ### development
 
 ```sh
-npm start
+pnpm start
 ```
 
 ### production
 
 ```sh
-npm run build
+pnpm run build
 ```
