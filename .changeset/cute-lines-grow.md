@@ -1,5 +1,0 @@
----
-"wpgraphql-ide": patch
----
-
-Test

@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.4
+
+### Patch Changes
+
+- b4d7302: Test
+
 ## 4.0.3
 
 ### Patch Changes
