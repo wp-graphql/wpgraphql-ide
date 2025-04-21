@@ -1,7 +1,6 @@
 import React from 'react';
 import { coerceArgValue, unwrapInputType } from '../utils';
 import { isInputObjectType, isLeafType } from 'graphql';
-import AbstractArgView from './AbstractArgView';
 
 class InputArgView extends React.PureComponent {
 	_previousArgSelection;
