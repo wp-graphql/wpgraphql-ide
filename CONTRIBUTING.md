@@ -27,5 +27,5 @@ npm run lint:js:fix   # Fix linting
 
 ## Requirements
 
-- Node.js 16+
-- Docker Desktop
+- Node.js + npm
+- Docker (for wp-env)
