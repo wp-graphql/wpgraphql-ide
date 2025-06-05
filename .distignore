@@ -33,6 +33,7 @@
 .gitattributes
 .gitignore
 .github_changelog_generator
+.wp-env.json
 c3.php
 CHANGELOG.md
 codeception.dist.yml
