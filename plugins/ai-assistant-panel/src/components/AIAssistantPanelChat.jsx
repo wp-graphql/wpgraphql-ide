@@ -1,180 +1,462 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useSelect } from '@wordpress/data';
-import { Button, Spinner, TextareaControl } from '@wordpress/components';
+import React, { useState, useEffect, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
-import ReactMarkdown from 'react-markdown';
+import apiFetch from '@wordpress/api-fetch';
+import './AIAssistantPanelChat.css';
 
-export const AIAssistantPanel = () => {
-	const [messages, setMessages] = useState([
-		{
-			type: 'assistant',
-			content: "👋 Hi! I'm your GraphQL assistant. I can help you write queries, understand your schema, and suggest optimizations.",
-			timestamp: new Date(),
-		}
-	]);
-	const [inputValue, setInputValue] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
+const MessageCard = ({ message, onInsertCode }) => {
+	const isUser = message.role === 'user';
+	
+	// Extract code blocks from the message
+	const renderContent = (content) => {
+		const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+		const parts = [];
+		let lastIndex = 0;
+		let match;
 
-	// Get current query and schema from the store
-	const { query, schema } = useSelect((select) => {
-		const wpgraphqlIDEApp = select('wpgraphql-ide/app');
-		return {
-			query: wpgraphqlIDEApp.getQuery(),
-			schema: wpgraphqlIDEApp.schema(),
-		};
-	});
-
-	const sendMessage = async () => {
-		if (!inputValue.trim() || isLoading) return;
-
-		const userMessage = {
-			type: 'user',
-			content: inputValue,
-			timestamp: new Date(),
-		};
-
-		setMessages((prev) => [...prev, userMessage]);
-		setInputValue('');
-		setIsLoading(true);
-
-		try {
-			const response = await fetch(
-				`${window.WPGRAPHQL_AI_ASSISTANT_DATA.apiUrl}/chat`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-WP-Nonce': window.WPGRAPHQL_AI_ASSISTANT_DATA.nonce,
-					},
-					body: JSON.stringify({
-						message: inputValue,
-						context: {
-							query: query || '',
-							schema: schema ? JSON.stringify(schema).substring(0, 2000) : '',
-						},
-					}),
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error('Failed to get response');
+		while ((match = codeBlockRegex.exec(content)) !== null) {
+			// Add text before code block
+			if (match.index > lastIndex) {
+				parts.push({
+					type: 'text',
+					content: content.slice(lastIndex, match.index)
+				});
 			}
 
-			const data = await response.json();
+			// Add code block
+			parts.push({
+				type: 'code',
+				language: match[1] || 'graphql',
+				content: match[2].trim()
+			});
+
+			lastIndex = match.index + match[0].length;
+		}
+
+		// Add remaining text
+		if (lastIndex < content.length) {
+			parts.push({
+				type: 'text',
+				content: content.slice(lastIndex)
+			});
+		}
+
+		return parts.map((part, index) => {
+			if (part.type === 'code') {
+				return (
+					<div key={index} className="wpgraphql-ide-ai-code-block">
+						<div className="wpgraphql-ide-ai-code-header">
+							<span className="wpgraphql-ide-ai-code-language">{part.language}</span>
+							<button
+								className="wpgraphql-ide-ai-code-insert"
+								onClick={() => onInsertCode(part.content)}
+								title={__('Insert into editor', 'wpgraphql-ide')}
+							>
+								{__('Insert', 'wpgraphql-ide')}
+							</button>
+						</div>
+						<pre>
+							<code>{part.content}</code>
+						</pre>
+					</div>
+				);
+			}
+			return <div key={index} dangerouslySetInnerHTML={{ __html: part.content.replace(/\n/g, '<br />') }} />;
+		});
+	};
+	
+	return (
+		<div
+			className={`wpgraphql-ide-ai-message-card ${isUser ? 'user' : 'assistant'}`}
+			style={{
+				backgroundColor: isUser 
+					? `hsla(var(--color-primary), 0.1)`
+					: `hsla(var(--color-neutral), var(--alpha-background-light))`,
+				borderRadius: `var(--border-radius-8)`,
+				padding: `var(--px-12)`,
+				marginTop: `var(--px-12)`,
+			}}
+		>
+			<div
+				className="wpgraphql-ide-ai-message-role"
+				style={{
+					color: isUser 
+						? `hsla(var(--color-primary), 1)`
+						: `hsla(var(--color-neutral), 1)`,
+					fontFamily: `var(--font-family)`,
+					fontSize: `12px`,
+					fontWeight: '600',
+					marginBottom: `var(--px-4)`,
+				}}
+			>
+				{isUser ? __('You', 'wpgraphql-ide') : __('GraphQL Assistant', 'wpgraphql-ide')}
+			</div>
+			<div 
+				className="wpgraphql-ide-ai-message-content"
+				style={{
+					fontSize: `13px`,
+					lineHeight: '1.5',
+				}}
+			>
+				{isUser ? message.content[0]?.text || '' : renderContent(message.content[0]?.text || '')}
+			</div>
+		</div>
+	);
+};
+
+const AIAssistantPanel = () => {
+	const [conversations, setConversations] = useState([{
+		id: 'default',
+		title: __('New Conversation', 'wpgraphql-ide'),
+		messages: []
+	}]);
+	const [activeConversationId, setActiveConversationId] = useState('default');
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [inputValue, setInputValue] = useState('');
+	const [showConversationMenu, setShowConversationMenu] = useState(false);
+	const messagesEndRef = useRef(null);
+	const textareaRef = useRef(null);
+
+	// Get active conversation
+	const activeConversation = conversations.find(c => c.id === activeConversationId);
+	const messages = activeConversation?.messages || [];
+
+	// Scroll to bottom when messages change
+	useEffect(() => {
+		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+	}, [messages]);
+
+	// Load saved conversations from localStorage
+	useEffect(() => {
+		const saved = localStorage.getItem('wpgraphql-ide-ai-conversations');
+		if (saved) {
+			try {
+				const parsed = JSON.parse(saved);
+				setConversations(parsed);
+			} catch (e) {
+				console.error('Failed to load conversations:', e);
+			}
+		}
+	}, []);
+
+	// Save conversations to localStorage
+	useEffect(() => {
+		localStorage.setItem('wpgraphql-ide-ai-conversations', JSON.stringify(conversations));
+	}, [conversations]);
+
+	const insertCodeIntoEditor = (code) => {
+		// Dispatch event to insert code into the active editor
+		const event = new CustomEvent('wpgraphql-ide:insert-code', {
+			detail: { code }
+		});
+		window.dispatchEvent(event);
+	};
+
+	const sendMessage = async (text) => {
+		if (!text.trim() || isLoading) return;
+
+		// Check if message is GraphQL-related
+		const graphqlKeywords = ['query', 'mutation', 'subscription', 'fragment', 'schema', 'type', 'field', 'resolver', 'graphql', 'wpgraphql'];
+		const isGraphQLRelated = graphqlKeywords.some(keyword => 
+			text.toLowerCase().includes(keyword)
+		);
+
+		if (!isGraphQLRelated) {
+			// Gently guide user to ask GraphQL-related questions
+			const guidanceMessage = {
+				id: Date.now().toString(),
+				role: 'assistant',
+				content: [{
+					type: 'text',
+					text: __('I\'m specialized in helping with GraphQL and WPGraphQL. I can help you with:\n\n• Writing GraphQL queries, mutations, and subscriptions\n• Understanding your WordPress GraphQL schema\n• Optimizing query performance\n• Debugging GraphQL errors\n• WPGraphQL plugin development\n\nPlease ask me something about GraphQL!', 'wpgraphql-ide')
+				}],
+			};
 			
-			setMessages((prev) => [
-				...prev,
-				{
-					type: 'assistant',
-					content: data.response,
-					timestamp: new Date(),
-				},
-			]);
-		} catch (error) {
-			console.error('Error sending message:', error);
-			setMessages((prev) => [
-				...prev,
-				{
-					type: 'assistant',
-					content: '❌ Sorry, I encountered an error. Please make sure the Gemini API key is configured in the settings.',
-					timestamp: new Date(),
-					isError: true,
-				},
-			]);
+			updateConversation(activeConversationId, [...messages, {
+				id: Date.now().toString(),
+				role: 'user',
+				content: [{ type: 'text', text }],
+			}, guidanceMessage]);
+			return;
+		}
+
+		const userMessage = {
+			id: Date.now().toString(),
+			role: 'user',
+			content: [{ type: 'text', text }],
+		};
+
+		updateConversation(activeConversationId, [...messages, userMessage]);
+		setIsLoading(true);
+		setError(null);
+		setInputValue('');
+
+		try {
+			// Get current IDE context
+			const contextEvent = new CustomEvent('wpgraphql-ide:get-context');
+			window.dispatchEvent(contextEvent);
+			
+			await new Promise(resolve => setTimeout(resolve, 100));
+			
+			const ideContext = window.WPGraphQLIDE?.context || {};
+			
+			// Get schema from GraphiQL if available
+			const graphiqlEditor = document.querySelector('.graphiql-container');
+			let schemaSDL = '';
+			if (graphiqlEditor && window.GraphiQL) {
+				try {
+					const schema = window.GraphiQL.getSchema();
+					if (schema) {
+						const { printSchema } = await import('graphql');
+						schemaSDL = printSchema(schema);
+					}
+				} catch (e) {
+					console.error('Failed to get schema:', e);
+				}
+			}
+			
+			const response = await apiFetch({
+				path: window.WPGRAPHQL_AI_ASSISTANT_DATA?.apiUrl + '/chat',
+				method: 'POST',
+				data: {
+					message: text,
+					context: {
+						query: ideContext.query || '',
+						variables: ideContext.variables || '',
+						schema: schemaSDL || ideContext.schema || '',
+						conversationHistory: messages.slice(-5) // Send last 5 messages for context
+					}
+				}
+			});
+
+			if (response && response.response) {
+				const assistantMessage = {
+					id: (Date.now() + 1).toString(),
+					role: 'assistant',
+					content: [{ type: 'text', text: response.response }],
+				};
+				updateConversation(activeConversationId, [...messages, userMessage, assistantMessage]);
+			} else {
+				throw new Error(response?.message || __('Failed to get AI response', 'wpgraphql-ide'));
+			}
+		} catch (err) {
+			setError(err.message);
+			console.error('AI Assistant error:', err);
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
+	const updateConversation = (conversationId, newMessages) => {
+		setConversations(prev => prev.map(conv => 
+			conv.id === conversationId 
+				? { ...conv, messages: newMessages }
+				: conv
+		));
+	};
+
+	const createNewConversation = () => {
+		const newConversation = {
+			id: Date.now().toString(),
+			title: __('New Conversation', 'wpgraphql-ide'),
+			messages: []
+		};
+		setConversations(prev => [...prev, newConversation]);
+		setActiveConversationId(newConversation.id);
+		setShowConversationMenu(false);
+	};
+
+	const deleteConversation = (conversationId) => {
+		if (conversations.length === 1) {
+			// Reset the only conversation instead of deleting
+			updateConversation(conversationId, []);
+			return;
+		}
+		
+		setConversations(prev => prev.filter(c => c.id !== conversationId));
+		if (conversationId === activeConversationId) {
+			setActiveConversationId(conversations[0].id);
+		}
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		sendMessage();
+		sendMessage(inputValue);
 	};
+
+	const handleKeyDown = (e) => {
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault();
+			handleSubmit(e);
+		}
+	};
+
+	// Auto-resize textarea
+	useEffect(() => {
+		const textarea = textareaRef.current;
+		if (textarea) {
+			textarea.style.height = 'auto';
+			textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+		}
+	}, [inputValue]);
 
 	return (
 		<div className="wpgraphql-ide-ai-assistant-panel">
-			<div className="graphiql-doc-explorer-title">GraphQL Genius 🧠</div>
-			
-			{/* Messages Container */}
-			<div style={{ padding: `var(--px-20)` }}>
-				{messages.map((message, index) => (
-					<div
-						key={index}
-						style={{
-							backgroundColor: `hsla(var(--color-neutral), var(--alpha-background-light))`,
-							borderRadius: `calc(var(--border-radius-12) + var(--px-8))`,
-							padding: `var(--px-20)`,
-							marginTop: index === 0 ? `var(--px-20)` : `var(--px-12)`,
-						}}
-					>
-						<div
-							style={{
-								color: `hsla(var(--color-neutral), 1)`,
-								fontFamily: `var(--font-family)`,
-								fontSize: `var(--font-size-body)`,
-								fontWeight: message.type === 'user' ? 'bold' : 'normal',
-								marginBottom: message.type === 'user' ? '0' : `var(--px-8)`,
-							}}
+			<div className="graphiql-doc-explorer-title">
+				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+					<span>{__('GraphQL Assistant', 'wpgraphql-ide')}</span>
+					<div className="wpgraphql-ide-ai-conversation-controls">
+						<button
+							className="wpgraphql-ide-ai-control-button"
+							onClick={() => setShowConversationMenu(!showConversationMenu)}
+							title={__('Conversation history', 'wpgraphql-ide')}
 						>
-							{message.type === 'user' ? 'You:' : 'AI Assistant:'}
-						</div>
-						{message.type === 'assistant' ? (
-							<ReactMarkdown
-								components={{
-									p: ({ children }) => <p style={{ margin: '0' }}>{children}</p>,
-									code: ({ children }) => (
-										<code style={{
-											backgroundColor: 'rgba(0,0,0,0.2)',
-											padding: '2px 4px',
-											borderRadius: '3px',
-											fontSize: '0.9em'
-										}}>
-											{children}
-										</code>
-									),
-								}}
-							>
-								{message.content}
-							</ReactMarkdown>
-						) : (
-							<p style={{ margin: '0' }}>{message.content}</p>
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+								<path d="M3 2h10a1 1 0 011 1v7a1 1 0 01-1 1H8l-3 3v-3H3a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+							</svg>
+							<span style={{ fontSize: '12px', marginLeft: '4px' }}>
+								{conversations.length}
+							</span>
+						</button>
+						{showConversationMenu && (
+							<div className="wpgraphql-ide-ai-conversation-menu">
+								<button
+									className="wpgraphql-ide-ai-menu-item"
+									onClick={createNewConversation}
+								>
+									<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+										<path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="2"/>
+									</svg>
+									{__('New Conversation', 'wpgraphql-ide')}
+								</button>
+								<div className="wpgraphql-ide-ai-menu-divider" />
+								{conversations.map(conv => (
+									<div
+										key={conv.id}
+										className={`wpgraphql-ide-ai-menu-item ${conv.id === activeConversationId ? 'active' : ''}`}
+										onClick={() => {
+											setActiveConversationId(conv.id);
+											setShowConversationMenu(false);
+										}}
+									>
+										<span className="wpgraphql-ide-ai-menu-item-title">
+											{conv.messages.length > 0 
+												? conv.messages[0].content[0]?.text.slice(0, 30) + '...'
+												: conv.title
+											}
+										</span>
+										<button
+											className="wpgraphql-ide-ai-menu-item-delete"
+											onClick={(e) => {
+												e.stopPropagation();
+												deleteConversation(conv.id);
+											}}
+										>
+											×
+										</button>
+									</div>
+								))}
+							</div>
 						)}
 					</div>
-				))}
-				
-				{isLoading && (
-					<div
-						style={{
-							backgroundColor: `hsla(var(--color-neutral), var(--alpha-background-light))`,
-							borderRadius: `calc(var(--border-radius-12) + var(--px-8))`,
-							padding: `var(--px-20)`,
-							marginTop: `var(--px-12)`,
-						}}
-					>
-						<Spinner /> Thinking...
+				</div>
+			</div>
+			
+			<div className="wpgraphql-ide-ai-message-container">
+				{error && (
+					<div className="wpgraphql-ide-ai-error">
+						{error}
 					</div>
 				)}
+				
+				{messages.length === 0 ? (
+					<div className="wpgraphql-ide-ai-empty-state">
+						<div className="wpgraphql-ide-ai-welcome">
+							<h3>{__('Welcome to GraphQL Assistant!', 'wpgraphql-ide')}</h3>
+							<p>{__('I can help you with:', 'wpgraphql-ide')}</p>
+							<ul>
+								<li>{__('Writing GraphQL queries, mutations & subscriptions', 'wpgraphql-ide')}</li>
+								<li>{__('Understanding your WordPress schema', 'wpgraphql-ide')}</li>
+								<li>{__('Debugging errors and optimizing performance', 'wpgraphql-ide')}</li>
+								<li>{__('WPGraphQL best practices', 'wpgraphql-ide')}</li>
+							</ul>
+						</div>
+						<div className="wpgraphql-ide-ai-suggestions">
+							<p>{__('Try asking:', 'wpgraphql-ide')}</p>
+							<button
+								className="wpgraphql-ide-ai-suggestion"
+								onClick={() => sendMessage('How do I query posts with their featured images?')}
+							>
+								{__('How do I query posts with their featured images?', 'wpgraphql-ide')}
+							</button>
+							<button
+								className="wpgraphql-ide-ai-suggestion"
+								onClick={() => sendMessage('What fields are available on the User type?')}
+							>
+								{__('What fields are available on the User type?', 'wpgraphql-ide')}
+							</button>
+							<button
+								className="wpgraphql-ide-ai-suggestion"
+								onClick={() => sendMessage('Show me how to create a mutation')}
+							>
+								{__('Show me how to create a mutation', 'wpgraphql-ide')}
+							</button>
+						</div>
+					</div>
+				) : (
+					<>
+						{messages.map(message => (
+							<MessageCard 
+								key={message.id} 
+								message={message}
+								onInsertCode={insertCodeIntoEditor}
+							/>
+						))}
+						{isLoading && (
+							<div className="wpgraphql-ide-ai-typing-indicator">
+								<span className="typing-dot"></span>
+								<span className="typing-dot"></span>
+								<span className="typing-dot"></span>
+							</div>
+						)}
+						<div ref={messagesEndRef} />
+					</>
+				)}
 			</div>
-
-			{/* Input Area */}
-			<div style={{ padding: `var(--px-20)`, marginTop: `var(--px-20)` }}>
+			
+			<div className="wpgraphql-ide-ai-composer">
 				<form onSubmit={handleSubmit}>
-					<TextareaControl
+					<textarea
+						ref={textareaRef}
 						value={inputValue}
-						onChange={setInputValue}
-						placeholder="Ask me about your GraphQL query..."
-						rows={3}
-						style={{ marginBottom: `var(--px-12)` }}
+						onChange={(e) => setInputValue(e.target.value)}
+						onKeyDown={handleKeyDown}
+						placeholder={__('Ask about GraphQL...', 'wpgraphql-ide')}
+						disabled={isLoading}
+						rows="1"
+						className="wpgraphql-ide-ai-input"
 					/>
-					<Button 
-						variant="primary" 
-						type="submit" 
+					<button
+						type="submit"
 						disabled={isLoading || !inputValue.trim()}
+						className="wpgraphql-ide-ai-send-button"
 					>
-						{isLoading ? 'Sending...' : 'Send'}
-					</Button>
+						{isLoading ? (
+							<svg className="wpgraphql-ide-ai-spinner" width="16" height="16" viewBox="0 0 16 16">
+								<circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="32" strokeDashoffset="32">
+									<animate attributeName="stroke-dashoffset" dur="1s" repeatCount="indefinite" from="32" to="0" />
+								</circle>
+							</svg>
+						) : (
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+								<path d="M2 8L14 2L10 8L14 14L2 8Z"/>
+							</svg>
+						)}
+					</button>
 				</form>
 			</div>
 		</div>
 	);
 };
+
+export default AIAssistantPanel;

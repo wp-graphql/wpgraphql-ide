@@ -1,5 +1,5 @@
 import { AIAssistantIcon } from './components/AIAssistantIcon';
-import { AIAssistantPanel } from './components/AIAssistantPanelChat';
+import AIAssistantPanel from './components/AIAssistantPanelChat';
 
 window.addEventListener('WPGraphQLIDE_Window_Ready', (event) => {
 	if (!window.WPGraphQLIDE) return;

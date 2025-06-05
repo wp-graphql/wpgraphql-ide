@@ -38,6 +38,14 @@ function enqueue_assets(): void {
 		true
 	);
 
+	// Enqueue the CSS file
+	wp_enqueue_style(
+		'ai-assistant-panel',
+		WPGRAPHQL_IDE_AI_ASSISTANT_PANEL_URL . 'build/ai-assistant-panel.css',
+		[ 'wpgraphql-ide-render' ],
+		$asset_file['version']
+	);
+
 	// Localize data for the AI Assistant
 	wp_localize_script(
 		'ai-assistant-panel',
