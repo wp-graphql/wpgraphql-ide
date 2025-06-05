@@ -1,5 +1,6 @@
 import React from 'react';
 import Checkbox from './Checkbox';
+import FieldView from './FieldView';
 
 class AbstractView extends React.PureComponent {
 	_previousSelection;
