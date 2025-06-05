@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.5
+
+### Patch Changes
+
+- c6cfbc1: fix: linting tooltips are now visible when using the IDE in the drawer
+- 6500ef3: fix: broken query composer by adding missing import statements for AbstractArgView and FieldView components. Props to @hacknug for the fix!
+
 ## 4.0.4
 
 ### Patch Changes
