@@ -6,11 +6,18 @@
   overflow: hidden;
 }
 
+/* Title bar needs overflow visible for dropdown */
+.wpgraphql-ide-ai-assistant-panel .graphiql-doc-explorer-title {
+  overflow: visible;
+  position: relative;
+  z-index: 10;
+}
+
 /* Message Container */
 .wpgraphql-ide-ai-message-container {
   flex: 1;
   overflow-y: auto;
-  padding: var(--px-16);
+  padding: 0;
 }
 
 /* Empty State */
@@ -243,6 +250,7 @@
   align-items: center;
   gap: var(--px-4);
   transition: all 0.2s;
+  font-size: 12px;
 }
 
 .wpgraphql-ide-ai-control-button:hover {
@@ -261,15 +269,14 @@
   box-shadow: 0 4px 12px hsla(var(--color-neutral), 0.15);
   min-width: 200px;
   max-width: 300px;
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
-  z-index: 10;
+  z-index: 9999;
 }
 
 .wpgraphql-ide-ai-menu-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   padding: var(--px-8) var(--px-12);
   background: none;
@@ -279,6 +286,8 @@
   color: hsla(var(--color-neutral), 0.8);
   font-size: 12px;
   transition: background 0.2s;
+  gap: var(--px-8);
+  position: relative;
 }
 
 .wpgraphql-ide-ai-menu-item:hover {
@@ -288,6 +297,11 @@
 .wpgraphql-ide-ai-menu-item.active {
   background: hsla(var(--color-primary), 0.1);
   color: hsla(var(--color-primary), 1);
+}
+
+.wpgraphql-ide-ai-new-conversation {
+  font-weight: 500;
+  border-bottom: 1px solid hsla(var(--color-neutral), 0.1);
 }
 
 .wpgraphql-ide-ai-menu-item-title {

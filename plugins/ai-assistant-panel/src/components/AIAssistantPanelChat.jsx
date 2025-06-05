@@ -132,7 +132,18 @@ const AIAssistantPanel = () => {
 		if (saved) {
 			try {
 				const parsed = JSON.parse(saved);
-				setConversations(parsed);
+				// Filter out any invalid conversations
+				const validConversations = parsed.filter(conv => 
+					conv && conv.id && Array.isArray(conv.messages)
+				);
+				if (validConversations.length > 0) {
+					setConversations(validConversations);
+					// Set the first conversation as active if current active ID doesn't exist
+					const currentExists = validConversations.some(c => c.id === activeConversationId);
+					if (!currentExists) {
+						setActiveConversationId(validConversations[0].id);
+					}
+				}
 			} catch (e) {
 				console.error('Failed to load conversations:', e);
 			}
@@ -145,11 +156,116 @@ const AIAssistantPanel = () => {
 	}, [conversations]);
 
 	const insertCodeIntoEditor = (code) => {
-		// Dispatch event to insert code into the active editor
+		// Check if we're dealing with variables
+		const isVariables = code.trim().startsWith('{') && code.trim().endsWith('}');
+		
+		// Try to use the GraphiQL context to set values
+		if (window.GraphiQL) {
+			try {
+				// For GraphiQL v2 API
+				const editor = document.querySelector('.graphiql-container');
+				if (editor?.__graphiql) {
+					if (isVariables) {
+						editor.__graphiql.setVariables(code);
+					} else {
+						editor.__graphiql.setQuery(code);
+					}
+					return;
+				}
+			} catch (e) {
+				console.error('Failed to use GraphiQL API:', e);
+			}
+		}
+		
+		// Dispatch custom event that the main IDE can listen to
 		const event = new CustomEvent('wpgraphql-ide:insert-code', {
-			detail: { code }
+			detail: { 
+				code,
+				type: isVariables ? 'variables' : 'query' 
+			},
+			bubbles: true
 		});
 		window.dispatchEvent(event);
+		
+		// Also try to update via wp.data if available
+		if (window.wp?.data?.dispatch) {
+			try {
+				const dispatch = window.wp.data.dispatch('wpgraphql-ide/app');
+				if (isVariables) {
+					dispatch.setVariables(code);
+				} else {
+					dispatch.setQuery(code);
+				}
+			} catch (e) {
+				console.error('Failed to use wp.data:', e);
+			}
+		}
+		
+		// Fallback: Try to find and update CodeMirror directly
+		const querySelector = isVariables 
+			? '.graphiql-editor.graphiql-variables-editor' 
+			: '.graphiql-editor.graphiql-query-editor';
+		
+		// Try CodeMirror 6
+		const cm6Editor = document.querySelector(`${querySelector} .cm-editor`);
+		if (cm6Editor?.cmView?.view) {
+			const view = cm6Editor.cmView.view;
+			view.dispatch({
+				changes: {
+					from: 0,
+					to: view.state.doc.length,
+					insert: code
+				}
+			});
+			return;
+		}
+		
+		// Try CodeMirror 5
+		const cm5Editor = document.querySelector(`${querySelector} .CodeMirror`);
+		if (cm5Editor?.CodeMirror) {
+			cm5Editor.CodeMirror.setValue(code);
+			return;
+		}
+		
+		// Final fallback: try to find any textarea
+		const textarea = document.querySelector(`${querySelector} textarea`);
+		if (textarea) {
+			textarea.value = code;
+			textarea.dispatchEvent(new Event('input', { bubbles: true }));
+			textarea.dispatchEvent(new Event('change', { bubbles: true }));
+		}
+	};
+
+	const updateConversation = (conversationId, newMessages) => {
+		setConversations(prev => prev.map(conv => 
+			conv.id === conversationId 
+				? { ...conv, messages: newMessages }
+				: conv
+		));
+	};
+
+	const createNewConversation = () => {
+		const newConversation = {
+			id: Date.now().toString(),
+			title: __('New Conversation', 'wpgraphql-ide'),
+			messages: []
+		};
+		setConversations(prev => [...prev, newConversation]);
+		setActiveConversationId(newConversation.id);
+		setShowConversationMenu(false);
+	};
+
+	const deleteConversation = (conversationId) => {
+		if (conversations.length === 1) {
+			// Reset the only conversation instead of deleting
+			updateConversation(conversationId, []);
+			return;
+		}
+		
+		setConversations(prev => prev.filter(c => c.id !== conversationId));
+		if (conversationId === activeConversationId) {
+			setActiveConversationId(conversations[0].id);
+		}
 	};
 
 	const sendMessage = async (text) => {
@@ -247,38 +363,6 @@ const AIAssistantPanel = () => {
 		}
 	};
 
-	const updateConversation = (conversationId, newMessages) => {
-		setConversations(prev => prev.map(conv => 
-			conv.id === conversationId 
-				? { ...conv, messages: newMessages }
-				: conv
-		));
-	};
-
-	const createNewConversation = () => {
-		const newConversation = {
-			id: Date.now().toString(),
-			title: __('New Conversation', 'wpgraphql-ide'),
-			messages: []
-		};
-		setConversations(prev => [...prev, newConversation]);
-		setActiveConversationId(newConversation.id);
-		setShowConversationMenu(false);
-	};
-
-	const deleteConversation = (conversationId) => {
-		if (conversations.length === 1) {
-			// Reset the only conversation instead of deleting
-			updateConversation(conversationId, []);
-			return;
-		}
-		
-		setConversations(prev => prev.filter(c => c.id !== conversationId));
-		if (conversationId === activeConversationId) {
-			setActiveConversationId(conversations[0].id);
-		}
-	};
-
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		sendMessage(inputValue);
@@ -296,7 +380,7 @@ const AIAssistantPanel = () => {
 		const textarea = textareaRef.current;
 		if (textarea) {
 			textarea.style.height = 'auto';
-			textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+			textarea.style.height = textarea.scrollHeight + 'px';
 		}
 	}, [inputValue]);
 
@@ -309,28 +393,33 @@ const AIAssistantPanel = () => {
 						<button
 							className="wpgraphql-ide-ai-control-button"
 							onClick={() => setShowConversationMenu(!showConversationMenu)}
-							title={__('Conversation history', 'wpgraphql-ide')}
+							title={__('Conversation History', 'wpgraphql-ide')}
 						>
-							<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-								<path d="M3 2h10a1 1 0 011 1v7a1 1 0 01-1 1H8l-3 3v-3H3a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+								<path d="M3 2h8a1 1 0 011 1v4a1 1 0 01-1 1H7l-2 2v-2H3a1 1 0 01-1-1V3a1 1 0 011-1z"/>
 							</svg>
-							<span style={{ fontSize: '12px', marginLeft: '4px' }}>
-								{conversations.length}
-							</span>
+							<span>{conversations.filter(c => c.messages.length > 0).length || 1}</span>
 						</button>
 						{showConversationMenu && (
 							<div className="wpgraphql-ide-ai-conversation-menu">
 								<button
-									className="wpgraphql-ide-ai-menu-item"
-									onClick={createNewConversation}
+									className="wpgraphql-ide-ai-menu-item wpgraphql-ide-ai-new-conversation"
+									onClick={() => {
+										createNewConversation();
+										setShowConversationMenu(false);
+									}}
 								>
-									<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-										<path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="2"/>
+									<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+										<path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="2"/>
 									</svg>
-									{__('New Conversation', 'wpgraphql-ide')}
+									<span>{__('New Conversation', 'wpgraphql-ide')}</span>
 								</button>
-								<div className="wpgraphql-ide-ai-menu-divider" />
-								{conversations.map(conv => (
+								{conversations.filter(conv => conv.messages.length > 0).length > 0 && (
+									<div className="wpgraphql-ide-ai-menu-divider" />
+								)}
+								{conversations
+									.filter(conv => conv.messages.length > 0)
+									.map(conv => (
 									<div
 										key={conv.id}
 										className={`wpgraphql-ide-ai-menu-item ${conv.id === activeConversationId ? 'active' : ''}`}
@@ -340,20 +429,20 @@ const AIAssistantPanel = () => {
 										}}
 									>
 										<span className="wpgraphql-ide-ai-menu-item-title">
-											{conv.messages.length > 0 
-												? conv.messages[0].content[0]?.text.slice(0, 30) + '...'
-												: conv.title
-											}
+											{conv.messages[0].content[0]?.text.slice(0, 30) + '...'}
 										</span>
-										<button
-											className="wpgraphql-ide-ai-menu-item-delete"
-											onClick={(e) => {
-												e.stopPropagation();
-												deleteConversation(conv.id);
-											}}
-										>
-											×
-										</button>
+										{conversations.filter(c => c.messages.length > 0).length > 1 && (
+											<button
+												className="wpgraphql-ide-ai-menu-item-delete"
+												onClick={(e) => {
+													e.stopPropagation();
+													deleteConversation(conv.id);
+												}}
+												title={__('Delete', 'wpgraphql-ide')}
+											>
+												×
+											</button>
+										)}
 									</div>
 								))}
 							</div>
