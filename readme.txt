@@ -2,7 +2,7 @@
 Contributors: jasonbahl, joefusco
 Tags: headless, decoupled, graphql, devtools
 Requires at least: 5.7
-Tested up to: 6.6.2
+Tested up to: 6.8
 Stable tag: 4.0.5
 Requires PHP: 7.4
 License: GPL-3
