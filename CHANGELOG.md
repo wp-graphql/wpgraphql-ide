@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.6
+
+### Patch Changes
+
+- d1df1d4: chore: update tested WordPress version to 6.8
+
 ## 4.0.5
 
 ### Patch Changes
