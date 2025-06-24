@@ -116,6 +116,11 @@ body:not(.graphql_page_graphql-ide) {
   z-index: 100002 !important; /* #wpadminar's z-index of 99999 + 3 */
 }
 
+/* Fix GraphiQL tooltips and hover popovers within drawer */
+.CodeMirror-lint-tooltip{
+  z-index: 100002 !important; /* #wpadminar's z-index of 99999 + 3 */
+}
+
 .graphiql-dialog-title,
 .graphiql-history-header {
   color: hsla(var(--color-neutral),1);
