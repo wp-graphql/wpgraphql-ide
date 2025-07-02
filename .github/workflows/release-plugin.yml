@@ -39,6 +39,17 @@ jobs:
         run: |
           echo "Published: ${{ steps.changesets.outputs.published }}"
 
+      - name: Create and push git tag
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          VERSION=${{ fromJSON(steps.changesets.outputs.publishedPackages)[0].version }}
+          TAG="v${VERSION}"
+          echo "Creating tag: ${TAG}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "Release ${TAG}"
+          git push origin "${TAG}"
+
       - name: Upload release artifact
         if: steps.changesets.outputs.published == 'true'
         uses: svenstaro/upload-release-action@v2
@@ -48,3 +59,10 @@ jobs:
           asset_name: wpgraphql-ide.zip
           tag: ${{ format('v{0}', fromJSON(steps.changesets.outputs.publishedPackages)[0].version) }}
           overwrite: true
+
+      - name: Trigger WordPress.org deployment
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          gh workflow run deploy-to-wordpress.org.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
