@@ -1,5 +1,30 @@
 # Changelog
 
+## 4.0.10
+
+### Patch Changes
+
+- 74c832c: chore: add period to description in readme.txt
+
+## 4.0.9
+
+### Patch Changes
+
+- 2eab1a7: chore: update license format in readme.txt to GPL-3.0
+
+## 4.0.8
+
+### Patch Changes
+
+- f610132: fix: remove duplicate git tag creation in release workflow
+
+## 4.0.7
+
+### Patch Changes
+
+- bf627cc: Fixed an issue with plugin updates not appearing on WordPress.org
+- b47b46d: ci: attempt to fix GitHub actions auto deploy to wp.org.
+
 ## 4.0.6
 
 ### Patch Changes
