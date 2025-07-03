@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.8
+
+### Patch Changes
+
+- f610132: fix: remove duplicate git tag creation in release workflow
+
 ## 4.0.7
 
 ### Patch Changes
