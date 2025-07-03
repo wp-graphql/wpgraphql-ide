@@ -12,7 +12,7 @@ GraphQL IDE for WPGraphQL
 
 == Description ==
 
-GraphQL IDE for WPGraphQL
+GraphQL IDE for WPGraphQL.
 
 == Installation ==
 
