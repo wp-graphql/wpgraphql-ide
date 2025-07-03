@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.11
+
+### Patch Changes
+
+- 7a53dbc: chore: trigger release
+
 ## 4.0.10
 
 ### Patch Changes
