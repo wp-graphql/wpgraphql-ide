@@ -5,7 +5,7 @@ Requires at least: 5.7
 Tested up to: 6.8
 Stable tag: 4.0.6
 Requires PHP: 7.4
-License: GPL-3
+License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 GraphQL IDE for WPGraphQL
