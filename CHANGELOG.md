@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.10
+
+### Patch Changes
+
+- 74c832c: chore: add period to description in readme.txt
+
 ## 4.0.9
 
 ### Patch Changes
