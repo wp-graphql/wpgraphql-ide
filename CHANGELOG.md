@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.9
+
+### Patch Changes
+
+- 2eab1a7: chore: update license format in readme.txt to GPL-3.0
+
 ## 4.0.8
 
 ### Patch Changes
