@@ -58,4 +58,5 @@ The WPGraphQL IDE plugin includes several important dependencies. You can learn 
 
 - b4d7302: Test
 
+
 [View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
