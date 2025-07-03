@@ -4,6 +4,11 @@ on:
     tags:
     - "*"
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (e.g., 4.0.9)'
+        required: true
+        type: string
 
 jobs:
   tag:
@@ -18,4 +23,5 @@ jobs:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SLUG: wpgraphql-ide
+        VERSION: ${{ github.event.inputs.version }}
 
