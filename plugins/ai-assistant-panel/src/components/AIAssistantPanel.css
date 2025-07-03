@@ -1,0 +1,228 @@
+.ai-assistant-panel {
+	color: var(--color-text, #cccccc);
+}
+
+.ai-assistant-header {
+	margin-bottom: 16px;
+	background-color: var(--color-base-secondary, #252526);
+}
+
+.ai-assistant-header h2 {
+	margin: 0 0 4px 0;
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--color-text, #cccccc);
+}
+
+.ai-assistant-subtitle {
+	font-size: 13px;
+	color: var(--color-text-secondary, #999);
+}
+
+.ai-assistant-messages {
+	margin-bottom: 16px;
+	background-color: var(--color-base, #1e1e1e);
+}
+
+.ai-message {
+	animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.ai-message-avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background-color: var(--color-base-secondary, #252526);
+}
+
+.ai-message-user .ai-message-avatar {
+	background-color: var(--wp-admin-theme-color, #007cba);
+}
+
+.ai-message-content {
+	background-color: var(--color-base-secondary, #252526);
+	padding: 12px 16px;
+	border-radius: 12px;
+}
+
+.ai-message-user .ai-message-content {
+	background-color: var(--wp-admin-theme-color, #007cba);
+	color: white;
+}
+
+.ai-message-error .ai-message-content {
+	background-color: rgba(220, 38, 38, 0.1);
+	border: 1px solid rgba(220, 38, 38, 0.3);
+	color: #ef4444;
+}
+
+.ai-message-content p {
+	margin: 0 0 8px 0;
+}
+
+.ai-message-content p:last-child {
+	margin-bottom: 0;
+}
+
+.ai-message-timestamp {
+	font-size: 10px;
+	color: var(--color-text-secondary, #999);
+}
+
+.ai-code-block {
+	background-color: var(--color-base, #1e1e1e);
+}
+
+.ai-code-header {
+	background-color: rgba(0, 0, 0, 0.2);
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.ai-copy-button {
+	color: var(--color-text-secondary, #999);
+}
+
+.ai-copy-button:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: var(--color-text, #cccccc);
+}
+
+.ai-code-block pre {
+	padding: 12px;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.ai-code-block code {
+	font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+}
+
+.ai-message-content code:not(.ai-code-block code) {
+	background-color: rgba(255, 255, 255, 0.1);
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-size: 0.9em;
+}
+
+.ai-suggestions {
+	background-color: var(--color-base-secondary, #252526);
+}
+
+.ai-suggestions p {
+	font-size: 12px;
+	color: var(--color-text-secondary, #999);
+}
+
+.ai-suggestion-chips {
+	gap: 8px;
+}
+
+.ai-suggestion-chip {
+	background-color: var(--color-base, #1e1e1e);
+	color: var(--color-text, #cccccc);
+	padding: 6px 12px;
+	border-radius: 16px;
+	font-size: 12px;
+}
+
+.ai-suggestion-chip:hover {
+	background-color: var(--wp-admin-theme-color, #007cba);
+	color: white;
+}
+
+.ai-assistant-input {
+	background-color: var(--color-base-secondary, #252526);
+	color: var(--color-text, #cccccc);
+	padding: 8px 12px;
+	border-radius: 8px;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.ai-assistant-input:focus {
+	border-color: var(--wp-admin-theme-color, #007cba);
+}
+
+.ai-assistant-input:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.ai-send-button {
+	height: 36px !important;
+	min-height: 36px !important;
+}
+
+.ai-assistant-footer {
+	background-color: var(--color-base-secondary, #252526);
+}
+
+.ai-assistant-footer p {
+	font-size: 12px;
+	color: var(--color-text-secondary, #999);
+}
+
+.components-spinner {
+	margin-right: 8px;
+}
+
+.ai-assistant-messages::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 4px;
+}
+
+.ai-assistant-messages::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.ai-message-content h1,
+.ai-message-content h2,
+.ai-message-content h3,
+.ai-message-content h4,
+.ai-message-content h5,
+.ai-message-content h6 {
+	margin: 16px 0 8px 0;
+	font-weight: 600;
+}
+
+.ai-message-content h1 { font-size: 20px; }
+.ai-message-content h2 { font-size: 18px; }
+.ai-message-content h3 { font-size: 16px; }
+.ai-message-content h4 { font-size: 14px; }
+
+.ai-message-content ul,
+.ai-message-content ol {
+	margin: 8px 0;
+	padding-left: 24px;
+}
+
+.ai-message-content li {
+	margin: 4px 0;
+}
+
+.ai-message-content blockquote {
+	border-left: 3px solid var(--color-border, #333);
+	margin: 8px 0;
+	padding: 8px 0 8px 16px;
+	color: var(--color-text-secondary, #999);
+}
+
+.ai-message-content a {
+	color: var(--wp-admin-theme-color, #007cba);
+}
+
+.ai-message-content a:hover {
+	text-decoration: underline;
+}
