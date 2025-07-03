@@ -48,10 +48,3 @@ jobs:
           asset_name: wpgraphql-ide.zip
           tag: ${{ format('v{0}', fromJSON(steps.changesets.outputs.publishedPackages)[0].version) }}
           overwrite: true
-
-      - name: Trigger WordPress.org deployment
-        if: steps.changesets.outputs.published == 'true'
-        run: |
-          gh workflow run deploy-to-wordpress.org.yml
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
