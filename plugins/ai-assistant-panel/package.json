@@ -1,0 +1,27 @@
+{
+	"name": "@wpgraphql-ide/ai-assistant-panel",
+	"private": true,
+	"main": "build/ai-assistant-panel.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"format:src": "wp-scripts format ./src",
+		"lint:js": "wp-scripts lint-js ./src",
+		"lint:js:fix": "wp-scripts lint-js --fix ./src",
+		"lint:js:src": "wp-scripts lint-js ./src"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^27.9.0"
+	},
+	"dependencies": {
+		"@wordpress/components": "^27.0.0",
+		"@wordpress/data": "^9.22.0",
+		"@wordpress/element": "^5.23.0",
+		"@wordpress/i18n": "^5.0.0",
+		"@wordpress/icons": "^10.0.0",
+		"@assistant-ui/react": "^0.10.20",
+		"react-markdown": "^9.1.0",
+		"ajv": "^8.12.0"
+	}
+}
