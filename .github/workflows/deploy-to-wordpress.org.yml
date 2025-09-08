@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment: actions # Environment Secrets are scoped inside of the "actions" environment.
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v4
     
     - name: Setup Node.js
       uses: actions/setup-node@v4
