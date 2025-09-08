@@ -17,9 +17,8 @@
 /tests
 /tests-examples
 /node_modules
-plugins/*/node_modules
+plugins/**/node_modules/**
 plugins/*/.npmrc
-plugins/*/src
 /packages
 /artifacts
 # hide vendor in this project until we need autoloading
@@ -55,13 +54,3 @@ README.md
 CONTRIBUTING.md
 ACTIONS_AND_FILTERS.md
 schema.graphql
-
-# Source maps (not needed in production)
-*.js.map
-*.css.map
-
-# Development configuration files
-webpack.config.js
-.changeset
-.husky
-.editorconfig
