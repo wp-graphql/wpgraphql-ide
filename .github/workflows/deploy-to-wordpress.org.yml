@@ -29,6 +29,18 @@ jobs:
     
     - name: Build plugin
       run: npm run build
+
+    - name: Debug SVN secret presence
+      run: |
+        if [ -z "${{ secrets.SVN_USERNAME }}" ] || [ -z "${{ secrets.SVN_PASSWORD }}" ]; then
+          echo "SVN credentials are NOT set!";
+          exit 1;
+        else
+          echo "SVN credentials are detected.";
+        fi
+      env:
+        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
     
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@2.1.1
