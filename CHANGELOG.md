@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.12
+
+### Patch Changes
+
+- 5f99ebc: test
+
 ## 4.0.11
 
 ### Patch Changes
