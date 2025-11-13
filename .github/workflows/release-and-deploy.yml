@@ -203,13 +203,6 @@ jobs:
             echo "✅ SVN credentials are detected"
           fi
 
-      - name: Exclude unchanged assets from deployment
-        run: |
-          if [ -d ".wordpress-org" ]; then
-            echo "Temporarily moving .wordpress-org to prevent property-only SVN changes"
-            mv .wordpress-org .wordpress-org-backup
-          fi
-
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
