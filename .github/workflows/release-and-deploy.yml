@@ -103,18 +103,18 @@ jobs:
         run: |
           RELEASE_VERSION="${{ steps.get-version.outputs.version }}"
 
-          # Check package.json
-          PACKAGE_VERSION=$(grep -o '"version": "[^"]*"' package.json | sed 's/"version": "//' | sed 's/"//')
+          # Use jq to properly parse JSON and get only the top-level version field
+          PACKAGE_VERSION=$(jq -r '.version' package.json)
 
-          echo "Version in package.json: ${PACKAGE_VERSION}"
-          echo "Release version: ${RELEASE_VERSION}"
+          echo "Version in package.json: '${PACKAGE_VERSION}'"
+          echo "Release version: '${RELEASE_VERSION}'"
 
-          if [[ "$PACKAGE_VERSION" != "$RELEASE_VERSION" ]]; then
-            echo "::error::Version mismatch! package.json: ${PACKAGE_VERSION}, expected: ${RELEASE_VERSION}"
+          if [[ "${PACKAGE_VERSION}" != "${RELEASE_VERSION}" ]]; then
+            echo "::error::Version mismatch! package.json: '${PACKAGE_VERSION}', expected: '${RELEASE_VERSION}'"
             exit 1
           fi
 
-          echo "✅ Version consistency validated"
+          echo "✅ Version consistency validated: ${RELEASE_VERSION}"
 
       - name: Release Summary
         if: always()
