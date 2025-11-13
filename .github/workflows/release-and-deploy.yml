@@ -194,6 +194,24 @@ jobs:
           npm ci
           npm run build
 
+      - name: Remove unchanged forbidden assets before deploy
+        run: |
+          set -e
+          SVN_URL="https://plugins.svn.wordpress.org/wpgraphql-ide/"
+          FORBIDDEN_ASSETS=(banner-1544x500.png banner-772x250.png icon-128x128.png icon-256x256.png)
+          for asset in "${FORBIDDEN_ASSETS[@]}"; do
+            if [ -f ".wordpress-org/$asset" ]; then
+              # Download SVN version
+              svn export "$SVN_URL/assets/$asset" "svn_$asset" 2>/dev/null || continue
+              # Compare, remove if identical
+              if cmp -s ".wordpress-org/$asset" "svn_$asset"; then
+                rm ".wordpress-org/$asset"
+                echo "::notice file=.wordpress-org/$asset::Skipped unchanged asset to avoid forbidden commit."
+              fi
+              rm -f "svn_$asset"
+            fi
+          done
+
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
