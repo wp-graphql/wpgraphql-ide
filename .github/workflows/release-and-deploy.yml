@@ -203,6 +203,12 @@ jobs:
             echo "✅ SVN credentials are detected"
           fi
 
+      - name: Prepare assets for SVN
+        run: |
+          if [ -d ".wordpress-org" ]; then
+            cp .wordpress-org/* /home/runner/svn-wpgraphql-ide/assets/
+          fi
+
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
