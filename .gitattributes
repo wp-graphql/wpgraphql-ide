@@ -3,7 +3,7 @@
 /.idea export-ignore
 /.log export-ignore
 /.vscode export-ignore
-/.wordpress-org export-ignore
+# /.wordpress-org export-ignore
 /bin export-ignore
 /github export-ignore
 /plugin-build export-ignore
