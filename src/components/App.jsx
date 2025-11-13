@@ -1,8 +1,8 @@
-import React, { useEffect, useCallback } from 'react';
 import { GraphiQL } from './GraphiQL';
 import { useDispatch, useSelect, dispatch } from '@wordpress/data';
 import { parse, visit } from 'graphql';
 import 'graphiql/graphiql.min.css';
+import React, { useEffect, useCallback } from 'react';
 
 export function App() {
 	const { query, shouldRenderStandalone, isAuthenticated, schema } =
@@ -19,6 +19,27 @@ export function App() {
 
 	const { setQuery, setDrawerOpen, setSchema } =
 		useDispatch( 'wpgraphql-ide/app' );
+
+	// Listen for insert code events from the AI Assistant
+	useEffect( () => {
+		const handleInsertCode = ( event ) => {
+			if ( event.detail && event.detail.code ) {
+				const { code, type } = event.detail;
+				
+				if ( type === 'query' ) {
+					setQuery( code );
+				}
+				// Note: GraphiQL in this setup doesn't expose setVariables
+				// Variables would need to be handled differently
+			}
+		};
+
+		window.addEventListener( 'wpgraphql-ide:insert-code', handleInsertCode );
+		
+		return () => {
+			window.removeEventListener( 'wpgraphql-ide:insert-code', handleInsertCode );
+		};
+	}, [ setQuery ] );
 
 	useEffect( () => {
 		// create a ref
