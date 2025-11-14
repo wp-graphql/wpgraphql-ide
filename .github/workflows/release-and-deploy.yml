@@ -142,19 +142,14 @@ jobs:
         run: |
           if [[ "${{ github.event.inputs.deploy_only }}" == "true" ]]; then
             DEPLOY_TAG="${{ github.event.inputs.deploy_tag }}"
-            # Ensure deploy_tag starts with 'v' if provided for deploy_only
-            if [[ ! "$DEPLOY_TAG" =~ ^v ]]; then
-              echo "::warning::Deploy tag '${DEPLOY_TAG}' does not start with 'v'. Prepending 'v'."
-              DEPLOY_TAG="v${DEPLOY_TAG}"
-            fi
           else
             DEPLOY_TAG="v${{ needs.prepare-release.outputs.version }}"
           fi
 
-          # Validate tag format (vX.Y.Z)
-          if [[ ! "$DEPLOY_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.].+)?$ ]]; then
-             echo "::error::Invalid tag format: '$DEPLOY_TAG'. Expected format: vX.Y.Z or vX.Y.Z-suffix"
-             exit 1
+          # Accept both 'vX.Y.Z' and 'X.Y.Z' tag formats
+          if [[ ! "$DEPLOY_TAG" =~ ^(v)?[0-9]+\.[0-9]+\.[0-9]+([-.].+)?$ ]]; then
+            echo "::error::Invalid tag format: '$DEPLOY_TAG'. Expected format: X.Y.Z, vX.Y.Z, X.Y.Z-suffix, or vX.Y.Z-suffix"
+            exit 1
           fi
 
           # Extract version number without 'v'
