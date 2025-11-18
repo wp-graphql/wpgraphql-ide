@@ -1,54 +1,9 @@
-/.git export-ignore
-/.github export-ignore
-/.idea export-ignore
-/.log export-ignore
-/.vscode export-ignore
-# /.wordpress-org export-ignore
-/bin export-ignore
-/github export-ignore
-/plugin-build export-ignore
-/documentation export-ignore
-/docs export-ignore
-/img export-ignore
-/phpstan export-ignore
-/tests export-ignore
-/docker export-ignore
-/docker-output export-ignore
-/node_modules export-ignore
-plugins/help-panel/node_modules export-ignore
-plugins/query-composer-panel/node_modules export-ignore
-plugins/ai-assistant-panel/node_modules export-ignore
-plugins/*/.npmrc export-ignore
-/packages export-ignore
-/artifacts export-ignore
-/vendor export-ignore
-/src export-ignore
-/wpgraphql-ide export-ignore
-.DS_Store export-ignore
-.coveralls.yml export-ignore
-.distignore export-ignore
-.dockerignore export-ignore
-.env export-ignore
-.env.dist export-ignore
-.gitattributes export-ignore
-.gitignore export-ignore
-.github_changelog_generator export-ignore
-.wp-env.json export-ignore
-c3.php export-ignore
-CHANGELOG.md export-ignore
-codeception.dist.yml export-ignore
-codeception.yml export-ignore
-composer.json export-ignore
-composer.lock export-ignore
-docker-compose.yml export-ignore
-netlify.toml export-ignore
-package-lock.json export-ignore
-package.json export-ignore
-phpcs.xml export-ignore
-phpcs.xml.dist export-ignore
-phpstan.neon.dist export-ignore
-phpunit.xml.dist export-ignore
-README.md export-ignore
-CONTRIBUTING.md export-ignore
-ACTIONS_AND_FILTERS.md export-ignore
-schema.graphql export-ignore
+# WordPress.org deployment exclusions are handled by .distignore
+# This file is kept minimal for GitHub-specific settings
+
+# Treat .php files as PHP for language statistics
+*.php linguist-language=PHP
+
+# Mark generated/vendor code
+/build/* linguist-generated=true
+/vendor/* linguist-vendored=true
