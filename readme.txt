@@ -3,7 +3,7 @@ Contributors: jasonbahl, joefusco
 Tags: headless, decoupled, graphql, devtools
 Requires at least: 5.7
 Tested up to: 6.8
-Stable tag: 4.0.22
+Stable tag: 4.0.23
 Requires PHP: 7.4
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -39,6 +39,12 @@ The WPGraphQL IDE plugin includes several important dependencies. You can learn 
 
 == Changelog ==
 
+= 4.0.23 =
+
+### Patch Changes
+
+- dc527b3: test12
+
 = 4.0.22 =
 
 ### Patch Changes
@@ -50,11 +56,5 @@ The WPGraphQL IDE plugin includes several important dependencies. You can learn 
 ### Patch Changes
 
 - 4bebba0: test10
-
-= 4.0.20 =
-
-### Patch Changes
-
-- f0194e1: test9
 
 [View the full changelog](https://github.com/wp-graphql/wpgraphql-ide/blob/main/CHANGELOG.md)
