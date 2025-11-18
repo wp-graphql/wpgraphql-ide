@@ -178,9 +178,6 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install Subversion
-        run: sudo apt-get update && sudo apt-get install -y subversion
-
       - name: Install PHP dependencies
         run: composer install --no-dev --optimize-autoloader
 
@@ -188,45 +185,6 @@ jobs:
         run: |
           npm ci
           npm run build
-
-      - name: Print working directory
-        run: pwd
-  
-      - name: List root directory contents
-        run: ls -la
-
-      - name: List .wordpress-org directory contents
-        run: |
-          echo "==== Listing .wordpress-org contents ===="
-          ls -l .wordpress-org || echo ".wordpress-org not found"
-          echo "==== Listing workspace root ===="
-          ls -la
-
-      - name: Check asset files existence
-        run: |
-          for asset in banner-1544x500.png banner-772x250.png icon-128x128.png icon-256x256.png; do
-            if [[ -f ".wordpress-org/$asset" ]]; then
-              echo "Found: .wordpress-org/$asset"
-            else
-              echo "::warning file=.wordpress-org/$asset::Missing asset file!"
-            fi
-          done
-
-      - name: Remove unchanged forbidden assets before deploy
-        run: |
-          set -e
-          SVN_URL="https://plugins.svn.wordpress.org/wpgraphql-ide/"
-          # List files explicitly, no loop needed!
-          for asset in .wordpress-org/banner-1544x500.png .wordpress-org/banner-772x250.png .wordpress-org/icon-128x128.png .wordpress-org/icon-256x256.png; do
-            if [ -f "${asset}" ]; then
-              svn export "$SVN_URL/assets/$(basename $asset)" "svn_$(basename $asset)" 2>/dev/null || continue
-              if cmp -s "${asset}" "svn_$(basename $asset)"; then
-                rm "${asset}"
-                echo "::notice file=${asset}::Skipped unchanged asset to avoid forbidden commit."
-              fi
-              rm -f "svn_$(basename $asset)"
-            fi
-          done
 
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
