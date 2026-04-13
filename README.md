@@ -1,6 +1,9 @@
 # WPGraphQL IDE
 
-> A next-gen query editor for [WPGraphQL](https://github.com/wp-graphql/wp-graphql) 🚀
+> [!WARNING]
+> This repository has been archived and WPGraphQL IDE is now maintained under the [WPGraphQL monorepo](https://github.com/wp-graphql/wp-graphql).
+
+> A next-gen query editor for WPGraphQL 🚀
 
 https://github.com/josephfusco/wpgraphql-ide/assets/6676674/88e128f0-a682-42ec-84d8-ff8474d7e683
 
